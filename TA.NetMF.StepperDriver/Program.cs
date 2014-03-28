@@ -24,25 +24,25 @@ namespace TA.NetMF.StepperDriver
         public static void Main()
             {
             Led = new OutputPort(Pins.ONBOARD_LED, false);
-            var axis = new StepperAxisController(StepsPerRevolution, SimulateMicrostep)
+            var axis = new AcceleratingStepperMotor(StepsPerRevolution, SimulateMicrostep)
                 {
-                MaximumSpeed = 800,
-                Acceleration = 20.0f
+                MaximumSpeed = 100,
+                RampTime = 5.0
                 };
-            axis.AxisStopped += HandleAxisStoppedEvent;
-            HandleAxisStoppedEvent(axis);
+            axis.MotorStopped += HandleMotorStoppedEvent;
+            HandleMotorStoppedEvent(axis);
             Thread.Sleep(Timeout.Infinite);
             }
 
-        static void HandleAxisStoppedEvent(StepperAxisController axis)
+        static void HandleMotorStoppedEvent(AcceleratingStepperMotor axis)
             {
             Thread.Sleep(500);
             var randomTarget = brandon.Next(StepsPerRevolution);
             Trace.Print("Starting move to " + randomTarget.ToString());
-            axis.RunToTarget(randomTarget);
+            axis.MoveToTarget(randomTarget);
             }
 
-        static void SimulateMicrostep(int stepIndex)
+        static void SimulateMicrostep(uint stepIndex)
             {
             LedState = (stepIndex & 0x01) == 1;
             Led.Write(LedState);
