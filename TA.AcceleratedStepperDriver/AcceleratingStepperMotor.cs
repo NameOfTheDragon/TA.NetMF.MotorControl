@@ -17,7 +17,9 @@ namespace TA.AcceleratedStepperDriver
     ///   <see cref="MotorStopped" /> event when it gets there.
     /// </summary>
     /// <remarks>
-    ///   This class draw inspiration from
+    ///   This class draws inspiration from the AccelStepper library, see http://www.airspayce.com/mikem/arduino/AccelStepper,
+    ///   see also https://github.com/adafruit/AccelStepper although the code has been completely rewritten in C#
+    ///   and has some significant differences.
     /// </remarks>
     public sealed class AcceleratingStepperMotor
         {
