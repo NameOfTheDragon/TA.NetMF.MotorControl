@@ -31,6 +31,8 @@
   </PropertyGroup>
   <Import Project="$(NetMfTargetsBaseDir)$(TargetFrameworkVersion)\CSharp.Targets" />
   <ItemGroup>
+    <Compile Include="DoubleExtensions.cs" />
+    <Compile Include="MotorDirection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AcceleratingStepperMotor.cs" />
   </ItemGroup>

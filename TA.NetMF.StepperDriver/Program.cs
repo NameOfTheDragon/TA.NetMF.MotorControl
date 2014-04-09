@@ -11,32 +11,46 @@ using Microsoft.SPOT;
 using Microsoft.SPOT.Hardware;
 using SecretLabs.NETMF.Hardware.NetduinoPlus;
 using TA.AcceleratedStepperDriver;
+using Math = System.Math;
 
 namespace TA.NetMF.StepperDriver
     {
     public class Program
         {
-        const int StepsPerRevolution = 10000;
+        const int StepsPerRevolution = 2000;
+        const int MicrostepsPerStep = 8;
+        const double RampTime = 4;
         static OutputPort Led;
         static bool LedState;
         static Random brandon = new Random();
+        static int ledThreshold;
 
         public static void Main()
             {
             Led = new OutputPort(Pins.ONBOARD_LED, false);
-            var axis = new AcceleratingStepperMotor(StepsPerRevolution, SimulateMicrostep)
+            ledThreshold = MicrostepsPerStep/2;
+            var axis = new AcceleratingStepperMotor(StepsPerRevolution, SimulateMicrostep, MicrostepsPerStep)
                 {
-                MaximumSpeed = 100,
-                RampTime = 5.0
+                MaximumSpeed = 500,
+                RampTime = RampTime
                 };
             axis.MotorStopped += HandleMotorStoppedEvent;
-            HandleMotorStoppedEvent(axis);
-            Thread.Sleep(Timeout.Infinite);
+            //HandleMotorStoppedEvent(axis);
+            //Thread.Sleep(Timeout.Infinite);
+
+            while (true)
+                {
+                var randomSpeed = brandon.NextDouble()*axis.MaximumSpeed * 2 - axis.MaximumSpeed;
+                if (Math.Abs(randomSpeed) <= 0.1)
+                    continue;
+                axis.MoveAtRegulatedSpeed(randomSpeed);
+                Thread.Sleep((int)(RampTime*2000));
+                }
             }
 
         static void HandleMotorStoppedEvent(AcceleratingStepperMotor axis)
             {
-            Thread.Sleep(500);
+            Thread.Sleep(5000);
             var randomTarget = brandon.Next(StepsPerRevolution);
             Trace.Print("Starting move to " + randomTarget.ToString());
             axis.MoveToTarget(randomTarget);
@@ -44,7 +58,7 @@ namespace TA.NetMF.StepperDriver
 
         static void SimulateMicrostep(uint stepIndex)
             {
-            LedState = (stepIndex & 0x01) == 1;
+            LedState = (stepIndex >= ledThreshold);
             Led.Write(LedState);
             }
         }

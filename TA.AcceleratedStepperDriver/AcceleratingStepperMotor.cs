@@ -3,7 +3,7 @@
 // Copyright © 2014 TiGra Networks, all rights reserved.
 // 
 // File: AcceleratingStepperMotor.cs  Created: 2014-03-26@04:11
-// Last modified: 2014-03-28@02:29 by Tim
+// Last modified: 2014-04-09@03:26 by Tim
 
 using System;
 using System.Threading;
@@ -30,20 +30,22 @@ namespace TA.AcceleratedStepperDriver
         public delegate void MicrostepCallback(uint index);
 
         /// <summary>
-        ///   Delegate MotorEventHandler - callback signature usd by the <see cref="AcceleratingStepperMotor.MotorStopped" /> event.
+        ///   Delegate MotorEventHandler - callback signature usd by the <see cref="AcceleratingStepperMotor.MotorStopped" />
+        ///   event.
         /// </summary>
         /// <param name="axis">The axis.</param>
         public delegate void MotorEventHandler(AcceleratingStepperMotor axis);
 
         /// <summary>
-        ///   The maximum possible speed that this driver is able to support.
+        ///   The maximum possible theoretical speed that this driver is able to support.
+        ///   The actual achievable speed may be much less due to hardware constraints.
         /// </summary>
         public const int MaximumPossibleSpeed = 1000;
 
         /// <summary>
         ///   The motor stopped threshold, The speed below which the motor is considered to be stopped.
         /// </summary>
-        const double MotorStoppedThreshold = 0.001;
+        const double MotorStoppedThreshold = 0.00001;
 
         /// <summary>
         ///   The limit of travel (in steps)
@@ -54,6 +56,11 @@ namespace TA.AcceleratedStepperDriver
         ///   The number of micro steps per whole step
         /// </summary>
         readonly int microStepsPerStep = 64;
+
+        /// <summary>
+        ///   The motor update lock - used as a mutual exclusion.
+        /// </summary>
+        readonly object motorUpdateLock = new object();
 
         /// <summary>
         ///   user-supplied delegate to write step data to the motor hardware.
@@ -76,11 +83,6 @@ namespace TA.AcceleratedStepperDriver
         int currentPosition;
 
         /// <summary>
-        ///   The current direction of travel; 1 forward; 0 stopped; -1 reverse
-        /// </summary>
-        int direction; // 1=forward; 0=stopped; -1=reverse
-
-        /// <summary>
         ///   The maximum run speed (in steps/second).
         ///   Defaults to a deliberately low 'safe' value, in practice 1000 is the practical upper limit.
         /// </summary>
@@ -95,6 +97,21 @@ namespace TA.AcceleratedStepperDriver
         ///   The current motor speed in steps per second.
         /// </summary>
         double motorSpeed;
+
+        /// <summary>
+        ///   The regulated speed when running at constant speed rather than running to a position.
+        /// </summary>
+        double regulatedSpeed = 0;
+
+        /// <summary>
+        ///   True when speed regulation is operational; false when moving to a position.
+        /// </summary>
+        bool regulating;
+
+        /// <summary>
+        ///   The speed set point (in steps per second) when running at a regulated speed.
+        /// </summary>
+        double speedSetpoint;
 
         /// <summary>
         ///   The target position for a move operation. Range 0 to <see cref="limitOfTravel" />.
@@ -112,7 +129,7 @@ namespace TA.AcceleratedStepperDriver
             this.limitOfTravel = limitOfTravel;
             this.performMicrostep = performMicrostep;
             microStepsPerStep = microSteps;
-            stepTimer = new Timer(StepTimerTick, null, 0, 1000); // Stopped
+            stepTimer = new Timer(StepTimerTick, null, Timeout.Infinite, Timeout.Infinite); // Stopped
             }
 
         /// <summary>
@@ -135,7 +152,7 @@ namespace TA.AcceleratedStepperDriver
 
         /// <summary>
         ///   Gets or sets the acceleration rate in steps per second per second.
-        /// Setting this property affects the <see cref="RampTime"/> and vice versa.
+        ///   Setting this property affects the <see cref="RampTime" /> and vice versa.
         /// </summary>
         /// <value>The acceleration, in steps per second per second.</value>
         public double Acceleration { get { return acceleration; } set { acceleration = value; } }
@@ -150,15 +167,16 @@ namespace TA.AcceleratedStepperDriver
         ///   Gets a value indicating whether this motor is moving.
         /// </summary>
         /// <value><c>true</c> if this motor is moving; otherwise, <c>false</c>.</value>
-        public bool IsMoving { get { return motorSpeed > MotorStoppedThreshold; } }
+        public bool IsMoving { get { return Math.Abs(motorSpeed) > MotorStoppedThreshold; } }
 
         /// <summary>
         ///   The current direction of travel; 1 forward; 0 stopped; -1 reverse
         /// </summary>
-        public int Direction { get { return direction; } }
+        public int Direction { get { return IsMoving ? Math.Sign(motorSpeed) : 0; } }
 
         /// <summary>
-        /// Gets or sets the time in which the motor will accelerate to full speed. Setting this property affects <see cref="Acceleration"/> and vice versa.
+        ///   Gets or sets the time in which the motor will accelerate to full speed. Setting this property affects
+        ///   <see cref="Acceleration" /> and vice versa.
         /// </summary>
         /// <value>The ramp time, in seconds.</value>
         public double RampTime { get { return MaximumSpeed/Acceleration; } set { Acceleration = MaximumSpeed/value; } }
@@ -185,66 +203,107 @@ namespace TA.AcceleratedStepperDriver
         /// <param name="state">Not used.</param>
         void StepTimerTick(object state)
             {
-            StepAndRepeat();
+            lock (motorUpdateLock)
+                {
+                StepAndAccelerate();
+                }
             }
 
         /// <summary>
-        ///   Steps the motor one step in the current direction, then computes and sets the new step speed.
+        ///   Steps the motor one step in the current direction, then computes and sets the new step speed
         ///   The act of setting the speed re-arms the step timer.
         /// </summary>
-        void StepAndRepeat()
+        void StepAndAccelerate()
             {
-            var canRepeat = MoveOneStep();
-            if (!canRepeat)
-                {
-                AllStop();
-                return;
-                }
-            var nextSpeed = ComputeSpeed();
-            SetSpeed(nextSpeed);
+            MoveOneStep(Direction);
+            var nextSpeed = ComputeAcceleratedVelocity();
+            SetSpeed(nextSpeed); // Stops the motor if speed is close enough to zero.
             }
 
         /// <summary>
-        ///   Moves one step in the current direction.
+        ///   Wraps the position.
         /// </summary>
-        /// <returns><c>true</c> if another step in the same direction is possible, <c>false</c> otherwise.</returns>
-        bool MoveOneStep()
+        void WrapPosition()
             {
-            if (direction == 0)
-                return false;
+            if (currentPosition < 0)
+                currentPosition += limitOfTravel;
+            else
+                currentPosition -= limitOfTravel;
+            }
+
+        /// <summary>
+        ///   Moves one step in the indicated direction.
+        /// </summary>
+        /// <param name="direction">
+        ///   A signed integer value indicating The direction to step. Any positive value results in a single forward step.
+        ///   any negative value results in a backward step. Zero results in no step.
+        /// </param>
+        public void MoveOneStep(int direction)
+            {
+            var safeDirection = Math.Sign(direction);
+            if (safeDirection == 0)
+                return; // Not moving.
             performMicrostep(microstep); // user code
-            UpdateMicrostep();
-            var newPosition = currentPosition + direction;
-            if (newPosition > limitOfTravel || newPosition < 0)
-                return false;
-            currentPosition = newPosition;
-            return true;
+            UpdateMicrostep(safeDirection); // Increment or decrement the microstep counter.
+            currentPosition += safeDirection;
+            if (currentPosition > limitOfTravel || currentPosition < 0)
+                WrapPosition();
             }
 
         /// <summary>
-        ///   Updates the microstep index by one step in the current direction..
+        ///   Updates the microstep index by one step in the specified direction..
         /// </summary>
-        void UpdateMicrostep()
+        void UpdateMicrostep(int increment)
             {
-            microstep = (uint)((microstep + Direction)%microStepsPerStep);
+            microstep = (uint)((microstep + increment)%microStepsPerStep);
             }
 
         /// <summary>
-        ///   Computes the desired motor speed, in steps per second.
-        ///   Takes account of acceleration and deceleration.
+        ///   Computes the new motor velocity based on the current velocity, such that the velocity always moves towards
+        ///   the set point (if regulation is active), or the acceleration curve dictated by the <see cref="Acceleration" />
+        ///   property.
+        ///   The magnitude of the returned speed will never be greater than <see cref="MaximumSpeed" /> which in turn can never
+        ///   exceed <see cref="MaximumPossibleSpeed" />.
+        ///   <see cref="MaximumSpeed" />.
         /// </summary>
-        /// <returns>System.Single.</returns>
-        float ComputeSpeed()
+        /// <returns>The computed velocity, in steps per second.</returns>
+        /// <remarks>
+        ///   A positive value indicates speed in the forward direction, while a negative value indicates speed in the reverse
+        ///   direction.
+        ///   'forward' is defined as motion towards a higher position value; 'reverse' is defined as motion towards a lower
+        ///   position value.
+        ///   No attempt is made here to define the mechanical direction. A speed value that is within
+        ///   <see cref="MotorStoppedThreshold" />
+        ///   of zero is considered to mean that the motor should be stopped.
+        /// </remarks>
+        double ComputeAcceleratedVelocity()
             {
             var distanceToGo = ComputeDistanceToTarget();
+            var absoluteDistance = Math.Abs(distanceToGo);
+            var direction = Math.Sign(distanceToGo);
             if (distanceToGo == 0)
                 return 0.0f; // We're there.
             if (!IsMoving)
-                return (float)Math.Sqrt(2.0*Acceleration); // Accelerate away from stop.
-            var targetSpeed = Math.Sqrt(2.0*distanceToGo*Acceleration);
+                return Math.Sqrt(2.0*Acceleration)*direction; // Accelerate away from stop.
+            // Compute the unconstrained target speed based on the acceleration curve or the regulation set point.
+            var targetSpeed = regulating ? speedSetpoint : Math.Sqrt(2.0*absoluteDistance*Acceleration)*direction;
+            // The change in speed is a function of the absolute current speed and acceleration.
+            var increment = Acceleration/Math.Abs(motorSpeed);
+            var directionOfChange = Math.Sign(Math.Abs(targetSpeed) - Math.Abs(motorSpeed));
+            var newSpeed = motorSpeed + increment*directionOfChange;
+            var clippedSpeed = newSpeed.ConstrainToLimits(-maximumSpeed, +maximumSpeed);
+            return clippedSpeed;
+            }
+
+        /// <summary>
+        ///   Computes the new speed when attempting to run at a constant regulated speed.
+        /// </summary>
+        /// <returns>System.Single containing the new target speed, which cannot be greater than <see cref="MaximumSpeed" />.</returns>
+        double ComputeRegulatedSpeed()
+            {
             var increment = Acceleration/MotorSpeed;
-            var newSpeed = targetSpeed > MotorSpeed ? MotorSpeed + increment : MotorSpeed - increment;
-            var clippedSpeed = (float)Math.Min(newSpeed, MaximumSpeed);
+            var newSpeed = regulatedSpeed > motorSpeed ? motorSpeed + increment : motorSpeed - increment;
+            var clippedSpeed = Math.Min(newSpeed, maximumSpeed);
             return clippedSpeed;
             }
 
@@ -268,15 +327,51 @@ namespace TA.AcceleratedStepperDriver
         /// <param name="target">The target position, in steps.</param>
         public void MoveToTarget(int target)
             {
-            var moveDirection = (short)Math.Sign(target - currentPosition);
-            if (moveDirection == 0)
+            lock (motorUpdateLock)
                 {
-                AllStop();
-                return;
+                var moveDirection = (short)Math.Sign(target - currentPosition);
+                if (moveDirection == 0)
+                    {
+                    AllStop();
+                    return;
+                    }
+                targetPosition = target;
+                regulating = false;
+                //performStepAction = StepAndAccelerate;
+                SetSpeed(ComputeAcceleratedVelocity());
                 }
-            targetPosition = target;
-            direction = moveDirection;
-            SetSpeed(ComputeSpeed());
+            }
+
+        /// <summary>
+        ///   Moves the motor at a regulated speed, using acceleration whenever the speed changes.
+        ///   Once moving, the speed may be changed by calling this method again with the new value.
+        ///   To decelerate to a stop, call this method with a speed of 0.
+        /// </summary>
+        /// <param name="speed">The target speed.</param>
+        /// <exception cref="System.ArgumentOutOfRangeException">
+        ///   speed;speed must be in the range -MaximumPossibleSpeed to
+        ///   +MaximumPossibleSpeed
+        /// </exception>
+        public void MoveAtRegulatedSpeed(double speed)
+            {
+            lock (motorUpdateLock)
+                {
+                var absoluteSpeed = Math.Abs(speed);
+                if (absoluteSpeed > MaximumPossibleSpeed)
+                    {
+                    throw new ArgumentOutOfRangeException("speed",
+                        "speed must be in the range -MaximumPossibleSpeed to +MaximumPossibleSpeed");
+                    }
+                //if (maximumSpeed < absoluteSpeed)
+                //    maximumSpeed = absoluteSpeed;
+
+                // Set the target position, effectively, infinitely far away so we will never stop.
+                targetPosition = speed >= 0 ? int.MaxValue : int.MinValue;
+                speedSetpoint = absoluteSpeed < MotorStoppedThreshold ? 0.0 : speed;
+                regulating = true;
+                if (!IsMoving)
+                    SetSpeed(ComputeAcceleratedVelocity()); // kick start the step timer.
+                }
             }
 
         /// <summary>
@@ -285,7 +380,6 @@ namespace TA.AcceleratedStepperDriver
         void AllStop()
             {
             stepTimer.Change(Timeout.Infinite, Timeout.Infinite);
-            direction = 0;
             motorSpeed = 0;
             OnMotorStopped(this);
             }
@@ -296,14 +390,20 @@ namespace TA.AcceleratedStepperDriver
         /// <param name="speed">The speed, in steps per second.</param>
         void SetSpeed(double speed)
             {
-            if (speed < MotorStoppedThreshold)
+            var absoluteSpeed = Math.Abs(speed);
+            if (absoluteSpeed < MotorStoppedThreshold)
                 {
                 AllStop();
                 return;
                 }
             motorSpeed = speed;
-            var millisecondsUntilNextStep = (int)Math.Abs(1000/speed);
-            stepTimer.Change(millisecondsUntilNextStep, millisecondsUntilNextStep);
+            var millisecondsUntilNextStep = (int)Math.Abs(1000/absoluteSpeed);
+            stepTimer.Change(millisecondsUntilNextStep, Timeout.Infinite);
             }
+
+        /// <summary>
+        ///   Delegate StepHandler - signature of handler methods that handle the step timer tick event.
+        /// </summary>
+        delegate void StepHandler();
         }
     }

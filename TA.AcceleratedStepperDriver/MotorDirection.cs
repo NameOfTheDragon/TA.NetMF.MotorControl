@@ -1,6 +1,6 @@
-namespace TA.NetMF.StepperDriver
+namespace TA.AcceleratedStepperDriver
     {
-    internal enum MotorDirection
+    public enum MotorDirection
         {
         Stopped = 0,
         Forward = 1,
