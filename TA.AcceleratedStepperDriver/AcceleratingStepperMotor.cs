@@ -23,9 +23,6 @@ namespace TA.AcceleratedStepperDriver
     /// </remarks>
     public sealed class AcceleratingStepperMotor
         {
-        const int historyDepth = 1000;
-        long[] serviceTimes = new long[historyDepth];
-        int serviceIndex = 0;
         /// <summary>
         ///   Delegate MicrostepCallback - user-supplied delegate to write step data to the motor hardware.
         /// </summary>
@@ -206,11 +203,7 @@ namespace TA.AcceleratedStepperDriver
         /// <param name="state">Not used.</param>
         void StepTimerTick(object state)
             {
-            long startTime = DateTime.Now.Ticks;
             StepAndAccelerate();
-            long endTime = DateTime.Now.Ticks;
-            serviceTimes[serviceIndex++] = endTime - startTime;
-            serviceIndex %= historyDepth;
             }
 
         /// <summary>
