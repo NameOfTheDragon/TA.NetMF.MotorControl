@@ -1,12 +1,16 @@
-using System;
-using Microsoft.SPOT;
+// This file is part of the TA.NetMF.StepperDriver project
+// 
+// Copyright © 2014 TiGra Networks, all rights reserved.
+// 
+// File: DoubleExtensions.cs  Created: 2014-04-09@00:49
+// Last modified: 2014-04-10@02:54 by Tim
 
 namespace TA.AcceleratedStepperDriver
-{
-    public static class DoubleExtensions
     {
+    public static class DoubleExtensions
+        {
         /// <summary>
-        /// Constrains (or clips) the value to the specified limits. The limits may be in any order.
+        ///   Constrains (or clips) the value to the specified limits. The limits may be in any order.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <param name="limit1">The minimum.</param>
@@ -31,5 +35,5 @@ namespace TA.AcceleratedStepperDriver
                 return min;
             return value;
             }
+        }
     }
-}

@@ -3,7 +3,7 @@
 // Copyright © 2014 TiGra Networks, all rights reserved.
 // 
 // File: AcceleratingStepperMotor.cs  Created: 2014-03-26@04:11
-// Last modified: 2014-04-09@03:26 by Tim
+// Last modified: 2014-04-10@01:49 by Tim
 
 using System;
 using System.Threading;
@@ -38,9 +38,13 @@ namespace TA.AcceleratedStepperDriver
 
         /// <summary>
         ///   The maximum possible theoretical speed that this driver is able to support.
-        ///   The actual achievable speed may be much less due to hardware constraints.
+        ///   This is limited by the timer resolution of the netduino which is 1 millisecond. In fact, the
+        ///   <see cref="StepTimerTick" /> handler takes somewhere between
+        ///   2 and 3 milliseconds to run on a Netduino Plus, so the actual achievable speed may be much less. Setting a speed that
+        ///   is too fast has no adverse effect,
+        ///   the motor will run as fast as possible and everything will work, but at a slower speed than expected.
         /// </summary>
-        public const int MaximumPossibleSpeed = 500;
+        public const int MaximumPossibleSpeed = 1000;
 
         /// <summary>
         ///   The motor stopped threshold, The speed below which the motor is considered to be stopped.
@@ -313,13 +317,13 @@ namespace TA.AcceleratedStepperDriver
         /// <param name="target">The target position, in steps.</param>
         public void MoveToTargetPosition(int target)
             {
-                var moveDirection = (short)Math.Sign(target - currentPosition);
-                if (moveDirection == 0)
-                    {
-                    AllStop();
-                    return;
-                    }
-                lock (motorUpdateLock)
+            var moveDirection = (short)Math.Sign(target - currentPosition);
+            if (moveDirection == 0)
+                {
+                AllStop();
+                return;
+                }
+            lock (motorUpdateLock)
                 {
                 targetPosition = target;
                 regulating = false;
@@ -339,18 +343,18 @@ namespace TA.AcceleratedStepperDriver
         /// </exception>
         public void MoveAtRegulatedSpeed(double speed)
             {
-                var absoluteSpeed = Math.Abs(speed);
-                if (absoluteSpeed > MaximumPossibleSpeed)
-                    {
-                    throw new ArgumentOutOfRangeException("speed",
-                        "speed must be in the range -MaximumPossibleSpeed to +MaximumPossibleSpeed");
-                    }
-                //if (maximumSpeed < absoluteSpeed)
-                //    maximumSpeed = absoluteSpeed;
+            var absoluteSpeed = Math.Abs(speed);
+            if (absoluteSpeed > MaximumPossibleSpeed)
+                {
+                throw new ArgumentOutOfRangeException("speed",
+                    "speed must be in the range -MaximumPossibleSpeed to +MaximumPossibleSpeed");
+                }
+            //if (maximumSpeed < absoluteSpeed)
+            //    maximumSpeed = absoluteSpeed;
 
-                // Set the target position, effectively, infinitely far away so we will never stop.
-                targetPosition = speed >= 0 ? int.MaxValue : int.MinValue;
-                speedSetpoint = absoluteSpeed < MotorStoppedThreshold ? 0.0 : speed;
+            // Set the target position, effectively, infinitely far away so we will never stop.
+            targetPosition = speed >= 0 ? int.MaxValue : int.MinValue;
+            speedSetpoint = absoluteSpeed < MotorStoppedThreshold ? 0.0 : speed;
             lock (motorUpdateLock)
                 {
                 regulating = true;
