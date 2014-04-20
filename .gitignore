@@ -154,3 +154,5 @@ $RECYCLE.BIN/
 
 # Mac desktop service store files
 .DS_Store
+TA.AcceleratedStepperDriver.Documentation/Help/
+TA.AcceleratedStepperDriver.Net40/TA.AcceleratedStepperDriver.Net40.csproj.GhostDoc.xml
