@@ -132,7 +132,7 @@ namespace TA.AcceleratedStepperDriver
             {
             this.limitOfTravel = limitOfTravel;
             this.performMicrostep = performMicrostep;
-            microStepsPerStep = microSteps;
+            microStepsPerStep = microSteps; // ToDo: retire microStepsPerStep - it is not needed here. A step is a step is a step.
             stepTimer = new Timer(StepTimerTick, null, Timeout.Infinite, Timeout.Infinite); // Stopped
             }
 

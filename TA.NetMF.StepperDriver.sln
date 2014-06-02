@@ -1,10 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30110.0
+VisualStudioVersion = 12.0.30324.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TA.NetMF.StepperDriver", "TA.NetMF.StepperDriver\TA.NetMF.StepperDriver.csproj", "{53CEFBAC-6705-4E25-956A-BAA241258B24}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Technical Documents", "Technical Documents", "{3B15C91A-93B8-421D-80AF-A988F531A9F8}"
 	ProjectSection(SolutionItems) = preProject
 		Technical Documents\ARM7TDMI Technical Reference Manual Complete.pdf = Technical Documents\ARM7TDMI Technical Reference Manual Complete.pdf
@@ -21,7 +19,9 @@ Project("{7CF6DF6D-3B04-46F8-A40B-537D21BCA0B4}") = "TA.AcceleratedStepperDriver
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{F7D06F9C-A265-46C0-98BE-3ACB959EFD21}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TA.AcceleratedStepperDriver.Net40", "TA.AcceleratedStepperDriver.Net40\TA.AcceleratedStepperDriver.Net40.csproj", "{B42C0DDD-E918-438B-BDC3-CB5F1FA032D7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TA.AdafruitMotorShield", "TA.AdafruitMotorShield\TA.AdafruitMotorShield.csproj", "{7F574E49-5B84-4D82-89C4-6EF51FB03B24}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TA.NetMF.StepperDriverSampleApp", "TA.NetMF.StepperDriver\TA.NetMF.StepperDriverSampleApp.csproj", "{53CEFBAC-6705-4E25-956A-BAA241258B24}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,30 +29,28 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7DF8C374-44E1-4970-956D-4B30A9993AA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7DF8C374-44E1-4970-956D-4B30A9993AA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7DF8C374-44E1-4970-956D-4B30A9993AA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7DF8C374-44E1-4970-956D-4B30A9993AA2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5BBFE2B-92A9-4904-902B-2BF139DA6068}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5BBFE2B-92A9-4904-902B-2BF139DA6068}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5BBFE2B-92A9-4904-902B-2BF139DA6068}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F574E49-5B84-4D82-89C4-6EF51FB03B24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F574E49-5B84-4D82-89C4-6EF51FB03B24}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F574E49-5B84-4D82-89C4-6EF51FB03B24}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F574E49-5B84-4D82-89C4-6EF51FB03B24}.Release|Any CPU.Build.0 = Release|Any CPU
 		{53CEFBAC-6705-4E25-956A-BAA241258B24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{53CEFBAC-6705-4E25-956A-BAA241258B24}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{53CEFBAC-6705-4E25-956A-BAA241258B24}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{53CEFBAC-6705-4E25-956A-BAA241258B24}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{53CEFBAC-6705-4E25-956A-BAA241258B24}.Release|Any CPU.Build.0 = Release|Any CPU
 		{53CEFBAC-6705-4E25-956A-BAA241258B24}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{7DF8C374-44E1-4970-956D-4B30A9993AA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7DF8C374-44E1-4970-956D-4B30A9993AA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7DF8C374-44E1-4970-956D-4B30A9993AA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7DF8C374-44E1-4970-956D-4B30A9993AA2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C5BBFE2B-92A9-4904-902B-2BF139DA6068}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C5BBFE2B-92A9-4904-902B-2BF139DA6068}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C5BBFE2B-92A9-4904-902B-2BF139DA6068}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C5BBFE2B-92A9-4904-902B-2BF139DA6068}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B42C0DDD-E918-438B-BDC3-CB5F1FA032D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B42C0DDD-E918-438B-BDC3-CB5F1FA032D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B42C0DDD-E918-438B-BDC3-CB5F1FA032D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B42C0DDD-E918-438B-BDC3-CB5F1FA032D7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{C5BBFE2B-92A9-4904-902B-2BF139DA6068} = {F7D06F9C-A265-46C0-98BE-3ACB959EFD21}
-		{B42C0DDD-E918-438B-BDC3-CB5F1FA032D7} = {F7D06F9C-A265-46C0-98BE-3ACB959EFD21}
 	EndGlobalSection
 EndGlobal
