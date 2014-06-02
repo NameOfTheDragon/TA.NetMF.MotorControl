@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="TA.AdafruitMotorShield.MotorShield">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAABAAAAAAABAAIAAAAAAAACAAAAAACAAASAAAAAAA=</HashCode>
+      <FileName>MotorShield.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TA.AdafruitMotorShield.StepperMotor">
+    <Position X="3" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>IAAAQAAAAQAAAAgAABAAAAAAAAAAAAgAAAAAQABAAAA=</HashCode>
+      <FileName>StepperMotor.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="hbridge" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="TA.AdafruitMotorShield.HBridge">
+    <Position X="6" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAA=</HashCode>
+      <FileName>HBridge.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="TA.AdafruitMotorShield.Octet" Collapsed="true">
+    <Position X="0.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAARAAAAEACAABAAAAAQBAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Octet.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Interface Name="TA.AdafruitMotorShield.IStepperMotorControl">
+    <Position X="3" Y="3.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>IStepperMotorControl.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

@@ -49,4 +49,7 @@
   <ItemGroup>
     <Content Include="Datasheet\mshieldv12schem.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Motor Shield Driver.cd" />
+  </ItemGroup>
 </Project>
