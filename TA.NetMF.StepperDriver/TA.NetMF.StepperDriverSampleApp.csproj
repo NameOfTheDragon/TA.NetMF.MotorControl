@@ -54,5 +54,13 @@
       <Project>{7F574E49-5B84-4D82-89C4-6EF51FB03B24}</Project>
       <Name>TA.AdafruitMotorShield</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TA.NetMF.Utils\TA.NetMF.Utils.csproj">
+      <Project>{85B64019-9BE7-4F0F-A328-0050FE5F5F96}</Project>
+      <Name>TA.NetMF.Utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TA.SparkfunArdumotoShield\TA.SparkfunArdumotoShield.csproj">
+      <Project>{EB54507F-0FB2-4A97-8463-CF42C09F42ED}</Project>
+      <Name>TA.SparkfunArdumotoShield</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>

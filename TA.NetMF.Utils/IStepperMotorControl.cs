@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TA.AdafruitMotorShield
+namespace TA.NetMF.Utils
 {
     public interface IStepperMotorControl
     {

@@ -1,20 +1,23 @@
 using System;
+using TA.NetMF.Utils;
 
-namespace TA.AdafruitMotorShield
+namespace TA.NetMF.Utils
 {
-    class StepperMotor : IStepperMotorControl
+    public class MicrosteppingStepperMotor : IStepperMotorControl
     {
-        private HBridge hbridge;
+        private HBridge phase1;
+        private HBridge phase2;
         private int microsteps;
         private int phaseIndex;
         private int maxIndex;
         private double[] inPhaseDutyCycle;
         private double[] outOfPhaseDutyCycle;
-        public StepperMotor(HBridge bridge, int microsteps)
+        public MicrosteppingStepperMotor(HBridge phase1bridge, HBridge phase2bridge, int microsteps)
         {
-            this.hbridge = bridge;
+            this.phase1 = phase1bridge;
+            this.phase2 = phase2bridge;
             this.microsteps = microsteps;
-            maxIndex = microsteps * 2;
+            this.maxIndex = microsteps;
             ComputeMicrostepTables();
             phaseIndex = 0;
         }
@@ -22,7 +25,7 @@ namespace TA.AdafruitMotorShield
         private void ComputeMicrostepTables()
         {
             // This implementation prefers performance over memory footprint.
-            var radiansPerIndex = Math.PI / maxIndex;
+            var radiansPerIndex = (2*Math.PI) / maxIndex;
             inPhaseDutyCycle = new double[maxIndex];
             outOfPhaseDutyCycle = new double[maxIndex];
             for (int i = 0; i < maxIndex; ++i)
@@ -35,7 +38,8 @@ namespace TA.AdafruitMotorShield
         public void PerformMicrostep()
         {
             phaseIndex = ++phaseIndex % maxIndex;
-            hbridge.SetDutyCycle(inPhaseDutyCycle[phaseIndex],outOfPhaseDutyCycle[phaseIndex]);
+            phase1.SetOutputPowerAndPolarity(inPhaseDutyCycle[phaseIndex]);
+            phase2.SetOutputPowerAndPolarity(outOfPhaseDutyCycle[phaseIndex]);
         }
     }
 }

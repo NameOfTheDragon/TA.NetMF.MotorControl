@@ -1,12 +1,12 @@
 using System;
 using Microsoft.SPOT;
 
-namespace TA.AdafruitMotorShield
+namespace TA.NetMF.Utils
 {
     /// <summary>
     /// Struct Octet - an immutable representation of an 8-bit integer, with each bit individually addressable.
     /// </summary>
-    internal struct Octet
+    public struct Octet
     {
         bool[] bits;
         static Octet zero = Octet.FromInt(0);

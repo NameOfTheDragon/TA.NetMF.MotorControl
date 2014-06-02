@@ -1,6 +1,7 @@
 using System;
 using Microsoft.SPOT;
 using Microsoft.SPOT.Hardware;
+using TA.NetMF.Utils;
 //using SecretLabs.NETMF.Hardware.NetduinoPlus;
 
 
@@ -68,9 +69,9 @@ namespace TA.AdafruitMotorShield
         /// </summary>
         /// <param name="hbridge">The hbridge.</param>
         /// <returns>IStepperMotor.</returns>
-        public IStepperMotorControl GetStepper(HBridge hbridge, int microsteps)
+        public IStepperMotorControl GetStepper(HBridge phase1bridge, HBridge phase2bridge, int microsteps)
         {
-            return new StepperMotor(hbridge, microsteps);
+            return new MicrosteppingStepperMotor(phase1bridge, phase2bridge, microsteps);
         }
     }
 }

@@ -2,7 +2,7 @@ using System;
 using Microsoft.SPOT;
 using Microsoft.SPOT.Hardware;
 
-namespace TA.AdafruitMotorShield
+namespace TA.NetMF.Utils
 {
     public static class OutputPortExtensions
     {
