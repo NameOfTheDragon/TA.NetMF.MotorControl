@@ -18,19 +18,17 @@ namespace TA.NetMF.StepperDriver
 {
     public class Program
     {
-        const int StepsPerRevolution = 10000;
+        const int LimitOfTravel = 2000;
         const int MicrostepsPerStep = 8;
-        const double RampTime = 5;
+        const double RampTime = 8;
         static OutputPort Led;
         static bool LedState;
         static Random brandon = new Random();
-        static int ledThreshold;
         static IStepperMotorControl stepper;
 
         public static void Main()
         {
             Led = new OutputPort(Pins.ONBOARD_LED, false);
-            ledThreshold = MicrostepsPerStep / 2;
 
             // Create the resources for the Adafruit motor shield, then finally create the motor driver itself.
             var latchData = new OutputPort(Pins.GPIO_PIN_D8, false);
@@ -42,9 +40,9 @@ namespace TA.NetMF.StepperDriver
             stepper = motorShield.GetStepper(hbridgeB, MicrostepsPerStep);
 
             // Create the stepper motor axes and link them to the Adafruit driver.
-            var axis = new AcceleratingStepperMotor(StepsPerRevolution, PerformMicrostep, MicrostepsPerStep)
+            var axis = new AcceleratingStepperMotor(LimitOfTravel, PerformMicrostep)
                 {
-                    MaximumSpeed = 500,
+                    MaximumSpeed = 100,
                     RampTime = RampTime
                 };
 
@@ -66,15 +64,15 @@ namespace TA.NetMF.StepperDriver
         {
             Led.Write(false);
             Thread.Sleep(5000);
-            var randomTarget = brandon.Next(StepsPerRevolution);
+            var randomTarget = brandon.Next(LimitOfTravel);
             Trace.Print("Starting move to " + randomTarget.ToString());
             axis.MoveToTargetPosition(randomTarget);
         }
 
-        static void PerformMicrostep(uint stepIndex)
+        static void PerformMicrostep(int direction)
         {
             stepper.PerformMicrostep();
-            LedState = (stepIndex >= ledThreshold);
+            LedState = !LedState;
             Led.Write(LedState);
         }
     }
