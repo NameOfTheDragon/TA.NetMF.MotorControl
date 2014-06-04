@@ -35,9 +35,11 @@ namespace TA.NetMF.Utils
                 outOfPhaseDutyCycle[i] = Math.Cos(phaseAngle);
             }
         }
-        public void PerformMicrostep()
+        public void PerformMicrostep(int direction)
         {
-            phaseIndex = ++phaseIndex % maxIndex;
+            phaseIndex += direction;
+            if (phaseIndex >= maxIndex) phaseIndex = 0;
+            if (phaseIndex < 0) phaseIndex = maxIndex - 1;
             phase1.SetOutputPowerAndPolarity(inPhaseDutyCycle[phaseIndex]);
             phase2.SetOutputPowerAndPolarity(outOfPhaseDutyCycle[phaseIndex]);
         }

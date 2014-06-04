@@ -7,7 +7,7 @@ namespace TA.NetMF.Utils
         /// <summary>
         /// Configures the motor coils for the specified microstep index.
         /// </summary>
-        /// <param name="stepIndex">Index of the step.</param>
-        void PerformMicrostep();
+        /// <param name="direction">The direction, +1 for forwards, -1 for reverse, 0 for stop.</param>
+        void PerformMicrostep(int direction);
     }
 }

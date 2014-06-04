@@ -51,6 +51,8 @@ namespace TA.AcceleratedStepperDriver
         /// </summary>
         const double MotorStoppedThreshold = 0.00001;
 
+        static readonly TimeSpan InfiniteTimeout = new TimeSpan(0, 0, 0, 0, -1);
+
         /// <summary>
         ///   The limit of travel (in steps)
         /// </summary>
@@ -111,6 +113,9 @@ namespace TA.AcceleratedStepperDriver
         ///   The target position for a move operation. Range 0 to <see cref="limitOfTravel" />.
         /// </summary>
         int targetPosition;
+
+        const int computeEvery = 64;
+        int computeDelay = 0;
 
         /// <summary>
         ///   Initializes a new instance of the <see cref="AcceleratingStepperMotor" /> class.
@@ -265,7 +270,7 @@ namespace TA.AcceleratedStepperDriver
             var absoluteDistance = Math.Abs(distanceToGo);
             var direction = Math.Sign(distanceToGo);
             if (distanceToGo == 0)
-                return 0.0f; // We're there.
+                return 0.0; // We're there.
             if (!IsMoving)
                 return Math.Sqrt(2.0 * Acceleration) * direction; // Accelerate away from stop.
             // Compute the unconstrained target speed based on the deceleration curve or the regulation set point.
@@ -367,10 +372,10 @@ namespace TA.AcceleratedStepperDriver
                 AllStop();
                 return;
             }
+            int millisecondsUntilNextStep = (int)(1000.0 / absoluteSpeed);
             lock (motorUpdateLock)
             {
                 motorSpeed = speed;
-                var millisecondsUntilNextStep = (int)Math.Abs(1000 / absoluteSpeed);
                 stepTimer.Change(millisecondsUntilNextStep, Timeout.Infinite);
             }
         }
