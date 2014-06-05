@@ -3,13 +3,13 @@
     <metadata>
         <id>TA.NetMF.MotorControl</id>
         <version>0.0.0</version>
-        <title>An object oriented motor control library for Netduino</title>
+        <title>Motor control library for Netduino and .net Micro-Framework</title>
         <authors>Tim Long</authors>
         <owners>Tigra Astronomy</owners>
         <licenseUrl>http://creativecommons.org/licenses/by/4.0/</licenseUrl>
         <projectUrl>https://bitbucket.org/tigranetworks/ta.netduino.motorcontrol</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>Contains drivers for various shields from Sparkfun and Adafruit as well as some general purpose items.</description>
+        <description>Contains motor drivers for stepper, D.C. and servo motors and works with popular arduino shields such as those from Sparkfun and Adafruit.</description>
         <summary>A collection of motor drivers and utilities for Netduino targetting .Net MicroFramework 4.3+</summary>
         <releaseNotes>This project is still in flight. Anything may change at any time.</releaseNotes>
         <copyright>Copyright © 2014 Tigra Astronomy, all rights reserved.</copyright>

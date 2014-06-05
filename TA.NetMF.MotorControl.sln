@@ -8,7 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A8C93A69-4E18-42B3-909E-FAD8CA6CC629}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
-		NuGet\TA.NetMF.MotorControl.nuspec = NuGet\TA.NetMF.MotorControl.nuspec
+		NuSpec\TA.NetMF.MotorControl.nuspec = NuSpec\TA.NetMF.MotorControl.nuspec
 	EndProjectSection
 EndProject
 Project("{7CF6DF6D-3B04-46F8-A40B-537D21BCA0B4}") = "TA.NetMF.Motor", "TA.AcceleratedStepperDriver.Documentation\TA.NetMF.Motor.shfbproj", "{C5BBFE2B-92A9-4904-902B-2BF139DA6068}"
