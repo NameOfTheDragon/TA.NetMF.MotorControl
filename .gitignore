@@ -156,3 +156,4 @@ $RECYCLE.BIN/
 .DS_Store
 TA.AcceleratedStepperDriver.Documentation/Help/
 TA.AcceleratedStepperDriver.Net40/TA.AcceleratedStepperDriver.Net40.csproj.GhostDoc.xml
+TA.NetMF.Motor.Documentation/Help/

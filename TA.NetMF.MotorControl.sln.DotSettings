@@ -1,0 +1,9 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/CodeStyle/FileHeader/FileHeaderText/@EntryValue">This file is part of the $SOLUTION$ project&#xD;
+&#xD;
+Copyright © $CURRENT_YEAR$ Tigra Astronomy, all rights reserved.&#xD;
+This source code is licensed under Creative Commons Attribution International 4.0 license&#xD;
+http://creativecommons.org/licenses/by/4.0/&#xD;
+&#xD;
+File: $FILENAME$  Created: $CREATED_YEAR$-$CREATED_MONTH$-$CREATED_DAY$@$CREATED_TIME$&#xD;
+Last modified: $CURRENT_YEAR$-$CURRENT_MONTH$-$CURRENT_DAY$@$CURRENT_TIME$ by $USER_LOGIN$</s:String></wpf:ResourceDictionary>
