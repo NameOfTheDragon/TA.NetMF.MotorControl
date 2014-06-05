@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+    <metadata>
+        <id>TA.NetMF.MotorControl</id>
+        <version>0.0.0</version>
+        <title>An object oriented motor control library for Netduino</title>
+        <authors>Tim Long</authors>
+        <owners>Tigra Astronomy</owners>
+        <licenseUrl>http://creativecommons.org/licenses/by/4.0/</licenseUrl>
+        <projectUrl>https://bitbucket.org/tigranetworks/ta.netduino.motorcontrol</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Contains drivers for various shields from Sparkfun and Adafruit as well as some general purpose items.</description>
+        <summary>A collection of motor drivers and utilities for Netduino targetting .Net MicroFramework 4.3+</summary>
+        <releaseNotes>This project is still in flight. Anything may change at any time.</releaseNotes>
+        <copyright>Copyright © 2014 Tigra Astronomy, all rights reserved.</copyright>
+        <language>en-GB</language>
+        <tags>netduino,NetMF,MicroFramework,motor,stepper motor,c#</tags>
+    </metadata>
+    <files>
+        <file src="..\TA.NetMF.AdafruitMotorShield\bin\Release\be\TA.NetMF.AdafruitMotorShield.dll" target="lib\netmf43\be\TA.NetMF.AdafruitMotorShield.dll" />
+        <file src="..\TA.NetMF.AdafruitMotorShield\bin\Release\be\TA.NetMF.AdafruitMotorShield.pdb" target="lib\netmf43\be\TA.NetMF.AdafruitMotorShield.pdb" />
+        <file src="..\TA.NetMF.AdafruitMotorShield\bin\Release\be\TA.NetMF.AdafruitMotorShield.pdbx" target="lib\netmf43\be\TA.NetMF.AdafruitMotorShield.pdbx" />
+        <file src="..\TA.NetMF.AdafruitMotorShield\bin\Release\be\TA.NetMF.AdafruitMotorShield.pe" target="lib\netmf43\be\TA.NetMF.AdafruitMotorShield.pe" />
+        <file src="..\TA.NetMF.Motor\bin\Release\be\TA.NetMF.Motor.dll" target="lib\netmf43\be\TA.NetMF.Motor.dll" />
+        <file src="..\TA.NetMF.Motor\bin\Release\be\TA.NetMF.Motor.pdb" target="lib\netmf43\be\TA.NetMF.Motor.pdb" />
+        <file src="..\TA.NetMF.Motor\bin\Release\be\TA.NetMF.Motor.pdbx" target="lib\netmf43\be\TA.NetMF.Motor.pdbx" />
+        <file src="..\TA.NetMF.Motor\bin\Release\be\TA.NetMF.Motor.pe" target="lib\netmf43\be\TA.NetMF.Motor.pe" />
+        <file src="..\TA.NetMF.SparkfunArdumotoShield\bin\Release\be\TA.NetMF.SparkfunArdumotoShield.dll" target="lib\netmf43\be\TA.NetMF.SparkfunArdumotoShield.dll" />
+        <file src="..\TA.NetMF.SparkfunArdumotoShield\bin\Release\be\TA.NetMF.SparkfunArdumotoShield.pdb" target="lib\netmf43\be\TA.NetMF.SparkfunArdumotoShield.pdb" />
+        <file src="..\TA.NetMF.SparkfunArdumotoShield\bin\Release\be\TA.NetMF.SparkfunArdumotoShield.pdbx" target="lib\netmf43\be\TA.NetMF.SparkfunArdumotoShield.pdbx" />
+        <file src="..\TA.NetMF.SparkfunArdumotoShield\bin\Release\be\TA.NetMF.SparkfunArdumotoShield.pe" target="lib\netmf43\be\TA.NetMF.SparkfunArdumotoShield.pe" />
+        <file src="..\TA.NetMF.AdafruitMotorShield\bin\Release\le\TA.NetMF.AdafruitMotorShield.dll" target="lib\netmf43\le\TA.NetMF.AdafruitMotorShield.dll" />
+        <file src="..\TA.NetMF.AdafruitMotorShield\bin\Release\le\TA.NetMF.AdafruitMotorShield.pdb" target="lib\netmf43\le\TA.NetMF.AdafruitMotorShield.pdb" />
+        <file src="..\TA.NetMF.AdafruitMotorShield\bin\Release\le\TA.NetMF.AdafruitMotorShield.pdbx" target="lib\netmf43\le\TA.NetMF.AdafruitMotorShield.pdbx" />
+        <file src="..\TA.NetMF.AdafruitMotorShield\bin\Release\le\TA.NetMF.AdafruitMotorShield.pe" target="lib\netmf43\le\TA.NetMF.AdafruitMotorShield.pe" />
+        <file src="..\TA.NetMF.Motor\bin\Release\be\TA.NetMF.Motor.dll" target="lib\netmf43\le\TA.NetMF.Motor.dll" />
+        <file src="..\TA.NetMF.Motor\bin\Release\be\TA.NetMF.Motor.pdb" target="lib\netmf43\le\TA.NetMF.Motor.pdb" />
+        <file src="..\TA.NetMF.Motor\bin\Release\be\TA.NetMF.Motor.pdbx" target="lib\netmf43\le\TA.NetMF.Motor.pdbx" />
+        <file src="..\TA.NetMF.Motor\bin\Release\be\TA.NetMF.Motor.pe" target="lib\netmf43\le\TA.NetMF.Motor.pe" />
+        <file src="..\TA.NetMF.SparkfunArdumotoShield\bin\Release\le\TA.NetMF.SparkfunArdumotoShield.dll" target="lib\netmf43\le\TA.NetMF.SparkfunArdumotoShield.dll" />
+        <file src="..\TA.NetMF.SparkfunArdumotoShield\bin\Release\le\TA.NetMF.SparkfunArdumotoShield.pdb" target="lib\netmf43\le\TA.NetMF.SparkfunArdumotoShield.pdb" />
+        <file src="..\TA.NetMF.SparkfunArdumotoShield\bin\Release\le\TA.NetMF.SparkfunArdumotoShield.pdbx" target="lib\netmf43\le\TA.NetMF.SparkfunArdumotoShield.pdbx" />
+        <file src="..\TA.NetMF.SparkfunArdumotoShield\bin\Release\le\TA.NetMF.SparkfunArdumotoShield.pe" target="lib\netmf43\le\TA.NetMF.SparkfunArdumotoShield.pe" />
+        <file src="..\TA.NetMF.AdafruitMotorShield\bin\Release\TA.NetMF.AdafruitMotorShield.dll" target="lib\netmf43\TA.NetMF.AdafruitMotorShield.dll" />
+        <file src="..\TA.NetMF.AdafruitMotorShield\bin\Release\TA.NetMF.AdafruitMotorShield.pdb" target="lib\netmf43\TA.NetMF.AdafruitMotorShield.pdb" />
+        <file src="..\TA.NetMF.Motor\bin\Release\TA.NetMF.Motor.dll" target="lib\netmf43\TA.NetMF.Motor.dll" />
+        <file src="..\TA.NetMF.Motor\bin\Release\TA.NetMF.Motor.pdb" target="lib\netmf43\TA.NetMF.Motor.pdb" />
+        <file src="..\TA.NetMF.SparkfunArdumotoShield\bin\Release\TA.NetMF.SparkfunArdumotoShield.dll" target="lib\netmf43\TA.NetMF.SparkfunArdumotoShield.dll" />
+        <file src="..\TA.NetMF.SparkfunArdumotoShield\bin\Release\TA.NetMF.SparkfunArdumotoShield.pdb" target="lib\netmf43\TA.NetMF.SparkfunArdumotoShield.pdb" />
+    </files>
+</package>
