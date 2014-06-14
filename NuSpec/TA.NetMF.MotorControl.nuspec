@@ -17,10 +17,11 @@
         <tags>netduino,NetMF,MicroFramework,motor,stepper motor,c#</tags>
     </metadata>
     <files>
-        <file src="..\TA.NetMF.Motor.StepperSampleApp\bin\Release\TA.NetMF.Motor.*" target="lib/netmf43/" />
-        <file src="..\TA.NetMF.Motor.StepperSampleApp\bin\Release\le\TA.NetMF.Motor.p*" target="lib/netmf43/le/" />
-        <file src="..\TA.NetMF.Motor.StepperSampleApp\bin\Release\be\TA.NetMF.Motor.p*" target="lib/netmf43/be/" />
-        <file src="..\TA.NetMF.Motor.StepperSampleApp\bin\Release\le\TA.NetMF.SparkfunArdumotoShield.p*" target="lib/netmf43/le/" />
-        <file src="..\TA.NetMF.Motor.StepperSampleApp\bin\Release\be\TA.NetMF.SparkfunArdumotoShield.p*" target="lib/netmf43/be/" />
+        <file src="..\TA.NetMF.SparkfunArdumotoShield\bin\Release\TA.NetMF.Motor.*" target="lib/netmf43/" />
+        <file src="..\TA.NetMF.SparkfunArdumotoShield\bin\Release\le\TA.NetMF.Motor.p*" target="lib/netmf43/le/" />
+        <file src="..\TA.NetMF.SparkfunArdumotoShield\bin\Release\be\TA.NetMF.Motor.p*" target="lib/netmf43/be/" />
+        <file src="..\TA.NetMF.SparkfunArdumotoShield\bin\Release\TA.NetMF.SparkfunArdumotoShield.*" target="lib/netmf43/" />
+        <file src="..\TA.NetMF.SparkfunArdumotoShield\bin\Release\le\TA.NetMF.SparkfunArdumotoShield.p*" target="lib/netmf43/le/" />
+        <file src="..\TA.NetMF.SparkfunArdumotoShield\bin\Release\be\TA.NetMF.SparkfunArdumotoShield.p*" target="lib/netmf43/be/" />
     </files>
 </package>
