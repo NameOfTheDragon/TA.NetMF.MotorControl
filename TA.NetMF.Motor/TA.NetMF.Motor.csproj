@@ -31,6 +31,9 @@
   </PropertyGroup>
   <Import Project="$(NetMfTargetsBaseDir)$(TargetFrameworkVersion)\CSharp.Targets" />
   <ItemGroup>
+    <Compile Include="..\SolutionVersionInfo.cs">
+      <Link>Properties\SolutionVersionInfo.cs</Link>
+    </Compile>
     <Compile Include="AcceleratingStepperMotor.cs" />
     <Compile Include="DoubleExtensions.cs" />
     <Compile Include="HBridge.cs" />
