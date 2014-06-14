@@ -42,6 +42,12 @@ namespace TA.NetMF.Motor
             phase2.SetOutputPowerAndPolarity(outOfPhaseDutyCycle[phaseIndex]);
             }
 
+        public void ReleaseHoldingTorque()
+            {
+            phase1.SetOutputPowerAndPolarity(0.0);
+            phase2.SetOutputPowerAndPolarity(0.0);
+            }
+
         void ComputeMicrostepTables()
             {
             // This implementation prefers performance over memory footprint.

@@ -354,9 +354,9 @@ namespace TA.NetMF.Motor
             }
 
         /// <summary>
-        ///   Stops the motor and raises the <see cref="OnMotorStopped" /> event.
+        ///   Instantly stops the motor and raises the <see cref="OnMotorStopped" /> event.
         /// </summary>
-        void AllStop()
+        public void AllStop()
             {
             stepTimer.Change(Timeout.Infinite, Timeout.Infinite);
             motorSpeed = 0;
