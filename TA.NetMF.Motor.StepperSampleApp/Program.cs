@@ -18,10 +18,11 @@ namespace TA.NetMF.Motor.StepperSampleApp
     {
     public class Program
         {
-        const int LimitOfTravel = 50000;
-        const int MaxSpeed = 75; // steps per second (Netduino Plus 2 can manage a few hundred)
-        const int MicrostepsPerStep = 8; // 4=full stepping; 8=half stepping; 9+=microstepping.
-        const double RampTime = 3.0; // seconds to reach full speed (acceleration)
+            const int LimitOfTravel = 50000;
+            const int MaxSpeed = 400; // steps per second (Netduino Plus 2 can manage a few hundred)
+            const int MicrostepsPerStep = 8; // 4=full stepping; 8=half stepping; 9+=microstepping.
+            const double RampTime = 2.5; // seconds to reach full speed (acceleration)
+            const int PwmFrequencyHz = 50000;
 
         static OutputPort Led;
         static bool LedState;

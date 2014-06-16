@@ -204,9 +204,13 @@ namespace TA.NetMF.Motor
         ///   Handles the step timer tick event.
         /// </summary>
         /// <param name="state">Not used.</param>
+        /// <remarks>
+        /// Beware! Tick events can still fire even after the timer has been disabled.
+        /// </remarks>
         void StepTimerTick(object state)
             {
-            StepAndAccelerate();
+            if (IsMoving)
+                StepAndAccelerate();
             }
 
         /// <summary>
@@ -358,7 +362,7 @@ namespace TA.NetMF.Motor
         /// </summary>
         public void AllStop()
             {
-            stepTimer.Change(Timeout.Infinite, Timeout.Infinite);
+            stepTimer.Change(Timeout.Infinite, Timeout.Infinite);   // The timer may still tick!
             motorSpeed = 0;
             OnMotorStopped(this);
             }
