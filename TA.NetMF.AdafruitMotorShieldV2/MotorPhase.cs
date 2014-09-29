@@ -19,10 +19,9 @@ namespace TA.NetMF.AdafruitMotorShieldV2
     /// </summary>
     internal class MotorPhase : HBridge
         {
-        readonly PwmBoolean In1;
-        readonly PwmBoolean In2;
-        readonly PwmChannel PowerControl;
-        int AllocatedToMotor = -1;
+        readonly PwmBoolean in1;
+        readonly PwmBoolean in2;
+        readonly PwmChannel powerControl;
         Pca9685PwmController pwmController;
 
         /// <summary>
@@ -38,10 +37,9 @@ namespace TA.NetMF.AdafruitMotorShieldV2
             ushort pwmPowerControlChannelNumber)
             {
             this.pwmController = pwmController;
-            In1 = new PwmBoolean(new PwmChannel(pwmController, in1PwmChannelNumber, Pca9685.DefaultFrquencyHz, 0.0));
-            In2 = new PwmBoolean(new PwmChannel(pwmController, in2PwmChannelNumber, Pca9685.DefaultFrquencyHz, 0.0));
-            PowerControl = new PwmChannel(pwmController, pwmPowerControlChannelNumber, Pca9685.DefaultFrquencyHz, 0.0);
-            Release();
+            in1 = new PwmBoolean(pwmController.GetPwmChannel(in1PwmChannelNumber));
+            in2 = new PwmBoolean(pwmController.GetPwmChannel(in2PwmChannelNumber));
+            powerControl = pwmController.GetPwmChannel(pwmPowerControlChannelNumber);
             }
 
         /// <summary>
@@ -49,9 +47,9 @@ namespace TA.NetMF.AdafruitMotorShieldV2
         /// </summary>
         void Release()
             {
-            PowerControl.DutyCycle = 0.0;
-            In1.State = false;
-            In2.State = false;
+            powerControl.DutyCycle = 0.0;
+            in1.State = false;
+            in2.State = false;
             }
 
         /// <summary>
@@ -60,8 +58,8 @@ namespace TA.NetMF.AdafruitMotorShieldV2
         /// </summary>
         void Forward()
             {
-            In1.State = true;
-            In2.State = false;
+            in1.State = true;
+            in2.State = false;
             }
 
         /// <summary>
@@ -70,8 +68,8 @@ namespace TA.NetMF.AdafruitMotorShieldV2
         /// </summary>
         void Reverse()
             {
-            In1.State = false;
-            In2.State = true;
+            in1.State = false;
+            in2.State = true;
             }
 
         /// <summary>
@@ -97,12 +95,12 @@ namespace TA.NetMF.AdafruitMotorShieldV2
         void SetOutputPowerAndPolarity(double magnitude, bool polarity)
             {
             if (polarity != Polarity)
-                PowerControl.DutyCycle = 0.0; // If reversing direction, set power to zero first.
+                powerControl.DutyCycle = 0.0; // If reversing direction, set power to zero first.
             if (polarity)
                 Forward();
             else
                 Reverse();
-            PowerControl.DutyCycle = magnitude;
+            powerControl.DutyCycle = magnitude;
             }
         }
     }

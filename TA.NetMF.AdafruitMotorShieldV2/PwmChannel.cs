@@ -15,6 +15,7 @@ namespace TA.NetMF.AdafruitMotorShieldV2
     /// <summary>
     ///   Class PwmChannel. Represents a single channel of the PCA9685 PWM controller.
     ///   Attribution: This code is based (albeit in a simplified form) on Microsoft.SPOT.Hardware.PWM
+    ///   Note: the fundamental oscillator frequency is determined by the parent PWM Controller and cannot be overridden here.
     /// </summary>
     public sealed class PwmChannel
         {
@@ -33,13 +34,15 @@ namespace TA.NetMF.AdafruitMotorShieldV2
         uint period; // The PWM waveform period, 1/frequency
         ScaleFactor scale;
         IPwmController controller;
+        double dutyCycle;
 
-        internal PwmChannel(IPwmController controller, uint channel, double frequencyHz, double dutyCycle)
+        internal PwmChannel(IPwmController controller, uint channel, double dutyCycle)
             {
+            if (dutyCycle < 0.0 || dutyCycle > 1.0)
+                throw new ArgumentOutOfRangeException("dutyCycle", "must be a fraction of unity");
             this.channel = channel;
             this.controller = controller;
-            period = PeriodFromFrequency(frequencyHz, out scale);
-            duration = DurationFromDutyCycleAndPeriod(dutyCycle, period);
+            this.dutyCycle = dutyCycle;
             try
                 {
                 Init();
@@ -70,57 +73,19 @@ namespace TA.NetMF.AdafruitMotorShieldV2
                 }
             }
 
-        public double Frequency
-            {
-            get { return FrequencyFromPeriod(period, scale); }
-            set
-                {
-                var dutyCycle = DutyCycle;
-                period = PeriodFromFrequency(value, out scale);
-                duration = DurationFromDutyCycleAndPeriod(dutyCycle, period);
-                Commit();
-                }
-            }
-
         public double DutyCycle
             {
-            get { return DutyCycleFromDurationAndPeriod(period, duration); }
+            get { return  dutyCycle; }
             set
                 {
-                duration = DurationFromDutyCycleAndPeriod(value, period);
+                if (value<0.0 || value>1.0) throw new ArgumentOutOfRangeException("value","must be a fraction of unity");
+                this.dutyCycle = value;
                 Commit();
                 }
             }
 
-        public uint Period
-            {
-            get { return period; }
-            set
-                {
-                period = value;
-                Commit();
-                }
-            }
 
-        public uint Duration
-            {
-            get { return duration; }
-            set
-                {
-                duration = value;
-                Commit();
-                }
-            }
 
-        public ScaleFactor Scale
-            {
-            get { return scale; }
-            set
-                {
-                scale = value;
-                Commit();
-                }
-            }
 
         /// <summary>
         ///   Allocates the channel after ensuring that it is not already in use.
@@ -145,9 +110,15 @@ namespace TA.NetMF.AdafruitMotorShieldV2
             Dispose(true);
             }
 
-        public void Start() {}
+        public void Start()
+            {
+            // ToDo - this needs to be implemented
+            }
 
-        public void Stop() {}
+        public void Stop()
+            {
+            // ToDo - this needs to be implemented
+            }
 
         protected void Dispose(bool disposing)
             {
@@ -162,10 +133,14 @@ namespace TA.NetMF.AdafruitMotorShieldV2
                 }
             }
 
+        /// <summary>
+        /// Commits the configured duty cycle to the PWM hardware.
+        /// </summary>
         protected void Commit()
             {
-            
+            controller.ConfigureChannelDutyCycle(this.channel, this.dutyCycle);
             }
+
 
         protected void Init()
             {
@@ -181,49 +156,6 @@ namespace TA.NetMF.AdafruitMotorShieldV2
             {
             if (AllocatedChannels != null && AllocatedChannels.Contains(channel))
                 AllocatedChannels.Remove(channel);
-            }
-
-        static uint PeriodFromFrequency(double f, out ScaleFactor scale)
-            {
-            if (f >= 1000.0)
-                {
-                scale = ScaleFactor.Nanoseconds;
-                return (uint)(1000000000.0/f + 0.5);
-                }
-            if (f >= 1.0)
-                {
-                scale = ScaleFactor.Microseconds;
-                return (uint)(1000000.0/f + 0.5);
-                }
-            scale = ScaleFactor.Milliseconds;
-            return (uint)(1000.0/f + 0.5);
-            }
-
-        static uint DurationFromDutyCycleAndPeriod(double dutyCycle, double period)
-            {
-            if (period <= 0.0)
-                throw new ArgumentException();
-            if (dutyCycle < 0.0)
-                return 0U;
-            if (dutyCycle > 1.0)
-                return 1U;
-            return (uint)(dutyCycle*period);
-            }
-
-        static double FrequencyFromPeriod(double period, ScaleFactor scale)
-            {
-            return (double)scale/period;
-            }
-
-        static double DutyCycleFromDurationAndPeriod(double period, double duration)
-            {
-            if (period <= 0.0)
-                throw new ArgumentException();
-            if (duration < 0.0)
-                return 0.0;
-            if (duration > period)
-                return 1.0;
-            return duration/period;
             }
         }
     }

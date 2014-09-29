@@ -21,7 +21,7 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="TA.NetMF.AdafruitMotorShieldV2.Pca9685PwmController">
-    <Position X="4.5" Y="2.25" Width="2" />
+    <Position X="4.5" Y="2.75" Width="2" />
     <TypeIdentifier>
       <HashCode>oCAAAAAAgAAIBAAACAAAAAAAAgIAEAAAAAQAAQAACAE=</HashCode>
       <FileName>Pca9685PwmController.cs</FileName>
@@ -33,6 +33,9 @@
   </Class>
   <Class Name="Microsoft.SPOT.Hardware.I2CDevice">
     <Position X="7.75" Y="1" Width="2" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
     <NestedTypes>
       <Class Name="Microsoft.SPOT.Hardware.I2CDevice.I2CTransaction" Collapsed="true">
         <TypeIdentifier />
@@ -53,7 +56,7 @@
   <Interface Name="TA.NetMF.AdafruitMotorShieldV2.IPwmController">
     <Position X="4.5" Y="0.5" Width="2" />
     <TypeIdentifier>
-      <HashCode>IAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>IAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAA=</HashCode>
       <FileName>IPwmController.cs</FileName>
     </TypeIdentifier>
   </Interface>
