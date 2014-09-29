@@ -19,8 +19,8 @@ namespace TA.NetMF.AdafruitMotorShieldV2
         /// <summary>
         ///   Initializes a new instance of the <see cref="MotorShield" /> class at the specified I2C address.
         /// </summary>
-        /// <param name="address">The address.</param>
-        public MotorShield(ushort address)
+        /// <param name="address">The I2C base address of the shield (optional; defaults to 0x60).</param>
+        public MotorShield(ushort address = 0x60)
             {
             pwmController = new Pca9685PwmController(address);
             }
@@ -39,7 +39,7 @@ namespace TA.NetMF.AdafruitMotorShieldV2
         /// <param name="phase1">The output number (M1, M2, M3 or M4) that the first motor phase is connected to.</param>
         /// <param name="phase2">The output number (M1, M2, M3 or M4) that the second motor phase is connected to.</param>
         /// <returns>IStepperMotorControl.</returns>
-        IStepperMotorControl GetStepperMotor(int microsteps, int phase1, int phase2)
+        public IStepperMotorControl GetStepperMotor(int microsteps, int phase1, int phase2)
             {
             if (phase1 > 4 || phase1 < 1)
                 throw new ArgumentOutOfRangeException("phase1", "must be 1, 2, 3 or 4");
