@@ -39,7 +39,7 @@ namespace TA.NetMF.AdafruitMotorShieldV2
         #region Other constants
         public const int ClockRateKhz = 100;
         public const int I2CTimeout = 3000; // milliseconds
-        public const int DefaultPwmFrquencyHz = 160000;
+        public const int DefaultPwmFrquencyHz = 1600;
         public const int InternalOscillatorFrequencyHz = 25000000;
         #endregion Other constants
         }

@@ -37,6 +37,7 @@ namespace TA.NetMF.Motor.StepperSampleApp
 
             #region Adaruit shield setup
             var adafruitMotorShieldV2 = new MotorShield();
+            adafruitMotorShieldV2.InitializeShield();
             #endregion
 
             #region Sparkfun Ardumoto Shield setup

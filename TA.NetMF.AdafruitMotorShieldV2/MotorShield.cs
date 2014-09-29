@@ -25,7 +25,7 @@ namespace TA.NetMF.AdafruitMotorShieldV2
             pwmController = new Pca9685PwmController(address);
             }
 
-        void InitializeShield()
+        public void InitializeShield()
             {
             pwmController.Reset();
             }
