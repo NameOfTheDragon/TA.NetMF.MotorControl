@@ -18,7 +18,7 @@ namespace TA.NetMF.Motor.StepperSampleApp
     {
     public class Program
         {
-        const int LimitOfTravel = 50000;
+        const int LimitOfTravel = 4000;
         const int MaxSpeed = 400; // steps per second (Netduino Plus 2 can manage a few hundred)
         const int MicrostepsPerStep = 8; // 4=full stepping; 8=half stepping; 9+=microstepping.
         const int PwmFrequencyHz = 50000;
@@ -52,7 +52,7 @@ namespace TA.NetMF.Motor.StepperSampleApp
             #endregion Sparkfun Ardumoto Shield setup
 
             // The shield details are now abstracted from the motor control, so whatever shield we have, we just ask it for an IStepperMotorControl.
-            stepper = adafruitMotorShieldV2.GetStepperMotor(8, 1, 2);
+            stepper = adafruitMotorShieldV2.GetStepperMotor(64, 1, 2);
 
             // Create the stepper motor axes and link them to the Adafruit driver.
             var axis = new AcceleratingStepperMotor(LimitOfTravel, PerformMicrostep)

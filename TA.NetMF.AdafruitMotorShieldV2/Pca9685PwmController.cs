@@ -9,7 +9,9 @@
 
 using System;
 using System.Threading;
+using Microsoft.SPOT;
 using Microsoft.SPOT.Hardware;
+using Math = System.Math;
 
 namespace TA.NetMF.AdafruitMotorShieldV2
     {
@@ -52,14 +54,20 @@ namespace TA.NetMF.AdafruitMotorShieldV2
         public void ConfigureChannelDutyCycle(uint channel, double dutyCycle)
             {
             if (dutyCycle >= 1.0)
+                {
                 SetFullOn(channel);
+                return;
+                }
             if (dutyCycle <= 0.0)
+                {
                 SetFullOff(channel);
+                return;
+                }
             uint onCount = 0;
             uint offCount = (uint)Math.Floor(pwmCounter * dutyCycle);
             if (offCount <= onCount)
                 offCount = onCount + 1; // The two counts may not be the same value
-            ushort registerOffset = (ushort)(6 + (4*channel));
+            byte registerOffset = (byte)(6 + (4*channel));
             // Register order is: On (low), On (high), Off (low), Off (high)
             WriteRegister(registerOffset, (byte)onCount);
             WriteRegister(++registerOffset, (byte)(onCount>>8));
@@ -73,7 +81,7 @@ namespace TA.NetMF.AdafruitMotorShieldV2
         /// <param name="channel">The channel number (0-based).</param>
         void SetFullOff(uint channel)
             {
-            ushort registerOffset = (ushort)(9 + (4 * channel));
+            byte registerOffset = (byte)(9 + (4 * channel));
             WriteRegister(registerOffset, 0x10);
             }
 
@@ -83,7 +91,7 @@ namespace TA.NetMF.AdafruitMotorShieldV2
         /// <param name="channel">The channel number (0-based).</param>
         void SetFullOn(uint channel)
             {
-            ushort registerOffset = (ushort)(7 + (4 * channel));
+            byte registerOffset = (byte)(7 + (4 * channel));
             WriteRegister(registerOffset, 0x10);
             }
 
@@ -127,10 +135,10 @@ namespace TA.NetMF.AdafruitMotorShieldV2
             iicDevice.Execute(operations, Pca9685.I2CTimeout);
             }
 
-        void WriteRegister(ushort registerOffset, byte data)
+        void WriteRegister(byte registerOffset, byte data)
             {
-            byte registerAddress = (byte)(address + registerOffset);
-            byte[] writeBuffer = {registerAddress, data};
+            Trace.Print("Register " + registerOffset.ToString() + " ==> " + data.ToString());
+            byte[] writeBuffer = {registerOffset, data};
             var operations = new I2CDevice.I2CTransaction[1];
             operations[0] = I2CDevice.CreateWriteTransaction(writeBuffer);
             iicDevice.Execute(operations, Pca9685.I2CTimeout);
@@ -180,16 +188,17 @@ namespace TA.NetMF.AdafruitMotorShieldV2
                 }
             }
 
-        byte ReadRegister(ushort registerOffset)
+        byte ReadRegister(byte registerOffset)
             {
-            byte registerAddress = (byte)(address + registerOffset);
-            byte[] writeBuffer = {registerAddress};
+            byte[] writeBuffer = { registerOffset };
             var readBuffer = new byte[1];
             var operations = new I2CDevice.I2CTransaction[2];
             operations[0] = I2CDevice.CreateWriteTransaction(writeBuffer);
             operations[1] = I2CDevice.CreateReadTransaction(readBuffer);
             iicDevice.Execute(operations, Pca9685.I2CTimeout);
-            return readBuffer[0];
+            byte result = readBuffer[0];
+            Trace.Print("Register " + registerOffset.ToString() + " <== " + result.ToString());
+            return result;
             }
         }
     }
