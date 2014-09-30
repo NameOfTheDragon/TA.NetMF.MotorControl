@@ -5,7 +5,7 @@
 // http://creativecommons.org/licenses/by/4.0/
 // 
 // File: Pca9685.cs  Created: 2014-06-07@15:01
-// Last modified: 2014-06-07@15:03 by Tim
+// Last modified: 2014-09-30@03:55 by Tim
 
 namespace TA.NetMF.AdafruitMotorShieldV2
     {
@@ -15,22 +15,23 @@ namespace TA.NetMF.AdafruitMotorShieldV2
     internal class Pca9685
         {
         #region MODE1 register bits
-        public const ushort RestartBit = 7;
-        public const ushort ExtClockBit = 6;
+        public const ushort AllCallBit = 0;
         public const ushort AutoIncrementBit = 5;
+        public const ushort ExtClockBit = 6;
+        public const ushort RestartBit = 7;
         public const ushort SleepBit = 4;
         public const ushort Sub1Bit = 3;
         public const ushort Sub2Bit = 2;
         public const ushort Sub3Bit = 1;
-        public const ushort AllCallBit = 0;
         #endregion MODE1 register bits
 
         #region Register addresses
-        public const byte ChannelBase = 0x06;
+        public const byte AllChannelsBaseRegister = 0xFA;
         public const byte Channel0OffHigh = 0x09;
         public const byte Channel0OffLow = 0x08;
         public const byte Channel0OnHigh = 0x07;
         public const byte Channel0OnLow = 0x06;
+        public const byte ChannelBase = 0x06;
         public const byte Mode1Register = 0x00;
         public const byte Mode2Register = 0x01;
         public const byte PrescaleRegister = 0xFE;
@@ -38,8 +39,8 @@ namespace TA.NetMF.AdafruitMotorShieldV2
 
         #region Other constants
         public const int ClockRateKhz = 100;
+        public const int DefaultOutputModulationFrequency = 1600;
         public const int I2CTimeout = 3000; // milliseconds
-        public const int DefaultPwmFrquencyHz = 1600;
         public const int InternalOscillatorFrequencyHz = 25000000;
         #endregion Other constants
         }

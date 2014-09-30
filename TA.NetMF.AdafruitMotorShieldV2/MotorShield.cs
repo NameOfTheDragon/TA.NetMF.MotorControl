@@ -5,7 +5,7 @@
 // http://creativecommons.org/licenses/by/4.0/
 // 
 // File: MotorShield.cs  Created: 2014-06-06@17:06
-// Last modified: 2014-09-28@05:58 by Tim
+// Last modified: 2014-09-30@04:21 by Tim
 
 using System;
 using TA.NetMF.Motor;
@@ -25,11 +25,7 @@ namespace TA.NetMF.AdafruitMotorShieldV2
             pwmController = new Pca9685PwmController(address);
             }
 
-        public void InitializeShield()
-            {
-            pwmController.Reset();
-            pwmController.SetOutputModulationFrequency();
-            }
+        public void InitializeShield() {}
 
         /// <summary>
         ///   Gets a stepper motor with the specified number of microsteps.
@@ -58,7 +54,8 @@ namespace TA.NetMF.AdafruitMotorShieldV2
         ///   Gets an H-Bridge instance for the specified motor output number.
         /// </summary>
         /// <param name="motorNumber">
-        ///   The motor number, as printed on the silk screen of the Adafruit motor shield.
+        ///   The motor number, as printed on the silk screen of the Adafruit motor shield
+        ///   (M1, M2, M3, M4).
         /// </param>
         /// <returns>
         ///   An H-Bridge configured with all of the correct PWM channels corresponding to the
@@ -67,7 +64,7 @@ namespace TA.NetMF.AdafruitMotorShieldV2
         HBridge GetHbridge(int motorNumber)
             {
             // Assumption: motorNumber has been validated elsewhere.
-            // ToDo - the channel numbers below need to be double checked.
+            // The channel numbers below tally with those used in Adafruit's driver.
             switch (motorNumber)
                 {
                 case 1:
@@ -75,9 +72,9 @@ namespace TA.NetMF.AdafruitMotorShieldV2
                 case 2:
                     return new MotorPhase(pwmController, 11, 12, 13);
                 case 3:
-                    return new MotorPhase(pwmController, 5, 6, 7);
-                case 4:
                     return new MotorPhase(pwmController, 4, 3, 2);
+                case 4:
+                    return new MotorPhase(pwmController, 5, 6, 7);
                 default:
                     throw new ArgumentOutOfRangeException("motorNumber", "Must be 1, 2, 3, or 4");
                 }

@@ -5,7 +5,7 @@
 // http://creativecommons.org/licenses/by/4.0/
 // 
 // File: Program.cs  Created: 2014-06-05@02:27
-// Last modified: 2014-09-29@05:07 by Tim
+// Last modified: 2014-09-30@04:23 by Tim
 
 using System;
 using System.Threading;
@@ -51,7 +51,9 @@ namespace TA.NetMF.Motor.StepperSampleApp
             //var motorShield = new ArdumotoShield(bridgeA, bridgeB);
             #endregion Sparkfun Ardumoto Shield setup
 
-            // The shield details are now abstracted from the motor control, so whatever shield we have, we just ask it for an IStepperMotorControl.
+            // The shield details are abstracted from the motor control, so whatever shield we have,
+            // we just ask it for an IStepperMotorControl, specifying the number of microsteps and the
+            // output numbers of the two motor phases.
             stepper = adafruitMotorShieldV2.GetStepperMotor(64, 1, 2);
 
             // Create the stepper motor axes and link them to the Adafruit driver.
