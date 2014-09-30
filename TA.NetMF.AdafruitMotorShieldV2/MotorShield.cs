@@ -28,6 +28,7 @@ namespace TA.NetMF.AdafruitMotorShieldV2
         public void InitializeShield()
             {
             pwmController.Reset();
+            pwmController.SetOutputModulationFrequency();
             }
 
         /// <summary>

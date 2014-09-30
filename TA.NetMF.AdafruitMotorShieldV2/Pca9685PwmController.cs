@@ -5,7 +5,7 @@
 // http://creativecommons.org/licenses/by/4.0/
 // 
 // File: Pca9685PwmController.cs  Created: 2014-06-06@18:06
-// Last modified: 2014-06-07@16:45 by Tim
+// Last modified: 2014-09-30@02:16 by Tim
 
 using System;
 using System.Threading;
@@ -18,27 +18,27 @@ namespace TA.NetMF.AdafruitMotorShieldV2
     internal class Pca9685PwmController : IPwmController
         {
         const int MaxChannel = 15;
-        const int pwmCounter = 4096;
+        const int PwmCounterCycle = 4096;
         readonly ushort address;
-        double outputModulationFrequencyHz;
         I2CDevice.Configuration i2CConfiguration;
         I2CDevice iicDevice;
+        double outputModulationFrequencyHz;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Pca9685PwmController"/> class at the specified I2C address
-        /// and with the specified output modulation frequency.
+        ///   Initializes a new instance of the <see cref="Pca9685PwmController" /> class at the specified I2C address
+        ///   and with the specified output modulation frequency.
         /// </summary>
         /// <param name="iicAddress">The base I2C address for the device.</param>
         /// <param name="outputModulationFrequencyHz">
-        /// The output modulation frequency of all 16 PWM channels, in Hertz (cycles per second).
-        /// If not specified, then the default value of 1.6 KHz is used. The theoretical range is
-        /// approximately 24 Hz to 1743 Hz, but extremes should be avoided if possible.
+        ///   The output modulation frequency of all 16 PWM channels, in Hertz (cycles per second).
+        ///   If not specified, then the default value of 1.6 KHz is used. The theoretical range is
+        ///   approximately 24 Hz to 1743 Hz, but extremes should be avoided if possible.
         /// </param>
         public Pca9685PwmController(ushort iicAddress, double outputModulationFrequencyHz = Pca9685.DefaultPwmFrquencyHz)
             {
             address = iicAddress;
             InitializeI2CDevice();
-            SetFrequency(outputModulationFrequencyHz);
+            SetOutputModulationFrequency(outputModulationFrequencyHz);
             }
 
         public PwmChannel GetPwmChannel(uint channel)
@@ -49,7 +49,6 @@ namespace TA.NetMF.AdafruitMotorShieldV2
             }
 
         public double OutputModulationFrequencyHz { get { return outputModulationFrequencyHz; } }
-
 
         public void ConfigureChannelDutyCycle(uint channel, double dutyCycle)
             {
@@ -64,34 +63,35 @@ namespace TA.NetMF.AdafruitMotorShieldV2
                 return;
                 }
             uint onCount = 0;
-            uint offCount = (uint)Math.Floor(pwmCounter * dutyCycle);
+            var offCount = (uint)Math.Floor(PwmCounterCycle*dutyCycle);
             if (offCount <= onCount)
                 offCount = onCount + 1; // The two counts may not be the same value
-            byte registerOffset = (byte)(6 + (4*channel));
-            // Register order is: On (low), On (high), Off (low), Off (high)
-            WriteRegister(registerOffset, (byte)onCount);
-            WriteRegister(++registerOffset, (byte)(onCount>>8));
-            WriteRegister(++registerOffset, (byte)offCount);
-            WriteRegister(++registerOffset, (byte)(offCount>>8));
+            var registerOffset = (byte)(6 + (4*channel));
+            WriteConsecutiveRegisters(
+                registerOffset,
+                (byte)onCount,
+                (byte)(onCount >> 8),
+                (byte)offCount,
+                (byte)(offCount >> 8));
             }
 
         /// <summary>
-        /// Sets the channel to 0% duty cycle.
+        ///   Sets the channel to 0% duty cycle.
         /// </summary>
         /// <param name="channel">The channel number (0-based).</param>
         void SetFullOff(uint channel)
             {
-            byte registerOffset = (byte)(9 + (4 * channel));
+            var registerOffset = (byte)(9 + (4*channel));
             WriteRegister(registerOffset, 0x10);
             }
 
         /// <summary>
-        /// Sets the channel to 100% duty cycle.
+        ///   Sets the channel to 100% duty cycle.
         /// </summary>
         /// <param name="channel">The channel number (0-based).</param>
         void SetFullOn(uint channel)
             {
-            byte registerOffset = (byte)(7 + (4 * channel));
+            var registerOffset = (byte)(7 + (4*channel));
             WriteRegister(registerOffset, 0x10);
             }
 
@@ -99,7 +99,7 @@ namespace TA.NetMF.AdafruitMotorShieldV2
             {
             i2CConfiguration = new I2CDevice.Configuration(address, Pca9685.ClockRateKhz);
             iicDevice = new I2CDevice(i2CConfiguration);
-            SetFrequency(); // ToDo - pass in constructor?
+            SetOutputModulationFrequency(); // ToDo - pass in constructor?
             AutoIncrement(true);
             }
 
@@ -113,7 +113,7 @@ namespace TA.NetMF.AdafruitMotorShieldV2
 
         void SetBitInRegister(byte registerOffset, ushort bitNumber)
             {
-            var bitSetMask = 2 ^ bitNumber;
+            var bitSetMask = 0x01 << bitNumber;
             var registerValue = (int)ReadRegister(registerOffset);
             registerValue |= bitSetMask;
             WriteRegister(registerOffset, (byte)registerValue);
@@ -121,7 +121,7 @@ namespace TA.NetMF.AdafruitMotorShieldV2
 
         void ClearBitInRegister(byte registerOffset, ushort bitNumber)
             {
-            var bitClearMask = 0xFF - 2 ^ bitNumber;
+            var bitClearMask = 0xFF ^ (0x01 << bitNumber);
             var registerValue = (int)ReadRegister(registerOffset);
             registerValue &= bitClearMask;
             WriteRegister(registerOffset, (byte)registerValue);
@@ -144,16 +144,51 @@ namespace TA.NetMF.AdafruitMotorShieldV2
             iicDevice.Execute(operations, Pca9685.I2CTimeout);
             }
 
-        void SetFrequency(double frequencyHz = Pca9685.DefaultPwmFrquencyHz)
+        void WriteConsecutiveRegisters(byte startRegisterOffset, params byte[] values)
+            {
+            if (!BitIsSet(Pca9685.Mode1Register, Pca9685.AutoIncrementBit))
+                SetAutoIncrement(true);
+            var bufferSize = values.Length + 1;
+            var writeBuffer = new byte[bufferSize];
+            writeBuffer[0] = startRegisterOffset;
+            var bufferIndex = 0;
+            foreach (var value in values)
+                writeBuffer[++bufferIndex] = value;
+            var transactions = new I2CDevice.I2CTransaction[]
+                {
+                I2CDevice.CreateWriteTransaction(writeBuffer)
+                };
+            iicDevice.Execute(transactions, Pca9685.I2CTimeout);
+            }
+
+        bool BitIsSet(byte registerOffset, ushort bitNumber)
+            {
+            var registerValue = ReadRegister(registerOffset);
+            var bitTestMask = 0x01 << bitNumber;
+            return (registerValue & bitTestMask) != 0;
+            }
+
+        public void SetOutputModulationFrequency(double frequencyHz = Pca9685.DefaultPwmFrquencyHz)
             {
             var computedPrescale = Math.Round(Pca9685.InternalOscillatorFrequencyHz/4096.0/frequencyHz) - 1;
             if (computedPrescale < 3.0 || computedPrescale > 255.0)
-                {
                 throw new ArgumentOutOfRangeException("frequencyHz", "range 24 Hz to 1743 Hz");
-                }
             var prescale = (byte)computedPrescale;
-            SetPrescale((byte)prescale);
-            this.outputModulationFrequencyHz = frequencyHz;
+            SetPrescale(prescale);
+            outputModulationFrequencyHz = frequencyHz;
+            }
+
+        /// <summary>
+        ///   Enables or disables the automatic increment mode.
+        ///   When enabled, sequential register reads are possible.
+        /// </summary>
+        /// <param name="enabled">if set to <c>true</c> [enabled].</param>
+        void SetAutoIncrement(bool enabled)
+            {
+            if (enabled)
+                SetBitInRegister(Pca9685.Mode1Register, 5);
+            else
+                ClearBitInRegister(Pca9685.Mode1Register, 5);
             }
 
         /// <summary>
@@ -171,7 +206,7 @@ namespace TA.NetMF.AdafruitMotorShieldV2
             WriteRegister(Pca9685.PrescaleRegister, prescale);
             // Now we have to restore the previous mode and wait at least 5 microseconds for the oscillator to restart.
             WriteRegister(Pca9685.Mode1Register, mode);
-            Thread.Sleep(0); // Let other threads run while we are waiting.
+            Thread.Sleep(1); // Must wait at least 500 microseconds.
             RestartPwm();
             }
 
@@ -181,22 +216,25 @@ namespace TA.NetMF.AdafruitMotorShieldV2
         void RestartPwm()
             {
             var mode = ReadRegister(Pca9685.Mode1Register);
-            if ((mode & 0x80) != 0)
-                {
-                var newMode = (byte)(mode | 0x80);
-                WriteRegister(Pca9685.Mode1Register, newMode);
-                }
+            if (BitIsClear(Pca9685.Mode1Register, Pca9685.RestartBit))
+                return;
+            SetBitInRegister(Pca9685.Mode1Register, Pca9685.RestartBit);
+            }
+
+        bool BitIsClear(byte registerOffset, ushort bitNumber)
+            {
+            return !BitIsSet(registerOffset, bitNumber);
             }
 
         byte ReadRegister(byte registerOffset)
             {
-            byte[] writeBuffer = { registerOffset };
+            byte[] writeBuffer = {registerOffset};
             var readBuffer = new byte[1];
             var operations = new I2CDevice.I2CTransaction[2];
             operations[0] = I2CDevice.CreateWriteTransaction(writeBuffer);
             operations[1] = I2CDevice.CreateReadTransaction(readBuffer);
             iicDevice.Execute(operations, Pca9685.I2CTimeout);
-            byte result = readBuffer[0];
+            var result = readBuffer[0];
             Trace.Print("Register " + registerOffset.ToString() + " <== " + result.ToString());
             return result;
             }
