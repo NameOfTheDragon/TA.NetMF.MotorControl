@@ -69,7 +69,7 @@ namespace TA.NetMF.AdafruitMotorShieldV2
             var offCount = (uint)Math.Floor(PwmCounterCycle*dutyCycle);
             if (offCount <= onCount)
                 offCount = onCount + 1; // The two counts may not be the same value
-            var registerOffset = (byte)(6 + (4*channel));
+            var registerOffset = (byte)(Pca9685.Channel0OnLow + (4*channel));
             WriteConsecutiveRegisters(
                 registerOffset,
                 (byte)onCount,
@@ -84,7 +84,7 @@ namespace TA.NetMF.AdafruitMotorShieldV2
         /// <param name="channel">The channel number (0-based).</param>
         void SetFullOff(uint channel)
             {
-            var registerOffset = (byte)(Pca9685.Channel0OnLow + (4*channel));
+            var registerOffset = (byte)(Pca9685.Channel0OnLow + (4 * channel));
             WriteConsecutiveRegisters(registerOffset, 0x00, 0x00, 0x00, 0x00); // Set LED_FULL_OFF bit
             }
 
@@ -141,8 +141,16 @@ namespace TA.NetMF.AdafruitMotorShieldV2
         /// </summary>
         void SetAllChannelsOff()
             {
-            // Sets teh LED_FULL_OFF bit in each and every channel, which sets the duty cycle to 0%.
-            WriteConsecutiveRegisters(Pca9685.AllChannelsBaseRegister, 0x00, 0x00, 0x01, 0x10);
+            // Sets the LED_FULL_OFF bit in each and every channel, which sets the duty cycle to 0%.
+            WriteConsecutiveRegisters(Pca9685.AllChannelsBaseRegister, 0x00, 0x00, 0x00, 0x10);
+            }
+
+        /// <summary>
+        /// Sets the LED_FULL_ON bit in each and every channel, which sets the duty cycle to 100%..
+        /// </summary>
+        void SetAllChannelsOn()
+            {
+            WriteConsecutiveRegisters(Pca9685.AllChannelsBaseRegister, 0x00, 0x10, 0x00, 0x00);
             }
 
         void WriteRegister(byte registerOffset, byte data)
@@ -197,9 +205,9 @@ namespace TA.NetMF.AdafruitMotorShieldV2
         void SetAutoIncrement(bool enabled)
             {
             if (enabled)
-                SetBitInRegister(Pca9685.Mode1Register, 5);
+                SetBitInRegister(Pca9685.Mode1Register, Pca9685.AutoIncrementBit);
             else
-                ClearBitInRegister(Pca9685.Mode1Register, 5);
+                ClearBitInRegister(Pca9685.Mode1Register, Pca9685.AutoIncrementBit);
             }
 
         /// <summary>
@@ -232,7 +240,6 @@ namespace TA.NetMF.AdafruitMotorShieldV2
             operations[1] = I2CDevice.CreateReadTransaction(readBuffer);
             i2cDevice.Execute(operations, Pca9685.I2CTimeout);
             var result = readBuffer[0];
-            Trace.Print("Register " + registerOffset.ToString() + " <== " + result.ToString());
             return result;
             }
         }

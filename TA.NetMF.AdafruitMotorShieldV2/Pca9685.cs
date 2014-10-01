@@ -5,7 +5,7 @@
 // http://creativecommons.org/licenses/by/4.0/
 // 
 // File: Pca9685.cs  Created: 2014-06-07@15:01
-// Last modified: 2014-09-30@03:55 by Tim
+// Last modified: 2014-10-01@11:07 by Tim
 
 namespace TA.NetMF.AdafruitMotorShieldV2
     {
@@ -25,8 +25,17 @@ namespace TA.NetMF.AdafruitMotorShieldV2
         public const ushort Sub3Bit = 1;
         #endregion MODE1 register bits
 
+        #region LED Control Register Bits
+        public const ushort FullOffBit = 4;
+        public const ushort FullOnBit = 4;
+        #endregion LED Control Register Bits
+
         #region Register addresses
         public const byte AllChannelsBaseRegister = 0xFA;
+        public const byte AllChannelsOffHigh = 0xFD;
+        public const byte AllChannelsOffLow = 0xFC;
+        public const byte AllChannelsOnHigh = 0xFB;
+        public const byte AllChannelsOnLow = 0xFA;
         public const byte Channel0OffHigh = 0x09;
         public const byte Channel0OffLow = 0x08;
         public const byte Channel0OnHigh = 0x07;
