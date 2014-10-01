@@ -50,9 +50,9 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TA.NetMF.AdafruitMotorShield\TA.NetMF.AdafruitMotorShield.csproj">
-      <Project>{7F574E49-5B84-4D82-89C4-6EF51FB03B24}</Project>
-      <Name>TA.NetMF.AdafruitMotorShield</Name>
+    <ProjectReference Include="..\TA.NetMF.AdafruitMotorShieldV2\TA.NetMF.AdafruitMotorShieldV2.csproj">
+      <Project>{AAE4ED0D-CC09-4307-91E8-48473EE7BB8A}</Project>
+      <Name>TA.NetMF.AdafruitMotorShieldV2</Name>
     </ProjectReference>
     <ProjectReference Include="..\TA.NetMF.Motor\TA.NetMF.Motor.csproj">
       <Project>{85B64019-9BE7-4F0F-A328-0050FE5F5F96}</Project>

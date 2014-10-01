@@ -39,6 +39,7 @@
     <Compile Include="Pca9685.cs" />
     <Compile Include="Pca9685PwmController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PwmBoolean.cs" />
     <Compile Include="PwmChannel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -47,6 +48,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Datasheets\PCA9685 16-channel PWM controller.pdf" />
+    <None Include="Datasheets\TB6612FNG Dual DC Motor Driver %28H-Bridge%29.pdf" />
     <None Include="PWM Controller.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TA.NetMF.Motor\TA.NetMF.Motor.csproj">
+      <Project>{85B64019-9BE7-4F0F-A328-0050FE5F5F96}</Project>
+      <Name>TA.NetMF.Motor</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Datasheets\Circuit Schematic.png" />
   </ItemGroup>
 </Project>
