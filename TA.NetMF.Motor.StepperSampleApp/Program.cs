@@ -18,10 +18,10 @@ namespace TA.NetMF.Motor.StepperSampleApp
     {
     public class Program
         {
-        const int LimitOfTravel = 4000;
-        const int MaxSpeed = 400; // steps per second (Netduino Plus 2 can manage a few hundred)
-        const int MicrostepsPerStep = 8; // 4=full stepping; 8=half stepping; 9+=microstepping.
-        const int PwmFrequencyHz = 50000;
+        const int LimitOfTravel = 100;
+        const int MaxSpeed = 2; // steps per second (Netduino Plus 2 can manage a few hundred)
+        const int MicrostepsPerStep = 4; // 4=full stepping; 8=half stepping; 9+=microstepping.
+        const int PwmFrequencyHz = 1600;
         const double RampTime = 2.5; // seconds to reach full speed (acceleration)
         static OutputPort Led;
         static bool LedState;
@@ -54,7 +54,7 @@ namespace TA.NetMF.Motor.StepperSampleApp
             // The shield details are abstracted from the motor control, so whatever shield we have,
             // we just ask it for an IStepperMotorControl, specifying the number of microsteps and the
             // output numbers of the two motor phases.
-            stepper = adafruitMotorShieldV2.GetStepperMotor(4, 1, 2);
+            stepper = adafruitMotorShieldV2.GetStepperMotor(8, 3, 4);
 
             // Create the stepper motor axes and link them to the Adafruit driver.
             var axis = new AcceleratingStepperMotor(LimitOfTravel, PerformMicrostep)
