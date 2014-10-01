@@ -34,13 +34,14 @@ namespace TA.NetMF.AdafruitMotorShieldV2
         ///   If not specified, then the default value of 1.6 KHz is used. The theoretical range is
         ///   approximately 24 Hz to 1743 Hz, but extremes should be avoided if possible.
         /// </param>
-        public Pca9685PwmController(ushort i2cAddress,
+        public Pca9685PwmController(ushort i2cAddress = 0x60,
             double outputModulationFrequencyHz = Pca9685.DefaultOutputModulationFrequency)
             {
             this.i2cAddress = i2cAddress;
             InitializeI2CDevice();
             Reset();
             SetOutputModulationFrequency(outputModulationFrequencyHz);
+            // At this point the device is fully configured but all PWM channels are turned off.
             }
 
         public PwmChannel GetPwmChannel(uint channel)
@@ -83,8 +84,8 @@ namespace TA.NetMF.AdafruitMotorShieldV2
         /// <param name="channel">The channel number (0-based).</param>
         void SetFullOff(uint channel)
             {
-            var registerOffset = (byte)(9 + (4*channel));
-            WriteRegister(registerOffset, 0x10);
+            var registerOffset = (byte)(Pca9685.Channel0OnLow + (4*channel));
+            WriteConsecutiveRegisters(registerOffset, 0x00, 0x00, 0x00, 0x00); // Set LED_FULL_OFF bit
             }
 
         /// <summary>
@@ -93,8 +94,8 @@ namespace TA.NetMF.AdafruitMotorShieldV2
         /// <param name="channel">The channel number (0-based).</param>
         void SetFullOn(uint channel)
             {
-            var registerOffset = (byte)(7 + (4*channel));
-            WriteRegister(registerOffset, 0x10);
+            var registerOffset = (byte)(Pca9685.Channel0OnLow + (4*channel));
+            WriteConsecutiveRegisters(registerOffset, 0x00, 0x10, 0x00, 0x00); // Set LED_FULL_ON bit
             }
 
         void InitializeI2CDevice()
@@ -120,12 +121,19 @@ namespace TA.NetMF.AdafruitMotorShieldV2
             }
 
         /// <summary>
-        ///   Resets the PCA9685 PWM controller into a known starting state.
+        ///   Resets the PCA9685 PWM controller into a known starting state
+        ///   and turns off all PWM channels. Blocks for at least 1 millisecond
+        ///   to allow the internal oscillator to stabilize.
         /// </summary>
         public void Reset()
             {
             WriteRegister(Pca9685.Mode1Register, 0x00);
+            Thread.Sleep(1);
             SetAllChannelsOff();
+            // Set the RESATART bit, but only if necessary.
+            if (BitIsClear(Pca9685.Mode1Register, Pca9685.RestartBit))
+                return;
+            SetBitInRegister(Pca9685.Mode1Register, Pca9685.RestartBit);
             }
 
         /// <summary>
@@ -172,6 +180,7 @@ namespace TA.NetMF.AdafruitMotorShieldV2
 
         public void SetOutputModulationFrequency(double frequencyHz = Pca9685.DefaultOutputModulationFrequency)
             {
+            // See PCA9685 data sheet, pp.24 for details on calculating the prescale value.
             var computedPrescale = Math.Round(Pca9685.InternalOscillatorFrequencyHz/4096.0/frequencyHz) - 1;
             if (computedPrescale < 3.0 || computedPrescale > 255.0)
                 throw new ArgumentOutOfRangeException("frequencyHz", "range 24 Hz to 1743 Hz");
@@ -194,34 +203,19 @@ namespace TA.NetMF.AdafruitMotorShieldV2
             }
 
         /// <summary>
-        ///   Sets the prescale divider without affecting any other mode settings.
-        ///   This requires putting the PWM controller to sleep while the prescaler is changed, and
-        ///   there will be a delay of at least 5uS to allow the oscillator to restart.
+        ///   Sets the master prescale divider for all channels.
+        ///   Thi will turn off all PWM channels. They must be reconfigured
+        ///   after setting the prescale value.
         /// </summary>
         /// <param name="prescale">The prescale.</param>
         void SetPrescale(byte prescale)
             {
             // The prescaler can only be set while the device is in SLEEP mode.
-            var mode = ReadRegister(Pca9685.Mode1Register);
-            var sleep = (byte)(mode & 0x7F | 0x10); // Set SLEEP mode and take care not to cause a restart (bit 7).
+            // so we must put it to sleep, set the prescaler, then restart it.
+            byte sleep = (byte)(0x01 << Pca9685.SleepBit);  // Set the SLEEP bit
             WriteRegister(Pca9685.Mode1Register, sleep);
             WriteRegister(Pca9685.PrescaleRegister, prescale);
-            // Now we have to restore the previous mode and wait at least 5 microseconds for the oscillator to restart.
-            WriteRegister(Pca9685.Mode1Register, mode);
-            Thread.Sleep(1); // Must wait at least 500 microseconds.
-            WriteRegister(Pca9685.Mode1Register, (byte)(mode | 0xa1));
-            RestartPwm();
-            }
-
-        /// <summary>
-        ///   Restarts the PWM counters after the device has been in sleep mode.
-        /// </summary>
-        void RestartPwm()
-            {
-            var mode = ReadRegister(Pca9685.Mode1Register);
-            if (BitIsClear(Pca9685.Mode1Register, Pca9685.RestartBit))
-                return;
-            SetBitInRegister(Pca9685.Mode1Register, Pca9685.RestartBit);
+            Reset();
             }
 
         bool BitIsClear(byte registerOffset, ushort bitNumber)

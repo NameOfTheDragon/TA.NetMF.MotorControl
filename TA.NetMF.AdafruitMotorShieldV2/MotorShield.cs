@@ -72,9 +72,9 @@ namespace TA.NetMF.AdafruitMotorShieldV2
                 case 2:
                     return new MotorPhase(pwmController, 11, 12, 13);
                 case 3:
-                    return new MotorPhase(pwmController, 4, 3, 2);
-                case 4:
                     return new MotorPhase(pwmController, 5, 6, 7);
+                case 4:
+                    return new MotorPhase(pwmController, 4, 3, 2);
                 default:
                     throw new ArgumentOutOfRangeException("motorNumber", "Must be 1, 2, 3, or 4");
                 }

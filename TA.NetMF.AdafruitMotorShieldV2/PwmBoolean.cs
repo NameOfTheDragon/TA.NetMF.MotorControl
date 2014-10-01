@@ -44,7 +44,6 @@ namespace TA.NetMF.AdafruitMotorShieldV2
         void InitializePwm(bool initialState)
             {
             State = initialState;
-            pwm.Start();
             }
         }
     }

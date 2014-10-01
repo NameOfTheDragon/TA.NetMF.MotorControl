@@ -110,23 +110,10 @@ namespace TA.NetMF.AdafruitMotorShieldV2
             Dispose(true);
             }
 
-        public void Start()
-            {
-            // ToDo - this needs to be implemented
-            }
-
-        public void Stop()
-            {
-            // ToDo - this needs to be implemented
-            }
-
         protected void Dispose(bool disposing)
             {
             try
-                {
-                Stop();
-                }
-            catch {}
+                {}
             finally
                 {
                 Uninit();

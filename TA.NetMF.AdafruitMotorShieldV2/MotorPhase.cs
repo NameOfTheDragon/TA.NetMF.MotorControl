@@ -58,8 +58,9 @@ namespace TA.NetMF.AdafruitMotorShieldV2
         /// </summary>
         void Forward()
             {
+            // Order is important; must avoid setting both outputs to true, which would cause a BRAKE condition.
+            in2.State = false; 
             in1.State = true;
-            in2.State = false;
             }
 
         /// <summary>
