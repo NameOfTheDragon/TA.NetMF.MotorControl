@@ -20,8 +20,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TA.NetMF.Motor", "TA.NetMF.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TA.NetMF.AdafruitMotorShieldV2", "TA.NetMF.AdafruitMotorShieldV2\TA.NetMF.AdafruitMotorShieldV2.csproj", "{AAE4ED0D-CC09-4307-91E8-48473EE7BB8A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TA.NetMF.AdafruitPwmDiagnostic", "TA.NetMF.AdafruitPwmDiagnostic\TA.NetMF.AdafruitPwmDiagnostic.csproj", "{D20894AD-3E35-424B-A49A-DBF760F5B5D2}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,12 +44,6 @@ Global
 		{AAE4ED0D-CC09-4307-91E8-48473EE7BB8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AAE4ED0D-CC09-4307-91E8-48473EE7BB8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AAE4ED0D-CC09-4307-91E8-48473EE7BB8A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D20894AD-3E35-424B-A49A-DBF760F5B5D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D20894AD-3E35-424B-A49A-DBF760F5B5D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D20894AD-3E35-424B-A49A-DBF760F5B5D2}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{D20894AD-3E35-424B-A49A-DBF760F5B5D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D20894AD-3E35-424B-A49A-DBF760F5B5D2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D20894AD-3E35-424B-A49A-DBF760F5B5D2}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
