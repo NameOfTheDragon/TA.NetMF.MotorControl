@@ -13,16 +13,17 @@ using Microsoft.SPOT;
 using Microsoft.SPOT.Hardware;
 using SecretLabs.NETMF.Hardware.Netduino;
 using TA.NetMF.AdafruitMotorShieldV2;
+using TA.NetMF.Motor;
 
-namespace TA.NetMF.Motor.StepperSampleApp
+namespace TA.NetMF.MotorControl.Samples
     {
     public class Program
         {
         const int LimitOfTravel = 10000;
-        const int MaxSpeed = 100; // steps per second (Netduino Plus 2 can manage a few hundred)
+        const int MaxSpeed = 400; // steps per second (Netduino Plus 2 can manage a few hundred)
         const int MicrostepsPerStep = 8; // 4=full stepping; 8=half stepping; 9+=microstepping.
         const int PwmFrequencyHz = 1600;
-        const double RampTime = 2.5; // seconds to reach full speed (acceleration)
+        const double RampTime = 2; // seconds to reach full speed (acceleration)
         static OutputPort Led;
         static bool LedState;
         static readonly Random randomGenerator = new Random();
@@ -55,8 +56,8 @@ namespace TA.NetMF.Motor.StepperSampleApp
             // The shield details are abstracted from the motor control, so whatever shield we have,
             // we just ask it for an IStepperMotorControl, specifying the number of microsteps and the
             // output numbers of the two motor phases.
-            StepperM1M2 = adafruitMotorShieldV2.GetStepperMotor(8, 1, 2);
-            StepperM3M4 = adafruitMotorShieldV2.GetStepperMotor(8, 3, 4);
+            StepperM1M2 = adafruitMotorShieldV2.GetStepperMotor(64, 1, 2);
+            StepperM3M4 = adafruitMotorShieldV2.GetStepperMotor(64, 3, 4);
 
             // Create the stepper motor axes and link them to the Adafruit driver.
             var axis1 = new AcceleratingStepperMotor(LimitOfTravel, StepperM1M2, UpdateDiagnosticLed)

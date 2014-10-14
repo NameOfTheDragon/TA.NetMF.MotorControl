@@ -51,7 +51,7 @@ namespace TA.NetMF.Motor
         void ComputeMicrostepTables()
             {
             // This implementation prefers performance over memory footprint.
-            var radiansPerIndex = (2*Math.PI)/maxIndex;
+            var radiansPerIndex = (2*Math.PI)/(maxIndex-1);
             inPhaseDutyCycle = new double[maxIndex];
             outOfPhaseDutyCycle = new double[maxIndex];
             for (var i = 0; i < maxIndex; ++i)
