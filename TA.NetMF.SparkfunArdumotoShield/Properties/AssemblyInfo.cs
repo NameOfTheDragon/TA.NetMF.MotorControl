@@ -5,19 +5,9 @@
 // http://creativecommons.org/licenses/by/4.0/
 // 
 // File: AssemblyInfo.cs  Created: 2014-06-05@02:27
-// Last modified: 2014-06-05@12:23 by Tim
+// Last modified: 2014-10-14@06:57 by Tim
 
 using System.Reflection;
 
-// General Information about an assembly is controlled through the following 
-// set of attributes. Change these attribute values to modify the information
-// associated with an assembly.
-
-[assembly: AssemblyTitle("TA.SparkfunArdumotoShield")]
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("TA.SparkfunArdumotoShield")]
-[assembly: AssemblyCopyright("Copyright ©  2014")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
+[assembly: AssemblyTitle("TA.NetMF.SparkfunArdumotoShield")]
+[assembly: AssemblyDescription("Driver for the Sparkfun Ardumoto shield")]
