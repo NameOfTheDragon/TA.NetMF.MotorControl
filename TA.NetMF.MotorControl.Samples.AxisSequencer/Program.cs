@@ -25,12 +25,12 @@ namespace TA.NetMF.MotorControl.Samples.AxisSequencer
             var motor2 = shield.GetStepperMotor(64, 3, 4); // 64 microsteps, outputs M3 and M4
             var axis1 = new AcceleratingStepperMotor(LimitOfTravel, motor1)
                 {
-                MaximumSpeed = 200,
+                MaximumSpeed = AcceleratingStepperMotor.MaximumPossibleSpeed,
                 RampTime = 2.0
                 };
             var axis2 = new AcceleratingStepperMotor(LimitOfTravel, motor2)
                 {
-                MaximumSpeed = 200,
+                MaximumSpeed = AcceleratingStepperMotor.MaximumPossibleSpeed,
                 RampTime = 2.0
                 };
             var sequencer = new DualAxisSequencer(axis1, axis2);

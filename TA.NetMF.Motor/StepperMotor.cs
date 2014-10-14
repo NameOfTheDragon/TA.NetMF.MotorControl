@@ -17,7 +17,6 @@ namespace TA.NetMF.Motor
         readonly HBridge phase1;
         readonly HBridge phase2;
         double[] inPhaseDutyCycle;
-        int microsteps;
         double[] outOfPhaseDutyCycle;
         int phaseIndex;
 
@@ -25,19 +24,54 @@ namespace TA.NetMF.Motor
             {
             phase1 = phase1bridge;
             phase2 = phase2bridge;
-            this.microsteps = microsteps;
-            maxIndex = microsteps;
-            ComputeMicrostepTables();
+            maxIndex = microsteps - 1;
             phaseIndex = 0;
+            ConfigureStepTables(microsteps);
+            }
+
+        void ConfigureStepTables(int microsteps)
+            {
+            if (microsteps == 4)
+                {
+                ComputeWholeStepTables();
+                return;
+                }
+            else if (microsteps == 8)
+                {
+                ComputeHalfStepTables();
+                return;
+                }
+            else if (microsteps >= 8)
+                {
+                ComputeMicrostepTables(microsteps);
+                return;
+                }
+            throw new ArgumentException("Use 4 for full steps; 8 for half steps; or >8 for microsteps", "microsteps");
+            }
+
+        void ComputeHalfStepTables()
+            {
+            inPhaseDutyCycle = new[]
+                {+1.0, +1.0, +0.0, -1.0, -1.0, -1.0, +0.0, +1.0};
+            outOfPhaseDutyCycle = new[]
+                {+0.0, +1.0, +1.0, +1.0, +0.0, -1.0, -1.0, -1.0};
+            }
+
+        void ComputeWholeStepTables()
+            {
+            inPhaseDutyCycle = new[]
+                {+1.0, -1.0, -1.0, +1.0};
+            outOfPhaseDutyCycle = new[]
+                {+1.0, +1.0, -1.0, -1.0};
             }
 
         public void PerformMicrostep(int direction)
             {
             phaseIndex += direction;
-            if (phaseIndex >= maxIndex)
+            if (phaseIndex > maxIndex)
                 phaseIndex = 0;
             if (phaseIndex < 0)
-                phaseIndex = maxIndex - 1;
+                phaseIndex = maxIndex;
             phase1.SetOutputPowerAndPolarity(inPhaseDutyCycle[phaseIndex]);
             phase2.SetOutputPowerAndPolarity(outOfPhaseDutyCycle[phaseIndex]);
             }
@@ -48,13 +82,13 @@ namespace TA.NetMF.Motor
             phase2.SetOutputPowerAndPolarity(0.0);
             }
 
-        void ComputeMicrostepTables()
+        void ComputeMicrostepTables(int microsteps)
             {
             // This implementation prefers performance over memory footprint.
-            var radiansPerIndex = (2*Math.PI)/(maxIndex-1);
-            inPhaseDutyCycle = new double[maxIndex];
-            outOfPhaseDutyCycle = new double[maxIndex];
-            for (var i = 0; i < maxIndex; ++i)
+            var radiansPerIndex = (2*Math.PI)/(microsteps-1);
+            inPhaseDutyCycle = new double[microsteps];
+            outOfPhaseDutyCycle = new double[microsteps];
+            for (var i = 0; i < microsteps; ++i)
                 {
                 var phaseAngle = i*radiansPerIndex;
                 inPhaseDutyCycle[i] = Math.Sin(phaseAngle);
