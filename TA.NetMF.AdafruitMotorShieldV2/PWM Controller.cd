@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="TA.NetMF.AdafruitMotorShieldV2.PwmChannel">
+    <Position X="0.5" Y="0.5" Width="2.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Enum Name="TA.NetMF.AdafruitMotorShieldV2.PwmChannel.ScaleFactor">
+        <TypeIdentifier>
+          <NewMemberFileName>PwmChannel.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>BAgAAEIAASACIAEBASIAAAQCAIAAAAAAIABCAgQAAAI=</HashCode>
+      <FileName>PwmChannel.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="controller" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="TA.NetMF.AdafruitMotorShieldV2.Pca9685PwmController">
+    <Position X="4.5" Y="2.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>oCAAAAAAgAAIBAAACAAAAAAAAgIAEAAAAAQAAQAACAE=</HashCode>
+      <FileName>Pca9685PwmController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="iicDevice" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Microsoft.SPOT.Hardware.I2CDevice">
+    <Position X="7.75" Y="1" Width="2" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="Microsoft.SPOT.Hardware.I2CDevice.I2CTransaction" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+      <Class Name="Microsoft.SPOT.Hardware.I2CDevice.I2CReadTransaction" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+      <Class Name="Microsoft.SPOT.Hardware.I2CDevice.I2CWriteTransaction" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+      <Class Name="Microsoft.SPOT.Hardware.I2CDevice.Configuration" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="TA.NetMF.AdafruitMotorShieldV2.IPwmController">
+    <Position X="4.5" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>IPwmController.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

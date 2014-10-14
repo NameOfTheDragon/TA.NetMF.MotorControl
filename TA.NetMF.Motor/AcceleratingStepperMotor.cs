@@ -33,10 +33,10 @@ namespace TA.NetMF.Motor
         public delegate void AxisEventHandler(AcceleratingStepperMotor axis);
 
         /// <summary>
-        ///   Delegate HardwareStep - user-supplied delegate to write step data to the motor hardware.
+        ///   Delegate StepCallback - user-supplied delegate to write step data to the motor hardware.
         /// </summary>
         /// <param name="direction">The direction of the step.</param>
-        public delegate void HardwareStep(int direction);
+        public delegate void StepCallback(int direction);
 
         /// <summary>
         ///   The maximum possible theoretical speed that this driver is able to support.
@@ -63,6 +63,11 @@ namespace TA.NetMF.Motor
         readonly int limitOfTravel;
 
         /// <summary>
+        /// The stepper hardware
+        /// </summary>
+        readonly IStepperMotorControl stepper;
+
+        /// <summary>
         ///   The motor update lock - used as a mutual exclusion.
         /// </summary>
         readonly object motorUpdateLock = new object();
@@ -70,7 +75,7 @@ namespace TA.NetMF.Motor
         /// <summary>
         ///   user-supplied delegate to write step data to the motor hardware.
         /// </summary>
-        readonly HardwareStep performStep;
+        readonly StepCallback performStepCallback;
 
         /// <summary>
         ///   The step timer - times the interval between steps.
@@ -124,16 +129,24 @@ namespace TA.NetMF.Motor
         ///   Initializes a new instance of the <see cref="AcceleratingStepperMotor" /> class.
         /// </summary>
         /// <param name="limitOfTravel">The limit of travel in steps.</param>
+        /// <param name="stepper">The hardware driver that will perform the actual microstep.</param>
         /// <param name="performMicrostep">A method to write the current microstep value to the motor hardware.</param>
         /// <param name="microSteps">The number of micro steps per whole step.</param>
-        public AcceleratingStepperMotor(int limitOfTravel, HardwareStep performMicrostep)
+        public AcceleratingStepperMotor(int limitOfTravel, IStepperMotorControl stepper, StepCallback performMicrostep = null)
             {
             //ToDo: this can be improved by deprecating the use of a delegate and instead providing
             // an implementation of IStepperMotorControl (defined in the Adafruit motor shield assembly).
             this.limitOfTravel = limitOfTravel;
-            performStep = performMicrostep;
+            this.stepper = stepper;
+            performStepCallback = performMicrostep ?? NullStepCallback;
             stepTimer = new Timer(StepTimerTick, null, Timeout.Infinite, Timeout.Infinite); // Stopped
             }
+
+        /// <summary>
+        /// An empty method that serves as the default StepCallback delegate if the user doesn't supply one.
+        /// </summary>
+        /// <param name="direction">The direction.</param>
+        void NullStepCallback(int direction) { }
 
         /// <summary>
         ///   Gets or sets the maximum speed, in steps per second.
@@ -204,9 +217,13 @@ namespace TA.NetMF.Motor
         ///   Handles the step timer tick event.
         /// </summary>
         /// <param name="state">Not used.</param>
+        /// <remarks>
+        /// Beware! Tick events can still fire even after the timer has been disabled.
+        /// </remarks>
         void StepTimerTick(object state)
             {
-            StepAndAccelerate();
+            if (IsMoving)
+                StepAndAccelerate();
             }
 
         /// <summary>
@@ -243,7 +260,8 @@ namespace TA.NetMF.Motor
             var safeDirection = Math.Sign(direction);
             if (safeDirection == 0)
                 return; // Not moving.
-            performStep(safeDirection); // user code
+            stepper.PerformMicrostep(safeDirection);
+            performStepCallback(safeDirection); // user code
             currentPosition += safeDirection;
             if (currentPosition > limitOfTravel || currentPosition < 0)
                 WrapPosition();
@@ -354,11 +372,11 @@ namespace TA.NetMF.Motor
             }
 
         /// <summary>
-        ///   Stops the motor and raises the <see cref="OnMotorStopped" /> event.
+        ///   Instantly stops the motor and raises the <see cref="OnMotorStopped" /> event.
         /// </summary>
-        void AllStop()
+        public void AllStop()
             {
-            stepTimer.Change(Timeout.Infinite, Timeout.Infinite);
+            stepTimer.Change(Timeout.Infinite, Timeout.Infinite);   // The timer may still tick!
             motorSpeed = 0;
             OnMotorStopped(this);
             }

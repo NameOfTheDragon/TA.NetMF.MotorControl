@@ -5,30 +5,9 @@
 // http://creativecommons.org/licenses/by/4.0/
 // 
 // File: AssemblyInfo.cs  Created: 2014-06-05@02:27
-// Last modified: 2014-06-05@12:23 by Tim
+// Last modified: 2014-10-14@06:53 by Tim
 
 using System.Reflection;
 
-// General Information about an assembly is controlled through the following 
-// set of attributes. Change these attribute values to modify the information
-// associated with an assembly.
-
-[assembly: AssemblyTitle("TA.NetMF.StepperDriver")]
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("TA.NetMF.StepperDriver")]
-[assembly: AssemblyCopyright("Copyright ©  2014")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
-
-// Version information for an assembly consists of the following four values:
-//
-//      Major Version
-//      Minor Version 
-//      Build Number
-//      Revision
-//
-
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyTitle("TA.NetMF.MotorControl.Samples.RunToRandomPosition")]
+[assembly: AssemblyDescription("Sample application demonstrating shield setup")]

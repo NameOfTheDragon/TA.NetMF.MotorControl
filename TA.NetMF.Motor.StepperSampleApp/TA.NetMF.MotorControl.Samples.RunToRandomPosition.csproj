@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <AssemblyName>TA.NetMF.Motor.StepperSampleApp</AssemblyName>
+    <AssemblyName>TA.NetMF.MotorControl.Samples.RunToRandomPosition</AssemblyName>
     <OutputType>Exe</OutputType>
-    <RootNamespace>TA.NetMF.Motor.StepperSampleApp</RootNamespace>
+    <RootNamespace>TA.NetMF.MotorControl.Samples</RootNamespace>
     <ProjectTypeGuids>{b69e3092-b931-443c-abe7-7e7b65f2a37f};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
@@ -33,6 +33,9 @@
   </PropertyGroup>
   <Import Project="$(NetMfTargetsBaseDir)$(TargetFrameworkVersion)\CSharp.Targets" />
   <ItemGroup>
+    <Compile Include="..\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
   </ItemGroup>
@@ -47,9 +50,9 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TA.NetMF.AdafruitMotorShield\TA.NetMF.AdafruitMotorShield.csproj">
-      <Project>{7F574E49-5B84-4D82-89C4-6EF51FB03B24}</Project>
-      <Name>TA.NetMF.AdafruitMotorShield</Name>
+    <ProjectReference Include="..\TA.NetMF.AdafruitMotorShieldV2\TA.NetMF.AdafruitMotorShieldV2.csproj">
+      <Project>{AAE4ED0D-CC09-4307-91E8-48473EE7BB8A}</Project>
+      <Name>TA.NetMF.AdafruitMotorShieldV2</Name>
     </ProjectReference>
     <ProjectReference Include="..\TA.NetMF.Motor\TA.NetMF.Motor.csproj">
       <Project>{85B64019-9BE7-4F0F-A328-0050FE5F5F96}</Project>

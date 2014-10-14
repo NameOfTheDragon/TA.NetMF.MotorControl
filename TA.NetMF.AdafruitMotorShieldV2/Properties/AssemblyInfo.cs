@@ -4,10 +4,10 @@
 // This source code is licensed under Creative Commons Attribution International 4.0 license
 // http://creativecommons.org/licenses/by/4.0/
 // 
-// File: AssemblyInfo.cs  Created: 2014-06-05@02:27
-// Last modified: 2014-10-14@06:56 by Tim
+// File: AssemblyInfo.cs  Created: 2014-06-06@17:03
+// Last modified: 2014-10-14@06:53 by Tim
 
 using System.Reflection;
 
-[assembly: AssemblyTitle("TA.NetMF.Motor")]
-[assembly: AssemblyDescription("Shield-independent motor control primitives")]
+[assembly: AssemblyTitle("TA.NetMF.AdafruitMotorShieldV2")]
+[assembly: AssemblyDescription("Driver for Adafruit Motor Control Shield V2")]
