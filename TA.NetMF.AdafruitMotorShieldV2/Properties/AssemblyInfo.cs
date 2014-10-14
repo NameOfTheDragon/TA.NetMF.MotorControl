@@ -1,16 +1,13 @@
-﻿using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
+﻿// This file is part of the TA.NetMF.MotorControl project
+// 
+// Copyright © 2014 Tigra Astronomy, all rights reserved.
+// This source code is licensed under Creative Commons Attribution International 4.0 license
+// http://creativecommons.org/licenses/by/4.0/
+// 
+// File: AssemblyInfo.cs  Created: 2014-06-06@17:03
+// Last modified: 2014-10-14@06:53 by Tim
 
-// General Information about an assembly is controlled through the following 
-// set of attributes. Change these attribute values to modify the information
-// associated with an assembly.
+using System.Reflection;
+
 [assembly: AssemblyTitle("TA.NetMF.AdafruitMotorShieldV2")]
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("TA.NetMF.AdafruitMotorShieldV2")]
-[assembly: AssemblyCopyright("Copyright ©  2014")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
-
+[assembly: AssemblyDescription("Driver for Adafruit Motor Control Shield V2")]

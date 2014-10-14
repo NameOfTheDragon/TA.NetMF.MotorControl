@@ -1,25 +1,15 @@
-﻿using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
+﻿// This file is part of the TA.NetMF.MotorControl project
+// 
+// Copyright © 2014 Tigra Astronomy, all rights reserved.
+// This source code is licensed under Creative Commons Attribution International 4.0 license
+// http://creativecommons.org/licenses/by/4.0/
+// 
+// File: AssemblyInfo.cs  Created: 2014-10-14@00:27
+// Last modified: 2014-10-14@06:52 by Tim
 
-// General Information about an assembly is controlled through the following 
-// set of attributes. Change these attribute values to modify the information
-// associated with an assembly.
+using System.Reflection;
+
 [assembly: AssemblyTitle("TA.NetMF.MotorControl.Samples.AxisSequencer")]
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("TA.NetMF.MotorControl.Samples.AxisSequencer")]
-[assembly: AssemblyCopyright("Copyright ©  2014")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
+[assembly: AssemblyDescription("Sample application demonstrating the use of an orchestrating class")]
 
-// Version information for an assembly consists of the following four values:
-//
-//      Major Version
-//      Minor Version 
-//      Build Number
-//      Revision
-//
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+// Versioning is in GlobalAssemblyInfo.cs

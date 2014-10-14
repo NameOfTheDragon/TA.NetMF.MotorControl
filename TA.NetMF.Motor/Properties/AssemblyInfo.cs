@@ -5,20 +5,9 @@
 // http://creativecommons.org/licenses/by/4.0/
 // 
 // File: AssemblyInfo.cs  Created: 2014-06-05@02:27
-// Last modified: 2014-06-05@12:23 by Tim
+// Last modified: 2014-10-14@06:56 by Tim
 
 using System.Reflection;
 
-// General Information about an assembly is controlled through the following 
-// set of attributes. Change these attribute values to modify the information
-// associated with an assembly.
-
-[assembly: AssemblyTitle("TA.NetMF.Utils")]
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("TA.NetMF.Utils")]
-[assembly: AssemblyCopyright("Copyright ©  2014")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
-
+[assembly: AssemblyTitle("TA.NetMF.Motor")]
+[assembly: AssemblyDescription("Shield-independent motor control primitives")]
