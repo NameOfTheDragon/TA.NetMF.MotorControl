@@ -405,6 +405,6 @@ namespace TA.NetMF.Motor
         /// Gets the current position of the stepper motor, measured in microsteps from the power-on position.
         /// </summary>
         /// <value>The position.</value>
-        int Position { get { return currentPosition; } }
+        public int Position { get { return currentPosition; } }
         }
     }
