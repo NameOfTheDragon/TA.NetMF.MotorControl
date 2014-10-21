@@ -400,5 +400,11 @@ namespace TA.NetMF.Motor
                 stepTimer.Change(millisecondsUntilNextStep, Timeout.Infinite);
                 }
             }
+
+        /// <summary>
+        /// Gets the current position of the stepper motor, measured in microsteps from the power-on position.
+        /// </summary>
+        /// <value>The position.</value>
+        public int Position { get { return currentPosition; } }
         }
     }
