@@ -1,12 +1,10 @@
 // This file is part of the TA.NetMF.MotorControl project
 // 
-// Copyright © 2014 Tigra Astronomy, all rights reserved.
-// This source code is licensed under Creative Commons Attribution International 4.0 license
-// http://creativecommons.org/licenses/by/4.0/
+// Copyright © 2014-2014 Tigra Astronomy, all rights reserved.
+// This source code is licensed under the MIT License, see http://opensource.org/licenses/MIT
 // 
 // File: SimpleHBridge.cs  Created: 2014-06-05@02:27
-// Last modified: 2014-06-05@12:23 by Tim
-
+// Last modified: 2014-11-30@13:57 by Tim
 using System;
 using Microsoft.SPOT.Hardware;
 using TA.NetMF.Motor;
