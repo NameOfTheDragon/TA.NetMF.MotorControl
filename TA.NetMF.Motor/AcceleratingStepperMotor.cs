@@ -403,6 +403,21 @@ namespace TA.NetMF.Motor
         /// Gets the current position of the stepper motor, measured in microsteps from the power-on position.
         /// </summary>
         /// <value>The position.</value>
-        public int Position { get { return currentPosition; } }
+        public int Position
+            {
+            get { return currentPosition; }
+            set
+                {
+                if (IsMoving)
+                    {
+                    throw new InvalidOperationException(
+                        "Position may only be set when the motor is stopped; check the IsMoving property or call AllStop().");
+                    }
+                if (value > limitOfTravel || value < 0)
+                    throw new ArgumentOutOfRangeException("value",
+                        "Position must be in the range 0 to " + limitOfTravel.ToString());
+                currentPosition = value;
+                }
+            }
         }
     }
