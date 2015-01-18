@@ -63,8 +63,8 @@ namespace TA.NetMF.MotorControl.Samples
             // The shield details are abstracted from the motor control, so whatever shield we have,
             // we just ask it for an IStepperMotorControl, specifying the number of microsteps and the
             // output numbers of the two motor phases.
-            StepperM1M2 = adafruitMotorShieldV2.GetStepperMotor(MicrostepsPerStep, 1, 2);
-            StepperM3M4 = adafruitMotorShieldV2.GetStepperMotor(MicrostepsPerStep, 3, 4);
+            StepperM1M2 = adafruitMotorShieldV2.GetMicrosteppingStepperMotor(MicrostepsPerStep, 1, 2);
+            StepperM3M4 = adafruitMotorShieldV2.GetMicrosteppingStepperMotor(MicrostepsPerStep, 3, 4);
 
             // Create the stepper motor axes and link them to the Adafruit driver.
             // On the first axis, we use the optional step callback to wire up a diagnostic LED.
