@@ -4,13 +4,13 @@
 // This source code is licensed under the MIT License, see http://opensource.org/licenses/MIT
 // 
 // File: MultiplexedHBridge.cs  Created: 2015-01-16@17:30
-// Last modified: 2015-01-17@23:50 by Tim
+// Last modified: 2015-01-19@00:09 by Tim
 
 using System;
 using Microsoft.SPOT.Hardware;
 using TA.NetMF.Motor;
 
-namespace TA.NetMF.AdafruitMotorShield
+namespace TA.NetMF.AdafruitMotorShieldV1
     {
     /// <summary>
     ///   Class MultiplexedHBridge. Each instance corresponds to one motor winding.
@@ -69,10 +69,10 @@ namespace TA.NetMF.AdafruitMotorShield
         ShiftRegisterOperation[] directionTransaction = new ShiftRegisterOperation[2];
         readonly ushort directionA;
         readonly ushort directionB;
+        readonly ShiftRegisterOperation[] forwardTransaction;
         readonly SerialShiftRegister outputShiftRegister;
+        readonly ShiftRegisterOperation[] reverseTransaction;
         readonly PWM speedControl;
-        ShiftRegisterOperation[] forwardTransaction;
-        ShiftRegisterOperation[] reverseTransaction;
 
         /// <summary>
         ///   Initializes a new instance of the <see cref="MultiplexedHBridge" /> class.
@@ -87,16 +87,17 @@ namespace TA.NetMF.AdafruitMotorShield
             ushort directionB)
             {
             this.speedControl = speedControl;
+            speedControl.Start();
             this.outputShiftRegister = outputShiftRegister;
             this.directionA = directionA;
             this.directionB = directionB;
             // For efficiency, initialise some direction transactions ready for use later.
-            forwardTransaction = new ShiftRegisterOperation[]
+            forwardTransaction = new[]
                 {
                 new ShiftRegisterOperation(directionA, true),
                 new ShiftRegisterOperation(directionB, false)
                 };
-            reverseTransaction = new ShiftRegisterOperation[]
+            reverseTransaction = new[]
                 {
                 new ShiftRegisterOperation(directionA, false),
                 new ShiftRegisterOperation(directionB, true)
@@ -105,19 +106,18 @@ namespace TA.NetMF.AdafruitMotorShield
 
         public override void SetOutputPowerAndPolarity(double duty)
             {
-            base.SetOutputPowerAndPolarity(duty);
             var magnitude = Math.Abs(duty);
-            // ToDo - work out how to configure the h-bridge using Adafruit's funny latch attangement
+            var polarity = duty >= 0.0;
+            SetOutputPowerAndPolarity(magnitude, polarity);
+            base.SetOutputPowerAndPolarity(duty);
             }
 
-        void SetForwardDirection()
+        void SetOutputPowerAndPolarity(double magnitude, bool polarity)
             {
-            outputShiftRegister.WriteTransaction(forwardTransaction);
-            }
-
-        void SetReverseDirection()
-            {
-            outputShiftRegister.WriteTransaction(reverseTransaction);
+            if (polarity != Polarity)
+                speedControl.DutyCycle = 0.0;
+            outputShiftRegister.WriteTransaction(polarity ? forwardTransaction : reverseTransaction);
+            speedControl.DutyCycle = magnitude;
             }
         }
     }

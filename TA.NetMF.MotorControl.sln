@@ -26,6 +26,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TA.NetMF.MotorControl.Sampl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TA.NetMF.AdafruitMotorShieldV1", "TA.NetMF.AdafruitMotorShield\TA.NetMF.AdafruitMotorShieldV1.csproj", "{7F574E49-5B84-4D82-89C4-6EF51FB03B24}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TA.NetMF.MotorSimulator", "TA.NetMF.MotorSimulator\TA.NetMF.MotorSimulator.csproj", "{FBA7AC49-CC4F-4C72-8632-F628DE16888A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,6 +62,10 @@ Global
 		{7F574E49-5B84-4D82-89C4-6EF51FB03B24}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7F574E49-5B84-4D82-89C4-6EF51FB03B24}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7F574E49-5B84-4D82-89C4-6EF51FB03B24}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FBA7AC49-CC4F-4C72-8632-F628DE16888A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBA7AC49-CC4F-4C72-8632-F628DE16888A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FBA7AC49-CC4F-4C72-8632-F628DE16888A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBA7AC49-CC4F-4C72-8632-F628DE16888A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

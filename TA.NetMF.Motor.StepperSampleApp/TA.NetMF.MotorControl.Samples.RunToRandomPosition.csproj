@@ -54,6 +54,14 @@
       <Project>{AAE4ED0D-CC09-4307-91E8-48473EE7BB8A}</Project>
       <Name>TA.NetMF.AdafruitMotorShieldV2</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TA.NetMF.AdafruitMotorShield\TA.NetMF.AdafruitMotorShieldV1.csproj">
+      <Project>{7F574E49-5B84-4D82-89C4-6EF51FB03B24}</Project>
+      <Name>TA.NetMF.AdafruitMotorShieldV1</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TA.NetMF.MotorSimulator\TA.NetMF.MotorSimulator.csproj">
+      <Project>{FBA7AC49-CC4F-4C72-8632-F628DE16888A}</Project>
+      <Name>TA.NetMF.MotorSimulator</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TA.NetMF.Motor\TA.NetMF.Motor.csproj">
       <Project>{85B64019-9BE7-4F0F-A328-0050FE5F5F96}</Project>
       <Name>TA.NetMF.Motor</Name>

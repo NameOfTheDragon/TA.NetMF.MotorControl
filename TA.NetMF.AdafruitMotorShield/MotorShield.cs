@@ -11,7 +11,7 @@ using Microsoft.SPOT.Hardware;
 using SecretLabs.NETMF.Hardware.NetduinoPlus;
 using TA.NetMF.Motor;
 
-namespace TA.NetMF.AdafruitMotorShield
+namespace TA.NetMF.AdafruitMotorShieldV1
     {
     public sealed class MotorShield
         {
@@ -36,17 +36,17 @@ namespace TA.NetMF.AdafruitMotorShield
             this.data = data;
             this.clock = clock;
             this.serialShiftRegister = new SerialShiftRegister(enable, clock, data, latch);
-            Reset();
             }
 
         /// <summary>
         ///   Resets the latch so that all motors and outputs are disabled.
         /// </summary>
         /// <exception cref="System.NotImplementedException"></exception>
-        public void Reset()
+        public void InitializeShield()
             {
-            enable.Low(); // disables the latch outputs.
+            enable.High(); // disables the latch outputs.
             serialShiftRegister.Write(Octet.Zero);
+            enable.Low();   // Enables the parallel output register drivers.
             }
 
         /// <summary>
