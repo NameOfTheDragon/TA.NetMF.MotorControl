@@ -11,31 +11,44 @@ using TA.NetMF.Motor;
 
 namespace TA.NetMF.SparkfunArdumotoShield
     {
+    /// <summary>
+    /// Class SimpleHBridge. Implements a simple H-Bridge that can be used to control
+    /// a DC motor or one winding of a stepper motor. The H-Bridge consists of a direction
+    /// control pin and a PWM channel that is used to modulate the Enable pin of the driver chip.
+    /// This class is intended to work with devices such as L293D.
+    /// </summary>
     public class SimpleHBridge : HBridge
         {
         readonly OutputPort direction;
-        readonly PWM enable;
+        readonly PWM power;
 
-        public SimpleHBridge(PWM enable, OutputPort direction)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SimpleHBridge"/> class.
+        /// </summary>
+        /// <param name="powerControlChannel">The PWM channel to be used for power control.</param>
+        /// <param name="directionControlPin">The pin to be used for direction control.</param>
+        public SimpleHBridge(Cpu.PWMChannel powerControlChannel, Cpu.Pin directionControlPin)
             {
-            this.enable = enable;
-            this.direction = direction;
+            direction = new OutputPort(directionControlPin, false);
+            power = new PWM(powerControlChannel, 500.0, 0.0, false);
+            power.Start();
             }
 
         public override void SetOutputPowerAndPolarity(double duty)
             {
-            base.SetOutputPowerAndPolarity(duty);
             var polarity = (duty >= 0.0);
             var magnitude = Math.Abs(duty);
             SetOutputPowerAndPolarity(magnitude, polarity);
+            base.SetOutputPowerAndPolarity(duty);
             }
+
 
         void SetOutputPowerAndPolarity(double magnitude, bool polarity)
             {
             if (polarity != Polarity)
-                enable.DutyCycle = 0.0; // If reversing direction, set power to zero first.
+                power.DutyCycle = 0.0; // If reversing direction, set power to zero first.
             direction.Write(polarity);
-            enable.DutyCycle = magnitude;
+            power.DutyCycle = magnitude;
             }
         }
     }

@@ -1,10 +1,11 @@
 // This file is part of the TA.NetMF.MotorControl project
 // 
-// Copyright © 2014-2014 Tigra Astronomy, all rights reserved.
+// Copyright © 2014-2015 Tigra Astronomy, all rights reserved.
 // This source code is licensed under the MIT License, see http://opensource.org/licenses/MIT
 // 
-// File: MotorShield.cs  Created: 2014-06-06@17:06
-// Last modified: 2014-11-30@13:57 by Tim
+// File: MotorShield.cs  Created: 2015-01-13@13:45
+// Last modified: 2015-01-16@17:56 by Tim
+
 using System;
 using TA.NetMF.Motor;
 
@@ -26,15 +27,16 @@ namespace TA.NetMF.AdafruitMotorShieldV2
         public void InitializeShield() {}
 
         /// <summary>
-        ///   Gets a stepper motor with the specified number of microsteps.
-        ///   The phases specify which of the 4 motor outputs the stepper motor windings are connected to.
-        ///   The outputs M1, M2, M3 and M4 can be read from the silk screen of the shield.
+        ///   Gets a stepper motor with the specified number of microsteps. The
+        ///   phases specify which of the 4 motor outputs the stepper motor
+        ///   windings are connected to. The outputs M1, M2, M3 and M4 can be
+        ///   read from the silk screen of the shield.
         /// </summary>
-        /// <param name="microsteps">The number of microsteps per whole step.</param>
+        /// <param name="microsteps">The number of microsteps per stepping cycle. </param>
         /// <param name="phase1">The output number (M1, M2, M3 or M4) that the first motor phase is connected to.</param>
-        /// <param name="phase2">The output number (M1, M2, M3 or M4) that the second motor phase is connected to.</param>
-        /// <returns>IStepperMotorControl.</returns>
-        public IStepperMotorControl GetStepperMotor(int microsteps, int phase1, int phase2)
+        /// <param name="phase2">The output number (M1, M2, M3 or M4) that the  second motor phase is connected to.</param>
+        /// <returns>An implementation of <see cref="IStepperMotorControl" />  that can control the specified motor windings in microsteps.</returns>
+        public IStepperMotorControl GetMicrosteppingStepperMotor(int microsteps, int phase1, int phase2)
             {
             if (phase1 > 4 || phase1 < 1)
                 throw new ArgumentOutOfRangeException("phase1", "must be 1, 2, 3 or 4");
@@ -46,6 +48,34 @@ namespace TA.NetMF.AdafruitMotorShieldV2
             var hbridge2 = GetHbridge(phase2);
             var motor = new MicrosteppingStepperMotor(hbridge1, hbridge2, microsteps);
             return motor;
+            }
+
+        /// <summary>
+        ///   Gets a stepper motor controller that performs 4 whole steps per stepping cycle.
+        ///   The phases specify which of the 4 motor outputs the stepper motor
+        ///   windings are connected to. The outputs M1, M2, M3 and M4 can be
+        ///   read from the silk screen of the shield.
+        /// </summary>
+        /// <param name="phase1">The output number (M1, M2, M3 or M4) that the first motor phase is connected to.</param>
+        /// <param name="phase2">The output number (M1, M2, M3 or M4) that the  second motor phase is connected to.</param>
+        /// <returns>An implementation of <see cref="IStepperMotorControl" /> that can control the specified motor windings in whole steps.</returns>
+        public IStepperMotorControl GetFullSteppingStepperMotor(int phase1, int phase2)
+            {
+            return GetMicrosteppingStepperMotor(4, phase1, phase2);
+            }
+
+        /// <summary>
+        ///   Gets a stepper motor controller that performs 8 half steps per stepping cycle.
+        ///   The phases specify which of the 4 motor outputs the stepper motor
+        ///   windings are connected to. The outputs M1, M2, M3 and M4 can be
+        ///   read from the silk screen of the shield.
+        /// </summary>
+        /// <param name="phase1">The output number (M1, M2, M3 or M4) that the first motor phase is connected to.</param>
+        /// <param name="phase2">The output number (M1, M2, M3 or M4) that the  second motor phase is connected to.</param>
+        /// <returns>An implementation of <see cref="IStepperMotorControl" /> that can control the specified motor windings in half steps.</returns>
+        public IStepperMotorControl GetHalfSteppingStepperMotor(int phase1, int phase2)
+            {
+            return GetMicrosteppingStepperMotor(8, phase1, phase2);
             }
 
         /// <summary>

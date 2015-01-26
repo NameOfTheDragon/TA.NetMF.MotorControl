@@ -48,9 +48,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Diagrams\HBridge.cd" />
     <None Include="Datasheets\PCA9685 16-channel PWM controller.pdf" />
     <None Include="Datasheets\TB6612FNG Dual DC Motor Driver %28H-Bridge%29.pdf" />
-    <None Include="PWM Controller.cd" />
+    <None Include="Diagrams\PWM Controller.cd" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TA.NetMF.Motor\TA.NetMF.Motor.csproj">
