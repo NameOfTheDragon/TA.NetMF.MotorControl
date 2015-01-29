@@ -44,11 +44,12 @@
     <Reference Include="SecretLabs.NETMF.Hardware" />
     <Reference Include="SecretLabs.NETMF.Hardware.Netduino" />
     <Reference Include="System" />
-    <Reference Include="TA.NetMF.MotorSimulator">
-      <HintPath>..\TA.NetMF.MotorSimulator\bin\Debug\TA.NetMF.MotorSimulator.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\TA.NetMF.MotorSimulator\TA.NetMF.MotorSimulator.csproj">
+      <Project>{FBA7AC49-CC4F-4C72-8632-F628DE16888A}</Project>
+      <Name>TA.NetMF.MotorSimulator</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TA.NetMF.Motor\TA.NetMF.Motor.csproj">
       <Project>{85B64019-9BE7-4F0F-A328-0050FE5F5F96}</Project>
       <Name>TA.NetMF.Motor</Name>

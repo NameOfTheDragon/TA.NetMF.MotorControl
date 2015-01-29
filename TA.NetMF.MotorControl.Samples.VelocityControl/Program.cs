@@ -29,7 +29,17 @@ using Microsoft.SPOT;
 using Microsoft.SPOT.Hardware;
 using SecretLabs.NETMF.Hardware.Netduino;
 using TA.NetMF.Motor;
+#if SparkfunArduMotoShield
+using TA.NetMF.SparkfunArdumotoShield;
+#elif AdafruitV1Shield
+using TA.NetMF.AdafruitMotorShieldV1;
+#elif AdafruitV2Shield
+using TA.NetMF.AdafruitMotorShieldV2;
+#elif LedSimulatorShield
 using TA.NetMF.MotorSimulator;
+#else
+#error Incorrect shield configuration - please uncomment exactly one #define
+#endif
 
 namespace TA.NetMF.MotorControl.Samples.VelocityControl
     {
