@@ -13,5 +13,10 @@ namespace TA.NetMF.AdafruitMotorShieldV1
 
         public ushort BitNumber { get; private set; }
         public bool Value { get; private set; }
+
+        public override string ToString()
+            {
+            return "Bit "+BitNumber.ToString()+"="+Value.ToString();
+            }
         }
     }

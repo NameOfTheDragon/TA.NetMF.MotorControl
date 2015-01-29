@@ -5,6 +5,7 @@
 // 
 // File: GlobalAssemblyInfo.cs  Created: 2014-06-14@22:54
 // Last modified: 2014-11-30@13:57 by Tim
+
 using System.Reflection;
 
 [assembly: AssemblyVersion("0.1.2.*")]

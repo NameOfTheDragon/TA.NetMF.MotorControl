@@ -3,8 +3,8 @@
 // Copyright © 2014-2015 Tigra Astronomy, all rights reserved.
 // This source code is licensed under the MIT License, see http://opensource.org/licenses/MIT
 // 
-// File: MultiplexedHBridge.cs  Created: 2015-01-16@17:30
-// Last modified: 2015-01-19@00:09 by Tim
+// File: MultiplexedHBridge.cs  Created: 2015-01-26@16:47
+// Last modified: 2015-01-29@01:59 by Tim
 
 using System;
 using Microsoft.SPOT.Hardware;
@@ -71,6 +71,7 @@ namespace TA.NetMF.AdafruitMotorShieldV1
         readonly ushort directionB;
         readonly ShiftRegisterOperation[] forwardTransaction;
         readonly SerialShiftRegister outputShiftRegister;
+        readonly ShiftRegisterOperation[] releaseTransaction;
         readonly ShiftRegisterOperation[] reverseTransaction;
         readonly PWM speedControl;
 
@@ -87,7 +88,6 @@ namespace TA.NetMF.AdafruitMotorShieldV1
             ushort directionB)
             {
             this.speedControl = speedControl;
-            speedControl.Start();
             this.outputShiftRegister = outputShiftRegister;
             this.directionA = directionA;
             this.directionB = directionB;
@@ -102,6 +102,21 @@ namespace TA.NetMF.AdafruitMotorShieldV1
                 new ShiftRegisterOperation(directionA, false),
                 new ShiftRegisterOperation(directionB, true)
                 };
+            releaseTransaction = new[]
+                {
+                new ShiftRegisterOperation(directionA, false),
+                new ShiftRegisterOperation(directionB, false)
+                };
+
+            InitializeOutputs(); // Ensure the outputs are in a sane, safe state.
+            }
+
+        void InitializeOutputs()
+            {
+            // base duty will start at 0.0, i.e. magnitude 0, polarity true (forwards)
+            speedControl.DutyCycle = 0.0;
+            speedControl.Start();
+            outputShiftRegister.WriteTransaction(forwardTransaction);
             }
 
         public override void SetOutputPowerAndPolarity(double duty)
@@ -109,15 +124,24 @@ namespace TA.NetMF.AdafruitMotorShieldV1
             var magnitude = Math.Abs(duty);
             var polarity = duty >= 0.0;
             SetOutputPowerAndPolarity(magnitude, polarity);
+
             base.SetOutputPowerAndPolarity(duty);
             }
 
         void SetOutputPowerAndPolarity(double magnitude, bool polarity)
             {
             if (polarity != Polarity)
-                speedControl.DutyCycle = 0.0;
-            outputShiftRegister.WriteTransaction(polarity ? forwardTransaction : reverseTransaction);
+                {
+                speedControl.DutyCycle = 0.0; // Set output power to nothing before reversing polarity.
+                outputShiftRegister.WriteTransaction(polarity ? forwardTransaction : reverseTransaction);
+                }
             speedControl.DutyCycle = magnitude;
+            }
+
+        void ReleaseTorque()
+            {
+            speedControl.DutyCycle = 0.0;
+            outputShiftRegister.WriteTransaction(releaseTransaction);
             }
         }
     }

@@ -11,6 +11,9 @@
 //#define AdafruitV2Shield
 //#define SparkfunArduMotoShield
 #define LedSimulatorShield
+#endregion
+
+#region Hardware options -- do not edit without good reason
 #if !SparkfunArduMotoShield
 #define UseSecondAxis   // Sparkfun shield only has one H-Bridge so cannot support a second axis.
 #endif

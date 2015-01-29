@@ -7,12 +7,15 @@
 // Last modified: 2015-01-19@00:25 by Tim
 
 #region Shield selection - uncomment only one of the following shields
-//#define AdafruitV1Shield
+#define AdafruitV1Shield
 //#define AdafruitV2Shield
-#define SparkfunArduMotoShield
+//#define SparkfunArduMotoShield
 //#define LedSimulatorShield
+#endregion
+
+#region Hardware options -- do not edit without good reason
 #if !SparkfunArduMotoShield
-    #define UseSecondAxis   // Sparkfun shield only has one H-Bridge so cannot support a second axis.
+#define UseSecondAxis   // Sparkfun shield only has one H-Bridge so cannot support a second axis.
 #endif
 #if !LedSimulatorShield
 #define UseOnboardLedForDiagnostics
@@ -26,7 +29,17 @@ using Microsoft.SPOT;
 using Microsoft.SPOT.Hardware;
 using SecretLabs.NETMF.Hardware.Netduino;
 using TA.NetMF.Motor;
+#if SparkfunArduMotoShield
 using TA.NetMF.SparkfunArdumotoShield;
+#elif AdafruitV1Shield
+using TA.NetMF.AdafruitMotorShieldV1;
+#elif AdafruitV2Shield
+using TA.NetMF.AdafruitMotorShieldV2;
+#elif LedSimulatorShield
+using TA.NetMF.MotorSimulator;
+#else
+#error Incorrect shield configuration - please uncomment exactly one #define
+#endif
 
 namespace TA.NetMF.MotorControl.Samples
     {
@@ -49,10 +62,10 @@ namespace TA.NetMF.MotorControl.Samples
             var enable = new OutputPort(Pins.GPIO_PIN_D7, true);
             var data = new OutputPort(Pins.GPIO_PIN_D8, false);
             var clock = new OutputPort(Pins.GPIO_PIN_D4, false);
-            var adafruitMotorShieldV1 = new AdafruitMotorShieldV1.MotorShield(latch, enable, data, clock);
+            var adafruitMotorShieldV1 = new MotorShield(latch, enable, data, clock);
             adafruitMotorShieldV1.InitializeShield();
-            StepperM1M2 = adafruitMotorShieldV1.GetMicrosteppingStepperMotor(64, 1, 2);
-            StepperM3M4 = adafruitMotorShieldV1.GetFullSteppingStepperMotor(3, 4);
+            StepperM1M2 = adafruitMotorShieldV1.GetHalfSteppingStepperMotor(1, 2);
+            StepperM3M4 = adafruitMotorShieldV1.GetMicrosteppingStepperMotor(64, 3, 4);
 #elif AdafruitV2Shield
             var adafruitMotorShieldV2 = new MotorShield();  // use shield at default I2C address.
             adafruitMotorShieldV2.InitializeShield();
@@ -92,13 +105,13 @@ namespace TA.NetMF.MotorControl.Samples
 
             // Repeat for the second axis, if it's supported.
 #if UseSecondAxis
-            var axis2 = new AcceleratingStepperMotor(LimitOfTravel, StepperM3M4)
-                {
-                MaximumSpeed = MaxSpeed,
-                RampTime = RampTime
-                };
-            axis2.MotorStopped += HandleAxisStoppedEvent;
-            HandleAxisStoppedEvent(axis2);
+            //var axis2 = new AcceleratingStepperMotor(LimitOfTravel, StepperM3M4)
+            //    {
+            //    MaximumSpeed = MaxSpeed,
+            //    RampTime = RampTime
+            //    };
+            //axis2.MotorStopped += HandleAxisStoppedEvent;
+            //HandleAxisStoppedEvent(axis2);
 #endif
 
             // Finally, we sleep forever as there is nothing else to do in the main thread.
@@ -113,9 +126,10 @@ namespace TA.NetMF.MotorControl.Samples
         /// <param name="axis">The axis that has stopped.</param>
         static void HandleAxisStoppedEvent(AcceleratingStepperMotor axis)
             {
-            Thread.Sleep(3000); // Wait a short time before starting the next move.
+            // Be careful, both axes appear to run on the same thread, so using Thread.Sleep() here will affect both.
+            //Thread.Sleep(3000); // Wait a short time before starting the next move.
             var randomTarget = randomGenerator.Next(LimitOfTravel);
-            Trace.Print("Starting move to " + randomTarget);
+            //Debug.Print("Starting move to " + randomTarget);
             axis.MoveToTargetPosition(randomTarget);
             }
 
@@ -136,7 +150,7 @@ namespace TA.NetMF.MotorControl.Samples
 
 
         #region Stepper Configuration - Change these values to your liking.
-        const int LimitOfTravel = 4000;
+        const int LimitOfTravel = 8000;
 
         /// <summary>
         ///   The maximum speed in steps per second.

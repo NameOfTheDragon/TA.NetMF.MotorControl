@@ -5,9 +5,31 @@
 // 
 // File: Program.cs  Created: 2014-10-14@03:43
 // Last modified: 2014-11-30@13:57 by Tim
+
+#region Shield selection - uncomment only one of the following shields
+//#define AdafruitV1Shield
+//#define AdafruitV2Shield
+//#define SparkfunArduMotoShield
+#define LedSimulatorShield
+#endregion
+
+#region Hardware options -- do not edit without good reason
+#if !SparkfunArduMotoShield
+#define UseSecondAxis   // Sparkfun shield only has one H-Bridge so cannot support a second axis.
+#endif
+#if !LedSimulatorShield
+#define UseOnboardLedForDiagnostics
+#endif
+#endregion
+
+
 using System;
 using System.Threading;
+#if AdafruitV2Shield
 using TA.NetMF.AdafruitMotorShieldV2;
+#elif AdafruitV1Shield
+#elif SparkfunArduMotoShield
+using TA.
 using TA.NetMF.Motor;
 
 namespace TA.NetMF.MotorControl.Samples.AxisSequencer

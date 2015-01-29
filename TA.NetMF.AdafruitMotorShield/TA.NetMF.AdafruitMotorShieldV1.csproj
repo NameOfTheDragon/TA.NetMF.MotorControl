@@ -52,6 +52,7 @@
     <Content Include="Datasheet\mshieldv12schem.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Datasheet\74HC_HCT595.pdf" />
     <None Include="Diagrams\Motor Shield V1 Driver.cd" />
   </ItemGroup>
   <ItemGroup>

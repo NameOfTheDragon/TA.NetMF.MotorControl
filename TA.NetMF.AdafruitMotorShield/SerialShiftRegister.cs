@@ -61,6 +61,8 @@ namespace TA.NetMF.AdafruitMotorShieldV1
 
         void WriteOctet(Octet data)
             {
+            // The 74HCT595 shift register accepts the most significant bit first.
+            // SO whatever is shifted in forst ends up on output Q7/QH/Pin 7.
             for (int i = 7; i >= 0; i--)
                 WriteOneBit(data[i]);
             }
@@ -77,10 +79,11 @@ namespace TA.NetMF.AdafruitMotorShieldV1
             {
             lock (syncObject) // prevent race condition
                 {
-                latchPositiveEdge.Write(false);
+                latchPositiveEdge.Low();
                 WriteOctet(data);
-                latchPositiveEdge.Write(true);
+                latchPositiveEdge.High();
                 outputs = data;
+                outputEnableActiveLow.Low();
                 }
             }
 
@@ -94,8 +97,8 @@ namespace TA.NetMF.AdafruitMotorShieldV1
                 {
                 var targetValues = outputs;
                 foreach (var shiftRegisterOperation in operations)
-                    targetValues.SetBitValue(shiftRegisterOperation.BitNumber, shiftRegisterOperation.Value);
-                WriteOctet(targetValues);
+                    targetValues = targetValues.WithBitSetTo(shiftRegisterOperation.BitNumber, shiftRegisterOperation.Value);
+                Write(targetValues);
                 }
             }
         }
