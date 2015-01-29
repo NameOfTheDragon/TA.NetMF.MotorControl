@@ -22,15 +22,21 @@
 #endif
 #endregion
 
-
+using SecretLabs.NETMF.Hardware.Netduino;
 using System;
 using System.Threading;
-#if AdafruitV2Shield
-using TA.NetMF.AdafruitMotorShieldV2;
-#elif AdafruitV1Shield
-#elif SparkfunArduMotoShield
-using TA.
 using TA.NetMF.Motor;
+#if SparkfunArduMotoShield
+using TA.NetMF.SparkfunArdumotoShield;
+#elif AdafruitV1Shield
+using TA.NetMF.AdafruitMotorShieldV1;
+#elif AdafruitV2Shield
+using TA.NetMF.AdafruitMotorShieldV2;
+#elif LedSimulatorShield
+using TA.NetMF.MotorSimulator;
+#else
+#error Incorrect shield configuration - please uncomment exactly one #define
+#endif
 
 namespace TA.NetMF.MotorControl.Samples.AxisSequencer
     {
@@ -40,15 +46,48 @@ namespace TA.NetMF.MotorControl.Samples.AxisSequencer
 
         public static void Main()
             {
-            var shield = new MotorShield();
-            var motor1 = shield.GetMicrosteppingStepperMotor(64, 1, 2); // 64 microsteps, outputs M1 and M2
-            var motor2 = shield.GetMicrosteppingStepperMotor(64, 3, 4); // 64 microsteps, outputs M3 and M4
-            var axis1 = new AcceleratingStepperMotor(LimitOfTravel, motor1)
+#if UseOnboardLedForDiagnostics
+            Led = new OutputPort(Pins.ONBOARD_LED, false);
+#endif
+#if AdafruitV1Shield
+            var latch = new OutputPort(Pins.GPIO_PIN_D12, false);
+            var enable = new OutputPort(Pins.GPIO_PIN_D7, true);
+            var data = new OutputPort(Pins.GPIO_PIN_D8, false);
+            var clock = new OutputPort(Pins.GPIO_PIN_D4, false);
+            var adafruitMotorShieldV1 = new MotorShield(latch, enable, data, clock);
+            adafruitMotorShieldV1.InitializeShield();
+            StepperM1M2 = adafruitMotorShieldV1.GetHalfSteppingStepperMotor(1, 2);
+            StepperM3M4 = adafruitMotorShieldV1.GetMicrosteppingStepperMotor(64, 3, 4);
+#elif AdafruitV2Shield
+            var adafruitMotorShieldV2 = new MotorShield();  // use shield at default I2C address.
+            adafruitMotorShieldV2.InitializeShield();
+            StepperM1M2 = adafruitMotorShieldV2.GetMicrosteppingStepperMotor(MicrostepsPerStep, 1, 2);
+            StepperM3M4 = adafruitMotorShieldV2.GetMicrosteppingStepperMotor(MicrostepsPerStep, 3, 4);
+#elif SparkfunArduMotoShield
+            var shield = new ArdumotoShield();
+            shield.InitializeShield();
+            var phase1 = shield.GetHBridge(Connector.A, TargetDevice.Netduino);
+            var phase2 = shield.GetHBridge(Connector.B, TargetDevice.Netduino);
+            StepperM1M2 = shield.GetMicrosteppingStepperMotor(MicrostepsPerStep, phase1, phase2);
+#elif LedSimulatorShield
+            var StepperM1M2 = LedMotorSimulator.GetSimulatedStepperMotor(Pins.GPIO_PIN_D0,
+                PWMChannels.PWM_ONBOARD_LED,
+                Pins.GPIO_PIN_D1,
+                PWMChannels.PWM_PIN_D6);
+            var StepperM3M4 = LedMotorSimulator.GetSimulatedStepperMotor(Pins.GPIO_PIN_D2,
+                PWMChannels.PWM_PIN_D9,
+                Pins.GPIO_PIN_D3,
+                PWMChannels.PWM_PIN_D10);
+#else
+            throw new ApplicationException("Uncomment one of the shield #define statements");
+#endif
+
+            var axis1 = new AcceleratingStepperMotor(LimitOfTravel, StepperM1M2)
                 {
                 MaximumSpeed = AcceleratingStepperMotor.MaximumPossibleSpeed,
                 RampTime = 2.0
                 };
-            var axis2 = new AcceleratingStepperMotor(LimitOfTravel, motor2)
+            var axis2 = new AcceleratingStepperMotor(LimitOfTravel, StepperM3M4)
                 {
                 MaximumSpeed = AcceleratingStepperMotor.MaximumPossibleSpeed,
                 RampTime = 2.0
