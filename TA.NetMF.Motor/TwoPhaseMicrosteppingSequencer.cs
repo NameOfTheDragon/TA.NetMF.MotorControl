@@ -9,7 +9,11 @@ using System;
 
 namespace TA.NetMF.Motor
     {
-    public class MicrosteppingStepperMotor : IStepperMotorControl
+    /// <summary>
+    /// Class TwoPhaseMicrosteppingSequencer. Provides an implementation of <see cref="IStepSequencer"/> that can perform
+    /// stepsPerStepCycle of variable resolution, half steps or full steps.
+    /// </summary>
+    public class TwoPhaseMicrosteppingSequencer : IStepSequencer
         {
         readonly int maxIndex;
         readonly HBridge phase1;
@@ -18,13 +22,19 @@ namespace TA.NetMF.Motor
         double[] outOfPhaseDutyCycle;
         int phaseIndex;
 
-        public MicrosteppingStepperMotor(HBridge phase1bridge, HBridge phase2bridge, int microsteps)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TwoPhaseMicrosteppingSequencer"/> class.
+        /// </summary>
+        /// <param name="phase1bridge">The H-Bridge that controls motor phase 1.</param>
+        /// <param name="phase2bridge">The H-Bridge that controls motor phase 2.</param>
+        /// <param name="stepsPerStepCycle">The steps per step cycle.</param>
+        public TwoPhaseMicrosteppingSequencer(HBridge phase1bridge, HBridge phase2bridge, int stepsPerStepCycle)
             {
             phase1 = phase1bridge;
             phase2 = phase2bridge;
-            maxIndex = microsteps - 1;
+            maxIndex = stepsPerStepCycle - 1;
             phaseIndex = 0;
-            ConfigureStepTables(microsteps);
+            ConfigureStepTables(stepsPerStepCycle);
             }
 
         void ConfigureStepTables(int microsteps)
@@ -44,7 +54,7 @@ namespace TA.NetMF.Motor
                 ComputeMicrostepTables(microsteps);
                 return;
                 }
-            throw new ArgumentException("Use 4 for full steps; 8 for half steps; or >8 for microsteps", "microsteps");
+            throw new ArgumentException("Use 4 for full steps; 8 for half steps; or >8 for stepsPerStepCycle", "microsteps");
             }
 
         void ComputeHalfStepTables()
@@ -63,7 +73,7 @@ namespace TA.NetMF.Motor
                 {+1.0, +1.0, -1.0, -1.0};
             }
 
-        public void PerformMicrostep(int direction)
+        public void PerformStep(int direction)
             {
             phaseIndex += direction;
             if (phaseIndex > maxIndex)

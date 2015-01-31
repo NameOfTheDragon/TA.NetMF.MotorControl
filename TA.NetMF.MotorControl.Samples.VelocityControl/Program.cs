@@ -45,8 +45,8 @@ namespace TA.NetMF.MotorControl.Samples.VelocityControl
     {
     public class Program
         {
-        static IStepperMotorControl StepperM1M2;
-        static IStepperMotorControl StepperM3M4;
+        static IStepSequencer StepperM1M2;
+        static IStepSequencer StepperM3M4;
         static readonly Random randomGenerator = new Random();
         static OutputPort Led;
         static bool LedState;

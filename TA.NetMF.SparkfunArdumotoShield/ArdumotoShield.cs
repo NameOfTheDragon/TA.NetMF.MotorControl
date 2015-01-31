@@ -68,10 +68,10 @@ namespace TA.NetMF.SparkfunArdumotoShield
         ///   Gets a stepper motor configured for the specified number of microsteps.
         /// </summary>
         /// <param name="microsteps">The microsteps.</param>
-        /// <returns>TA.NetMF.Utils.IStepperMotorControl.</returns>
-        public IStepperMotorControl GetMicrosteppingStepperMotor(int microsteps, HBridge phase1, HBridge phase2)
+        /// <returns>TA.NetMF.Utils.IStepSequencer.</returns>
+        public IStepSequencer GetMicrosteppingStepperMotor(int microsteps, HBridge phase1, HBridge phase2)
             {
-            return new MicrosteppingStepperMotor(phase1, phase2, microsteps);
+            return new TwoPhaseMicrosteppingSequencer(phase1, phase2, microsteps);
             }
 
         public void InitializeShield()

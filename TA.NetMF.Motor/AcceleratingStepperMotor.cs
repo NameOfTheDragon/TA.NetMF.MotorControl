@@ -63,7 +63,7 @@ namespace TA.NetMF.Motor
         /// <summary>
         /// The stepper hardware
         /// </summary>
-        readonly IStepperMotorControl stepper;
+        readonly IStepSequencer stepper;
 
         /// <summary>
         ///   The motor update lock - used as a mutual exclusion.
@@ -130,10 +130,10 @@ namespace TA.NetMF.Motor
         /// <param name="stepper">The hardware driver that will perform the actual microstep.</param>
         /// <param name="performMicrostep">A method to write the current microstep value to the motor hardware.</param>
         /// <param name="microSteps">The number of micro steps per whole step.</param>
-        public AcceleratingStepperMotor(int limitOfTravel, IStepperMotorControl stepper, StepCallback performMicrostep = null)
+        public AcceleratingStepperMotor(int limitOfTravel, IStepSequencer stepper, StepCallback performMicrostep = null)
             {
             //ToDo: this can be improved by deprecating the use of a delegate and instead providing
-            // an implementation of IStepperMotorControl (defined in the Adafruit motor shield assembly).
+            // an implementation of IStepSequencer (defined in the Adafruit motor shield assembly).
             this.limitOfTravel = limitOfTravel;
             this.stepper = stepper;
             performStepCallback = performMicrostep ?? NullStepCallback;
@@ -258,7 +258,7 @@ namespace TA.NetMF.Motor
             var safeDirection = Math.Sign(direction);
             if (safeDirection == 0)
                 return; // Not moving.
-            stepper.PerformMicrostep(safeDirection);
+            stepper.PerformStep(safeDirection);
             performStepCallback(safeDirection); // user code
             currentPosition += safeDirection;
             if (currentPosition > limitOfTravel || currentPosition < 0)
