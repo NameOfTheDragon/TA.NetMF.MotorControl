@@ -30,6 +30,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TA.NetMF.MotorSimulator", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TA.NetMF.MotorControl.Samples.VelocityControl", "TA.NetMF.MotorControl.Samples.VelocityControl\TA.NetMF.MotorControl.Samples.VelocityControl.csproj", "{43389AB9-B180-4C16-A012-1F9CA8E2B71A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TA.NetMF.MotorControl.Samples.SpeedControl", "TA.NetMF.MotorControl.Samples.SpeedControl\TA.NetMF.MotorControl.Samples.SpeedControl.csproj", "{5B4D8D48-7745-49EA-BDEE-12F7BBCEED97}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -74,6 +76,12 @@ Global
 		{43389AB9-B180-4C16-A012-1F9CA8E2B71A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{43389AB9-B180-4C16-A012-1F9CA8E2B71A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{43389AB9-B180-4C16-A012-1F9CA8E2B71A}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{5B4D8D48-7745-49EA-BDEE-12F7BBCEED97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B4D8D48-7745-49EA-BDEE-12F7BBCEED97}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B4D8D48-7745-49EA-BDEE-12F7BBCEED97}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{5B4D8D48-7745-49EA-BDEE-12F7BBCEED97}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B4D8D48-7745-49EA-BDEE-12F7BBCEED97}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B4D8D48-7745-49EA-BDEE-12F7BBCEED97}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -82,5 +90,6 @@ Global
 		{53CEFBAC-6705-4E25-956A-BAA241258B24} = {491E3CF0-36BD-4468-93F6-44BF382B7B92}
 		{13652D4C-3DD0-4C66-9544-AB27A9ECCCE7} = {491E3CF0-36BD-4468-93F6-44BF382B7B92}
 		{43389AB9-B180-4C16-A012-1F9CA8E2B71A} = {491E3CF0-36BD-4468-93F6-44BF382B7B92}
+		{5B4D8D48-7745-49EA-BDEE-12F7BBCEED97} = {491E3CF0-36BD-4468-93F6-44BF382B7B92}
 	EndGlobalSection
 EndGlobal

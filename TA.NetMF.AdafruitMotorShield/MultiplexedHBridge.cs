@@ -114,6 +114,8 @@ namespace TA.NetMF.AdafruitMotorShieldV1
         void InitializeOutputs()
             {
             // base duty will start at 0.0, i.e. magnitude 0, polarity true (forwards)
+            speedControl.DutyCycle = 0.5;
+            speedControl.Frequency = 5000;
             speedControl.DutyCycle = 0.0;
             speedControl.Start();
             outputShiftRegister.WriteTransaction(forwardTransaction);

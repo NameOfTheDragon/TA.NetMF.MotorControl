@@ -45,8 +45,8 @@ namespace TA.NetMF.MotorControl.Samples
     {
     public class Program
         {
-        static IStepperMotorControl StepperM1M2;
-        static IStepperMotorControl StepperM3M4;
+        static IStepSequencer StepperM1M2;
+        static IStepSequencer StepperM3M4;
         static readonly Random randomGenerator = new Random();
         static OutputPort Led;
         static bool LedState;
@@ -64,7 +64,7 @@ namespace TA.NetMF.MotorControl.Samples
             var clock = new OutputPort(Pins.GPIO_PIN_D4, false);
             var adafruitMotorShieldV1 = new MotorShield(latch, enable, data, clock);
             adafruitMotorShieldV1.InitializeShield();
-            StepperM1M2 = adafruitMotorShieldV1.GetHalfSteppingStepperMotor(1, 2);
+            StepperM1M2 = adafruitMotorShieldV1.GetFullSteppingStepperMotor(1, 2);
             StepperM3M4 = adafruitMotorShieldV1.GetMicrosteppingStepperMotor(64, 3, 4);
 #elif AdafruitV2Shield
             var adafruitMotorShieldV2 = new MotorShield();  // use shield at default I2C address.
@@ -91,10 +91,10 @@ namespace TA.NetMF.MotorControl.Samples
 #endif
 
             // Create the stepper motor axes and link them to the Adafruit driver.
-            var axis1 = new AcceleratingStepperMotor(LimitOfTravel, StepperM1M2, UpdateDiagnosticLed)
+            var axis1 = new InstantaneousStepperMotor(LimitOfTravel, StepperM1M2)
                 {
                 MaximumSpeed = MaxSpeed,
-                RampTime = RampTime
+                //RampTime = RampTime
                 };
             // Now we subscribe to the MotorStopped event on each axis. When the event fires, 
             // we start the axis going again with a new random target position.
@@ -105,7 +105,7 @@ namespace TA.NetMF.MotorControl.Samples
 
             // Repeat for the second axis, if it's supported.
 #if UseSecondAxis
-            //var axis2 = new AcceleratingStepperMotor(LimitOfTravel, StepperM3M4)
+            //var axis2 = new StepperMotor(LimitOfTravel, StepperM3M4)
             //    {
             //    MaximumSpeed = MaxSpeed,
             //    RampTime = RampTime
@@ -124,7 +124,7 @@ namespace TA.NetMF.MotorControl.Samples
         ///   Picks a new random position and starts a new move.
         /// </summary>
         /// <param name="axis">The axis that has stopped.</param>
-        static void HandleAxisStoppedEvent(AcceleratingStepperMotor axis)
+        static void HandleAxisStoppedEvent(StepperMotor axis)
             {
             // Be careful, both axes appear to run on the same thread, so using Thread.Sleep() here will affect both.
             //Thread.Sleep(3000); // Wait a short time before starting the next move.
@@ -150,14 +150,14 @@ namespace TA.NetMF.MotorControl.Samples
 
 
         #region Stepper Configuration - Change these values to your liking.
-        const int LimitOfTravel = 8000;
+        const int LimitOfTravel = 1000;
 
         /// <summary>
         ///   The maximum speed in steps per second.
         ///   Although the theoretical maximum is 1,000 steps per second, in practice
         ///   the netduino plus can handle about 400 steps (or microsteps) per second, total.
         /// </summary>
-        const int MaxSpeed = 400;
+        const int MaxSpeed = 1000;
 
         /// <summary>
         ///   The number of microsteps per whole step.

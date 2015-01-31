@@ -35,8 +35,8 @@ namespace TA.NetMF.AdafruitMotorShieldV2
         /// <param name="microsteps">The number of microsteps per stepping cycle. </param>
         /// <param name="phase1">The output number (M1, M2, M3 or M4) that the first motor phase is connected to.</param>
         /// <param name="phase2">The output number (M1, M2, M3 or M4) that the  second motor phase is connected to.</param>
-        /// <returns>An implementation of <see cref="IStepperMotorControl" />  that can control the specified motor windings in microsteps.</returns>
-        public IStepperMotorControl GetMicrosteppingStepperMotor(int microsteps, int phase1, int phase2)
+        /// <returns>An implementation of <see cref="IStepSequencer" />  that can control the specified motor windings in microsteps.</returns>
+        public IStepSequencer GetMicrosteppingStepperMotor(int microsteps, int phase1, int phase2)
             {
             if (phase1 > 4 || phase1 < 1)
                 throw new ArgumentOutOfRangeException("phase1", "must be 1, 2, 3 or 4");
@@ -46,7 +46,7 @@ namespace TA.NetMF.AdafruitMotorShieldV2
                 throw new ArgumentException("The motor phases must be on different outputs");
             var hbridge1 = GetHbridge(phase1);
             var hbridge2 = GetHbridge(phase2);
-            var motor = new MicrosteppingStepperMotor(hbridge1, hbridge2, microsteps);
+            var motor = new TwoPhaseMicrosteppingSequencer(hbridge1, hbridge2, microsteps);
             return motor;
             }
 
@@ -58,8 +58,8 @@ namespace TA.NetMF.AdafruitMotorShieldV2
         /// </summary>
         /// <param name="phase1">The output number (M1, M2, M3 or M4) that the first motor phase is connected to.</param>
         /// <param name="phase2">The output number (M1, M2, M3 or M4) that the  second motor phase is connected to.</param>
-        /// <returns>An implementation of <see cref="IStepperMotorControl" /> that can control the specified motor windings in whole steps.</returns>
-        public IStepperMotorControl GetFullSteppingStepperMotor(int phase1, int phase2)
+        /// <returns>An implementation of <see cref="IStepSequencer" /> that can control the specified motor windings in whole steps.</returns>
+        public IStepSequencer GetFullSteppingStepperMotor(int phase1, int phase2)
             {
             return GetMicrosteppingStepperMotor(4, phase1, phase2);
             }
@@ -72,8 +72,8 @@ namespace TA.NetMF.AdafruitMotorShieldV2
         /// </summary>
         /// <param name="phase1">The output number (M1, M2, M3 or M4) that the first motor phase is connected to.</param>
         /// <param name="phase2">The output number (M1, M2, M3 or M4) that the  second motor phase is connected to.</param>
-        /// <returns>An implementation of <see cref="IStepperMotorControl" /> that can control the specified motor windings in half steps.</returns>
-        public IStepperMotorControl GetHalfSteppingStepperMotor(int phase1, int phase2)
+        /// <returns>An implementation of <see cref="IStepSequencer" /> that can control the specified motor windings in half steps.</returns>
+        public IStepSequencer GetHalfSteppingStepperMotor(int phase1, int phase2)
             {
             return GetMicrosteppingStepperMotor(8, phase1, phase2);
             }

@@ -18,22 +18,22 @@ namespace TA.NetMF.MotorSimulator
     public static class LedMotorSimulator
         {
         // ToDo - these methods can be factored out of the shield implementations and into the motor control code.
-        public static IStepperMotorControl GetMicrosteppingStepperMotor(ushort microsteps, HBridge phase1, HBridge phase2)
+        public static IStepSequencer GetMicrosteppingStepperMotor(ushort microsteps, HBridge phase1, HBridge phase2)
             {
-            return new MicrosteppingStepperMotor(phase1, phase2, microsteps);
+            return new TwoPhaseMicrosteppingSequencer(phase1, phase2, microsteps);
             }
 
-        public static IStepperMotorControl GetHalfSteppingStepperMotor(HBridge phase1, HBridge phase2)
+        public static IStepSequencer GetHalfSteppingStepperMotor(HBridge phase1, HBridge phase2)
             {
             return GetMicrosteppingStepperMotor(8, phase1, phase2);
             }
 
-        public static IStepperMotorControl GetFullSteppingStepperMotor(HBridge phase1, HBridge phase2)
+        public static IStepSequencer GetFullSteppingStepperMotor(HBridge phase1, HBridge phase2)
             {
             return GetMicrosteppingStepperMotor(4, phase1, phase2);
             }
 
-        public static IStepperMotorControl GetSimulatedStepperMotor(Cpu.Pin direction1, Cpu.PWMChannel power1, Cpu.Pin direction2, Cpu.PWMChannel power2)
+        public static IStepSequencer GetSimulatedStepperMotor(Cpu.Pin direction1, Cpu.PWMChannel power1, Cpu.Pin direction2, Cpu.PWMChannel power2)
             {
             var direction1Port = new OutputPort(direction1, false);
             var direction2Port = new OutputPort(direction2, false);
