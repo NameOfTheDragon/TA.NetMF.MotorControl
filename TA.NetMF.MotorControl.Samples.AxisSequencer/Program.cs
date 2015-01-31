@@ -84,12 +84,12 @@ namespace TA.NetMF.MotorControl.Samples.AxisSequencer
 
             var axis1 = new AcceleratingStepperMotor(LimitOfTravel, StepperM1M2)
                 {
-                MaximumSpeed = AcceleratingStepperMotor.MaximumPossibleSpeed,
+                MaximumSpeed = StepperMotor.MaximumPossibleSpeed,
                 RampTime = 2.0
                 };
             var axis2 = new AcceleratingStepperMotor(LimitOfTravel, StepperM3M4)
                 {
-                MaximumSpeed = AcceleratingStepperMotor.MaximumPossibleSpeed,
+                MaximumSpeed = StepperMotor.MaximumPossibleSpeed,
                 RampTime = 2.0
                 };
             var sequencer = new DualAxisSequencer(axis1, axis2);
