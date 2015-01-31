@@ -1,25 +1,27 @@
 // This file is part of the TA.NetMF.MotorControl project
 // 
-// Copyright © 2014-2014 Tigra Astronomy, all rights reserved.
+// Copyright © 2014-2015 Tigra Astronomy, all rights reserved.
 // This source code is licensed under the MIT License, see http://opensource.org/licenses/MIT
 // 
-// File: StepperMotor.cs  Created: 2014-06-05@12:18
-// Last modified: 2014-11-30@13:57 by Tim
+// File: StepperMotor.cs  Created: 2015-01-13@13:45
+// Last modified: 2015-01-31@22:59 by Tim
+
 using System;
 using System.Threading;
 
 namespace TA.NetMF.Motor
     {
     /// <summary>
-    ///   Class StepperMotor. A general purpose stepper motor controller, with acceleration and microstepping.
-    ///   Supports multiple simultaneous instances.
-    ///   Once started, the motor will run to its target position asynchronously and autonomously, raising the
+    ///   Class StepperMotor. A general purpose stepper motor controller, with acceleration and
+    ///   microstepping. Supports multiple simultaneous instances. Once started, the motor will run
+    ///   to its target position asynchronously and autonomously, raising the
     ///   <see cref="MotorStopped" /> event when it gets there.
     /// </summary>
     /// <remarks>
-    ///   This class draws inspiration from the AccelStepper library, see http://www.airspayce.com/mikem/arduino/AccelStepper,
-    ///   see also https://github.com/adafruit/AccelStepper although the code has been completely rewritten in C#
-    ///   and has some significant differences.
+    ///   This class draws inspiration from the AccelStepper library, see
+    ///   http://www.airspayce.com/mikem/arduino/AccelStepper, see also
+    ///   https://github.com/adafruit/AccelStepper although the code has been completely rewritten
+    ///   in C# and has some significant differences.
     /// </remarks>
     public class StepperMotor
         {
@@ -52,34 +54,7 @@ namespace TA.NetMF.Motor
         protected const double MotorStoppedThreshold = 0.00001;
 
         const int computeEvery = 64;
-
         static readonly TimeSpan InfiniteTimeout = new TimeSpan(0, 0, 0, 0, -1);
-
-        /// <summary>
-        ///   The limit of travel (in steps)
-        /// </summary>
-        readonly int limitOfTravel;
-
-        /// <summary>
-        /// The stepper hardware
-        /// </summary>
-        readonly IStepSequencer stepper;
-
-        /// <summary>
-        ///   The motor update lock - used as a mutual exclusion.
-        /// </summary>
-        protected readonly object motorUpdateLock = new object();
-
-        /// <summary>
-        ///   user-supplied delegate to write step data to the motor hardware.
-        /// </summary>
-        readonly StepCallback performStepCallback;
-
-        /// <summary>
-        ///   The step timer - times the interval between steps.
-        /// </summary>
-        protected readonly Timer stepTimer;
-
         int computeDelay = 0;
 
         /// <summary>
@@ -89,7 +64,7 @@ namespace TA.NetMF.Motor
 
         /// <summary>
         ///   The maximum run speed (in steps/second).
-        ///   Defaults to a deliberately low 'safe' value, in practice 1000 is the practical upper limit.
+        ///   Defaults to the maximum theooretical possible speed; in practice the achievable speed will be lower.
         /// </summary>
         protected double maximumSpeed = 100;
 
@@ -119,6 +94,31 @@ namespace TA.NetMF.Motor
         int targetPosition;
 
         /// <summary>
+        ///   The limit of travel (in steps)
+        /// </summary>
+        readonly int limitOfTravel;
+
+        /// <summary>
+        ///   The motor update lock - used as a mutual exclusion.
+        /// </summary>
+        protected readonly object motorUpdateLock = new object();
+
+        /// <summary>
+        ///   user-supplied delegate to write step data to the motor hardware.
+        /// </summary>
+        readonly StepCallback performStepCallback;
+
+        /// <summary>
+        ///   The stepper hardware
+        /// </summary>
+        readonly IStepSequencer stepper;
+
+        /// <summary>
+        ///   The step timer - times the interval between steps.
+        /// </summary>
+        protected readonly Timer stepTimer;
+
+        /// <summary>
         ///   Initializes a new instance of the <see cref="StepperMotor" /> class.
         /// </summary>
         /// <param name="limitOfTravel">The limit of travel in steps.</param>
@@ -135,23 +135,12 @@ namespace TA.NetMF.Motor
             stepTimer = new Timer(StepTimerTick, null, Timeout.Infinite, Timeout.Infinite); // Stopped
             }
 
-        protected virtual void StepTimerTick(object state)
-            {
-            throw new NotImplementedException();
-            }
-
-        /// <summary>
-        /// An empty method that serves as the default StepCallback delegate if the user doesn't supply one.
-        /// </summary>
-        /// <param name="direction">The direction.</param>
-        void NullStepCallback(int direction) { }
-
         /// <summary>
         ///   Gets or sets the maximum speed, in steps per second.
         ///   Must be greater than <see cref="MotorStoppedThreshold" /> but no greater than <see cref="MaximumPossibleSpeed" />.
         /// </summary>
         /// <value>The maximum speed.</value>
-        public double MaximumSpeed
+        public virtual double MaximumSpeed
             {
             get { return maximumSpeed; }
             set
@@ -180,6 +169,40 @@ namespace TA.NetMF.Motor
         ///   The current direction of travel; 1 forward; 0 stopped; -1 reverse
         /// </summary>
         public int Direction { get { return IsMoving ? Math.Sign(motorSpeed) : 0; } }
+
+        /// <summary>
+        ///   Gets the current position of the stepper motor, measured in microsteps from the power-on position.
+        /// </summary>
+        /// <value>The position.</value>
+        public int Position
+            {
+            get { return currentPosition; }
+            set
+                {
+                if (IsMoving)
+                    {
+                    throw new InvalidOperationException(
+                        "Position may only be set when the motor is stopped; check the IsMoving property or call AllStop().");
+                    }
+                if (value > limitOfTravel || value < 0)
+                    {
+                    throw new ArgumentOutOfRangeException("value",
+                        "Position must be in the range 0 to " + limitOfTravel);
+                    }
+                currentPosition = value;
+                }
+            }
+
+        protected virtual void StepTimerTick(object state)
+            {
+            throw new NotImplementedException();
+            }
+
+        /// <summary>
+        ///   An empty method that serves as the default StepCallback delegate if the user doesn't supply one.
+        /// </summary>
+        /// <param name="direction">The direction.</param>
+        void NullStepCallback(int direction) {}
 
         /// <summary>
         ///   Raised when the motor stops at the end of a move operation.
@@ -304,7 +327,7 @@ namespace TA.NetMF.Motor
         /// </summary>
         public void AllStop()
             {
-            stepTimer.Change(Timeout.Infinite, Timeout.Infinite);   // The timer may still tick!
+            stepTimer.Change(Timeout.Infinite, Timeout.Infinite); // The timer may still tick!
             motorSpeed = 0;
             OnMotorStopped(this);
             }
@@ -316,27 +339,6 @@ namespace TA.NetMF.Motor
         protected virtual void SetSpeed(double speed)
             {
             // Should be overridden in derived classes.
-            }
-
-        /// <summary>
-        /// Gets the current position of the stepper motor, measured in microsteps from the power-on position.
-        /// </summary>
-        /// <value>The position.</value>
-        public int Position
-            {
-            get { return currentPosition; }
-            set
-                {
-                if (IsMoving)
-                    {
-                    throw new InvalidOperationException(
-                        "Position may only be set when the motor is stopped; check the IsMoving property or call AllStop().");
-                    }
-                if (value > limitOfTravel || value < 0)
-                    throw new ArgumentOutOfRangeException("value",
-                        "Position must be in the range 0 to " + limitOfTravel.ToString());
-                currentPosition = value;
-                }
             }
         }
     }

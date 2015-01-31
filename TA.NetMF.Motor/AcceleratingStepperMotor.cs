@@ -1,5 +1,15 @@
-using System;
+// This file is part of the TA.NetMF.MotorControl project
+// 
+// Copyright © 2014-2015 Tigra Astronomy, all rights reserved.
+// This source code is licensed under the MIT License, see http://opensource.org/licenses/MIT
+// 
+// File: AcceleratingStepperMotor.cs  Created: 2015-01-31@17:10
+// Last modified: 2015-01-31@23:42 by Tim
+
+using System.Diagnostics;
 using System.Threading;
+using Microsoft.SPOT;
+using Math = System.Math;
 
 namespace TA.NetMF.Motor
     {
@@ -8,32 +18,90 @@ namespace TA.NetMF.Motor
         /// <summary>
         ///   The acceleration factor
         /// </summary>
-        double acceleration = 1.0f;
+        double acceleration = 100.0; // Default is 100 steps per second per second.
+
+        Thread computationThread;
+        /*volatile*/
+        bool enableAccelerationComputationThread;
+        double nextSpeed;
 
         public AcceleratingStepperMotor(int limitOfTravel, IStepSequencer stepper) : base(limitOfTravel, stepper)
             {
-            
+            RampTime = 5.0; // Default to 5 second ramp, compute acceleration.
             }
 
         /// <summary>
-        ///   Gets or sets the acceleration rate in steps per second per second.
-        ///   Setting this property affects the <see cref="RampTime" /> and vice versa.
+        ///   Gets or sets the acceleration in steps per second per second.
+        ///   Setting this property affects <see cref="RampTime" /> and vice versa.
         /// </summary>
         /// <value>The acceleration, in steps per second per second.</value>
-        public double Acceleration { get { return acceleration; } set { acceleration = value; } }
+        public double Acceleration
+            {
+            get { return acceleration; }
+            set
+                {
+                acceleration = value;
+                PrintAccelerationParameters("Acceleration");
+                }
+            }
 
         /// <summary>
-        ///   Gets or sets the time in which the motor will accelerate to full speed. Setting this property affects
+        ///   Gets or sets the time (in seconds) in which the motor will accelerate to full speed. Setting this property affects
         ///   <see cref="Acceleration" /> and vice versa.
         /// </summary>
         /// <value>The ramp time, in seconds.</value>
-        public double RampTime { get { return MaximumSpeed/Acceleration; } set { Acceleration = MaximumSpeed/value; } }
+        public double RampTime
+            {
+            get { return RampTimeFromAcceleration(acceleration); }
+            set
+                {
+                acceleration = AccelerationFromRampTime(value);
+                PrintAccelerationParameters("RampTime");
+                }
+            }
+
+        /// <summary>
+        ///   Gets or sets the maximum speed, in steps per second. Must be greater than
+        ///   <see cref="StepperMotor.MotorStoppedThreshold" /> but no greater than
+        ///   <see cref="StepperMotor.MaximumPossibleSpeed" />.  When setting this property,
+        ///   acceleration remains constant so <see cref="RampTime" /> must be recomputed. If for
+        ///   some reason a constant ramp time is required, then it must be reset each time the
+        ///   speed is changed.
+        /// </summary>
+        /// <value>The maximum allowed speed.</value>
+        public override double MaximumSpeed
+            {
+            get { return base.MaximumSpeed; }
+            set
+                {
+                base.MaximumSpeed = value;
+                PrintAccelerationParameters("MaximumSpeed");
+                }
+            }
+
+        [Conditional("DEBUG")]
+        void PrintAccelerationParameters(string why)
+            {
+            Debug.Print(why + " changed. Acceleration parameters: MaxSpeed=" + MaximumSpeed.ToString("F4") +
+                        " Acceleration=" + acceleration.ToString("F4") + " RampTime=" + RampTime.ToString("F4"));
+            }
+
+        double RampTimeFromAcceleration(double acceleration)
+            {
+            return MaximumSpeed/acceleration; // From v = u + at; since u is 0, v = at
+            }
+
+        double AccelerationFromRampTime(double time)
+            {
+            return MaximumSpeed/time; // From v = u + at; since u is 0, v = at
+            }
 
         /// <summary>
         ///   Computes the new motor velocity based on the current velocity, such that the velocity always moves towards
         ///   the set point (if regulation is active), or the acceleration curve dictated by the <see cref="Acceleration" />
         ///   property.
-        ///   The magnitude of the returned speed will never be greater than <see cref="StepperMotor.MaximumSpeed" /> which in turn can never
+        ///   The magnitude of the returned speed will never be greater than <see cref="StepperMotor.MaximumSpeed" /> which in turn
+        ///   can never
         ///   exceed <see cref="StepperMotor.MaximumPossibleSpeed" />.
         ///   <see cref="StepperMotor.MaximumSpeed" />.
         /// </summary>
@@ -67,33 +135,56 @@ namespace TA.NetMF.Motor
             return clippedSpeed;
             }
 
+        void StartComputationThread()
+            {
+            enableAccelerationComputationThread = true;
+            if (computationThread == null)
+                {
+                var threadStarter = new ThreadStart(ComputeAccelerationCurveThread);
+                computationThread = new Thread(threadStarter);
+                computationThread.Priority = ThreadPriority.AboveNormal;
+                computationThread.Start();
+                }
+            else
+                computationThread.Resume();
+            }
+
+        void StopComputationThread()
+            {
+            enableAccelerationComputationThread = false;
+            computationThread = null;
+            }
+
+        void ComputeAccelerationCurveThread()
+            {
+            while (enableAccelerationComputationThread)
+                {
+                nextSpeed = ComputeAcceleratedVelocity();
+                Thread.Sleep(0); // Yield
+                }
+            }
+
         /// <summary>
         ///   Handles the step timer tick event.
         /// </summary>
         /// <param name="state">Not used.</param>
         /// <remarks>
-        /// Beware! Tick events can still fire even after the timer has been disabled.
+        ///   Beware! Tick events can still fire even after the timer has been disabled.
         /// </remarks>
         protected virtual void StepTimerTick(object state)
             {
+            if (nextSpeed != motorSpeed)
+                SetSpeed(nextSpeed);
             if (IsMoving)
-                StepAndAccelerate();
-            }
-
-        /// <summary>
-        ///   Steps the motor one step in the current direction, then computes and sets the new step speed
-        ///   The act of setting the speed re-arms the step timer.
-        /// </summary>
-        void StepAndAccelerate()
-            {
-            MoveOneStep(Direction);
-            var nextSpeed = ComputeAcceleratedVelocity();
-            SetSpeed(nextSpeed); // Stops the motor if speed is close enough to zero.
+                MoveOneStep(Direction);
             }
 
         protected override void StartStepping(short moveDirection)
             {
-            SetSpeed(ComputeAcceleratedVelocity());
+            var initialSpeed = ComputeAcceleratedVelocity();
+            nextSpeed = initialSpeed;
+            SetSpeed(initialSpeed);
+            StartComputationThread();
             }
 
         protected override void SetSpeed(double speed)
@@ -102,16 +193,16 @@ namespace TA.NetMF.Motor
             var absoluteSpeed = Math.Abs(speed);
             if (absoluteSpeed < MotorStoppedThreshold)
                 {
+                StopComputationThread();
                 AllStop();
                 return;
                 }
-            var millisecondsUntilNextStep = (int)(1000.0 / absoluteSpeed);
+            var millisecondsUntilNextStep = (int)(1000.0/absoluteSpeed);
             lock (motorUpdateLock)
                 {
                 motorSpeed = speed;
-                stepTimer.Change(millisecondsUntilNextStep, Timeout.Infinite);
+                stepTimer.Change(millisecondsUntilNextStep, millisecondsUntilNextStep);
                 }
-
             }
         }
     }

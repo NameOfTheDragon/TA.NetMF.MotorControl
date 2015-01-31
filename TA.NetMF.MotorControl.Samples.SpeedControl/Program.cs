@@ -91,10 +91,10 @@ namespace TA.NetMF.MotorControl.Samples
 #endif
 
             // Create the stepper motor axes and link them to the Adafruit driver.
-            var axis1 = new InstantaneousStepperMotor(LimitOfTravel, StepperM1M2)
+            var axis1 = new AcceleratingStepperMotor(LimitOfTravel, StepperM1M2)
                 {
-                MaximumSpeed = MaxSpeed
-                //RampTime = RampTime
+                MaximumSpeed = MaxSpeed,
+                RampTime = RampTime
                 };
             // Now we subscribe to the MotorStopped event on each axis. When the event fires, 
             // we start the axis going again with a new random target position.
@@ -177,7 +177,7 @@ namespace TA.NetMF.MotorControl.Samples
         ///   Setting <see cref="AcceleratingStepperMotor.RampTime" /> affects <see cref="AcceleratingStepperMotor.Acceleration" />
         ///   and vice versa.
         /// </summary>
-        const double RampTime = 3; // seconds to reach full speed (acceleration)
+        const double RampTime = 2; // seconds to reach full speed (acceleration)
         #endregion
         }
     }

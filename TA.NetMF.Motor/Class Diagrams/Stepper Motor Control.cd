@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="TA.NetMF.Motor.TwoPhaseMicrosteppingSequencer">
-    <Position X="4.75" Y="2.25" Width="2.25" />
+    <Position X="9.5" Y="2.25" Width="3" />
     <TypeIdentifier>
       <HashCode>AAIAQAEAAAAABAgAABEAIAAAAAAAAAgAAAAEQAAAAAA=</HashCode>
       <FileName>TwoPhaseMicrosteppingSequencer.cs</FileName>
@@ -9,14 +9,43 @@
     <Lollipop Position="0.21" />
   </Class>
   <Class Name="TA.NetMF.Motor.AcceleratingStepperMotor">
-    <Position X="0.5" Y="0.5" Width="2.25" />
+    <Position X="3.75" Y="1.75" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAIAAAAAAACAAAAAgAAABAAAAAAGAQAAAAEAAAAAAA=</HashCode>
       <FileName>AcceleratingStepperMotor.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="TA.NetMF.Motor.StepperMotor">
+    <Position X="0.75" Y="0.5" Width="2.25" />
+    <NestedTypes>
+      <Delegate Name="TA.NetMF.Motor.StepperMotor.AxisEventHandler" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>StepperMotor.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="TA.NetMF.Motor.StepperMotor.StepCallback" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>StepperMotor.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>EAICUBkACAGAAAAgAixgABBiACACEwEAAIAgECAAABI=</HashCode>
+      <FileName>StepperMotor.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="stepper" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="TA.NetMF.Motor.InstantaneousStepperMotor">
+    <Position X="3.75" Y="5.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAgAAABAAAAAAEAAAAAAAAAAAAAA=</HashCode>
+      <FileName>InstantaneousStepperMotor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
   <Interface Name="TA.NetMF.Motor.IStepSequencer">
-    <Position X="4.75" Y="0.5" Width="2" />
+    <Position X="9.5" Y="0.5" Width="2" />
     <TypeIdentifier>
       <HashCode>AAIAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>IStepSequencer.cs</FileName>
