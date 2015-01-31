@@ -7,11 +7,11 @@ namespace TA.NetMF.Motor
         {
         public static Octet SetBit(this Octet source, ushort bit)
             {
-            return source.SetBitValue(bit, true);
+            return source.WithBitSetTo(bit, true);
             }
         public static Octet ClearBit(this Octet source, ushort bit)
             {
-            return source.SetBitValue(bit, false);
+            return source.WithBitSetTo(bit, false);
             }
         }
     }

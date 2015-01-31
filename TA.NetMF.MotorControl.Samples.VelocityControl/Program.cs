@@ -7,10 +7,10 @@
 // Last modified: 2015-01-19@00:25 by Tim
 
 #region Shield selection - uncomment only one of the following shields
-#define AdafruitV1Shield
+//#define AdafruitV1Shield
 //#define AdafruitV2Shield
 //#define SparkfunArduMotoShield
-//#define LedSimulatorShield
+#define LedSimulatorShield
 #endregion
 
 #region Hardware options -- do not edit without good reason
@@ -41,7 +41,7 @@ using TA.NetMF.MotorSimulator;
 #error Incorrect shield configuration - please uncomment exactly one #define
 #endif
 
-namespace TA.NetMF.MotorControl.Samples
+namespace TA.NetMF.MotorControl.Samples.VelocityControl
     {
     public class Program
         {
@@ -50,6 +50,9 @@ namespace TA.NetMF.MotorControl.Samples
         static readonly Random randomGenerator = new Random();
         static OutputPort Led;
         static bool LedState;
+        static double speed;
+        static int direction;
+        static AcceleratingStepperMotor axis1;
 
         public static void Main()
             {
@@ -62,10 +65,10 @@ namespace TA.NetMF.MotorControl.Samples
             var enable = new OutputPort(Pins.GPIO_PIN_D7, true);
             var data = new OutputPort(Pins.GPIO_PIN_D8, false);
             var clock = new OutputPort(Pins.GPIO_PIN_D4, false);
-            var adafruitMotorShieldV1 = new MotorShield(latch, enable, data, clock);
+            var adafruitMotorShieldV1 = new AdafruitMotorShieldV1.MotorShield(latch, enable, data, clock);
             adafruitMotorShieldV1.InitializeShield();
-            StepperM1M2 = adafruitMotorShieldV1.GetHalfSteppingStepperMotor(1, 2);
-            StepperM3M4 = adafruitMotorShieldV1.GetMicrosteppingStepperMotor(64, 3, 4);
+            StepperM1M2 = adafruitMotorShieldV1.GetMicrosteppingStepperMotor(64, 1, 2);
+            StepperM3M4 = adafruitMotorShieldV1.GetFullSteppingStepperMotor(3, 4);
 #elif AdafruitV2Shield
             var adafruitMotorShieldV2 = new MotorShield();  // use shield at default I2C address.
             adafruitMotorShieldV2.InitializeShield();
@@ -82,56 +85,72 @@ namespace TA.NetMF.MotorControl.Samples
                 PWMChannels.PWM_ONBOARD_LED,
                 Pins.GPIO_PIN_D1,
                 PWMChannels.PWM_PIN_D6);
-            var StepperM3M4 = LedMotorSimulator.GetSimulatedStepperMotor(Pins.GPIO_PIN_D2,
-                PWMChannels.PWM_PIN_D9,
-                Pins.GPIO_PIN_D3,
-                PWMChannels.PWM_PIN_D10);
 #else
             throw new ApplicationException("Uncomment one of the shield #define statements");
 #endif
 
-            // Create the stepper motor axes and link them to the Adafruit driver.
-            var axis1 = new AcceleratingStepperMotor(LimitOfTravel, StepperM1M2, UpdateDiagnosticLed)
+            // Create the stepper motor axes and link them to the shield driver.
+            axis1 = new AcceleratingStepperMotor(LimitOfTravel, StepperM1M2, UpdateDiagnosticLed)
                 {
                 MaximumSpeed = MaxSpeed,
                 RampTime = RampTime
                 };
-            // Now we subscribe to the MotorStopped event on each axis. When the event fires, 
-            // we start the axis going again with a new random target position.
-            axis1.MotorStopped += HandleAxisStoppedEvent;
-            // We need to call our event handler once manually to get things going.
-            // After that it is fully automatic.
-            HandleAxisStoppedEvent(axis1);
 
-            // Repeat for the second axis, if it's supported.
-#if UseSecondAxis
-            //var axis2 = new AcceleratingStepperMotor(LimitOfTravel, StepperM3M4)
-            //    {
-            //    MaximumSpeed = MaxSpeed,
-            //    RampTime = RampTime
-            //    };
-            //axis2.MotorStopped += HandleAxisStoppedEvent;
-            //HandleAxisStoppedEvent(axis2);
-#endif
+            speed = 1.0;
+            direction = +1;
 
-            // Finally, we sleep forever as there is nothing else to do in the main thread.
-            // The motors continue to work in the background all by themselves.
+            var fasterButton = new InterruptPort(Pins.GPIO_PIN_D8,
+                true,
+                Port.ResistorMode.PullUp,
+                Port.InterruptMode.InterruptEdgeLow);
+            var slowerButton = new InterruptPort(Pins.GPIO_PIN_D9,
+                true,
+                Port.ResistorMode.PullUp,
+                Port.InterruptMode.InterruptEdgeLow);
+            var reverseButton = new InterruptPort(Pins.GPIO_PIN_D7,
+                true,
+                Port.ResistorMode.PullUp,
+                Port.InterruptMode.InterruptEdgeLow);
+            fasterButton.OnInterrupt += fasterButton_OnInterrupt;
+            slowerButton.OnInterrupt += slowerButton_OnInterrupt;
+            reverseButton.OnInterrupt += reverseButton_OnInterrupt;
+            SetMotorVelocity();
             Thread.Sleep(Timeout.Infinite);
             }
 
-        /// <summary>
-        ///   Handles the axis stopped event for an axis.
-        ///   Picks a new random position and starts a new move.
-        /// </summary>
-        /// <param name="axis">The axis that has stopped.</param>
-        static void HandleAxisStoppedEvent(AcceleratingStepperMotor axis)
+        static void reverseButton_OnInterrupt(uint data1, uint data2, DateTime time)
             {
-            // Be careful, both axes appear to run on the same thread, so using Thread.Sleep() here will affect both.
-            //Thread.Sleep(3000); // Wait a short time before starting the next move.
-            var randomTarget = randomGenerator.Next(LimitOfTravel);
-            //Debug.Print("Starting move to " + randomTarget);
-            axis.MoveToTargetPosition(randomTarget);
+            direction = -direction;
+            SetMotorVelocity();
             }
+
+        static void slowerButton_OnInterrupt(uint data1, uint data2, DateTime time)
+            {
+            speed /= 2.0;
+            if (speed < MinimumSpeed)
+                speed = 0.0;
+            SetMotorVelocity();
+            }
+
+        static void fasterButton_OnInterrupt(uint data1, uint data2, DateTime time)
+            {
+            if (speed < MinimumSpeed)
+                speed = MinimumSpeed;
+            else
+                {
+                speed *= 2.0;
+                }
+            speed = speed.ConstrainToLimits(0.0, 1.0);
+            SetMotorVelocity();
+            }
+
+        static void SetMotorVelocity()
+            {
+            var velocity = speed*direction*MaxSpeed;
+            Debug.Print("Motor: speed= "+speed.ToString("F4")+" direction="+direction.ToString()+" velocity="+velocity.ToString("F4"));
+            axis1.MoveAtRegulatedSpeed(velocity);
+            }
+
 
         /// <summary>
         ///   Toggles the Netduino's on-board led.
@@ -150,14 +169,14 @@ namespace TA.NetMF.MotorControl.Samples
 
 
         #region Stepper Configuration - Change these values to your liking.
-        const int LimitOfTravel = 8000;
+        const int LimitOfTravel = 4000;
 
         /// <summary>
         ///   The maximum speed in steps per second.
         ///   Although the theoretical maximum is 1,000 steps per second, in practice
         ///   the netduino plus can handle about 400 steps (or microsteps) per second, total.
         /// </summary>
-        const int MaxSpeed = 400;
+        const int MaxSpeed = 600;
 
         /// <summary>
         ///   The number of microsteps per whole step.
@@ -172,6 +191,8 @@ namespace TA.NetMF.MotorControl.Samples
         ///   and vice versa.
         /// </summary>
         const double RampTime = 3; // seconds to reach full speed (acceleration)
+
+        const double MinimumSpeed = 0.0001;
         #endregion
         }
     }

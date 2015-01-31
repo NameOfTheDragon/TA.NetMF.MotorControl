@@ -18,7 +18,16 @@ Some features and aims of this library:
 
 ### How do I get set up? ###
 
-The projects are configured for Netduino Plus 2 hardware and .net MicroFramework 4.3. There are [instructions on setting up Visual Studio 2012](http://forums.netduino.com/index.php?/topic/10479-netduino-plus-2-firmware-v431/ "How to set up the Netduiono SDK in Visual Studio 2012") on the Netduino forums. You should be able to clone the code, build it in Visual Studio 2012 or later and deploy it to your Netduino Plus.
+The projects are configured for Netduino Plus 2 hardware and .net MicroFramework 4.3.
+If you use different hardware or a different framework version,
+then you must manually re-target the projects to the correct device and framework.  
+
+Each of the sample projects contains a region near the top of Program.cs where you can 
+configure which of the supported motor shields you want to use. Uncomment exactly one of
+the shield definitions and ensure the others are commented out. By default, a 'motor simulator' 
+shield is used, which just flashes some LEDs and will not actually drive a motor.
+
+There are [instructions on setting up Visual Studio 2012](http://forums.netduino.com/index.php?/topic/10479-netduino-plus-2-firmware-v431/ "How to set up the Netduiono SDK in Visual Studio 2012") on the Netduino forums. You should be able to clone the code, build it in Visual Studio 2012 or later and deploy it to your Netduino Plus.
 
 Note: Netduino support for Visual Studio 2013 is experimental, but we've found it works brilliantly. If you are using VS2013, there are [special instructions](http://forums.netduino.com/index.php?/topic/10201-experimental-visual-studio-2013-support/ "How to set up the Netduino SDK in Visual Studio 2013") on setting up.
 
@@ -40,9 +49,10 @@ Some ideas for future work:
 	- DC motors
 	- Servo motors
 - Other motor shields
-	- Sparkfun motor control shield (part complete - stepper motor implemented)
-	- Adafruit motor shiled V1 - abandoned due to the product becoming obsolete.
-	- Adafruit motor shield V2 - part complete (stepper motor implemented).
+	- Sparkfun motor control shield (part complete - stepper motor implemented, but microstepping is 'rough' so needs some debugging)
+	- Adafruit motor shiled V1 - included for backward compatibility. Part complete - stepper motor implemented. Not currently working; code written but needs debugging.
+	- Adafruit motor shield V2 - part complete (stepper motor implemented and working).
+	- LED Motor Simulator - Simulates a motor and indicates the power and direction of each motor winding using LEDs. Will not actually drive a motor. complete but could be extended with additional LEDs (only two were available when the code was written).
 - Unit tests: We love unit tests, but haven't found a good way of doing that with micro-framework projects. We would love some contribution in this area. Can you work out how we could unit test a micro-framework project?
 - Make the code cleaner - we try to write clean code but there is always room for improvement.
 - Remove any SOLID violations. Again, always room for improvement.

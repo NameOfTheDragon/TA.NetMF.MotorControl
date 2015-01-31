@@ -6,6 +6,8 @@
 // File: Octet.cs  Created: 2015-01-13@13:45
 // Last modified: 2015-01-17@22:33 by Tim
 
+using System.Text;
+
 namespace TA.NetMF.Motor
     {
     /// <summary>
@@ -70,12 +72,24 @@ namespace TA.NetMF.Motor
         /// <param name="bit">The bit number to be modified.</param>
         /// <param name="value">The value of the specified bit number.</param>
         /// <returns>A new octet instance with the specified bit number set to the specified value.</returns>
-        public Octet SetBitValue(ushort bit, bool value)
+        public Octet WithBitSetTo(ushort bit, bool value)
             {
             var newBits = new bool[8];
             bits.CopyTo(newBits, 0);
             newBits[bit] = value;
             return new Octet(newBits);
+            }
+
+        public override string ToString()
+            {
+            var builder = new StringBuilder();
+            for (int i = 7; i >= 0; i--)
+                {
+                builder.Append(bits[i] ? '1' : '0');
+                builder.Append(' ');
+                }
+            builder.Length -= 1;
+            return builder.ToString();
             }
 
         static readonly Octet max = FromInt(0xFF);

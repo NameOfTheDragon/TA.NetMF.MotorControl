@@ -13,6 +13,11 @@ using TA.NetMF.Motor;
 
 namespace TA.NetMF.AdafruitMotorShieldV1
     {
+    /// <summary>
+    /// Class MotorShield. This class cannot be inherited. Provides access to the resources of the
+    /// Adafruit Motor Shield (version 1).
+    /// <image url="$(ProjectDir)\Datasheet\mshieldv12schem.png" />
+    /// </summary>
     public sealed class MotorShield
         {
         Octet latchState; // The last octet written to the latch.
@@ -129,7 +134,7 @@ namespace TA.NetMF.AdafruitMotorShieldV1
 
         PWM GetPwm(Cpu.PWMChannel pwmChannel)
             {
-            var pwm = new PWM(pwmChannel, 5000.0, 0.0, false);
+            var pwm = new PWM(pwmChannel, 64000.0, 0.0, false);
             return pwm;
             }
         }
