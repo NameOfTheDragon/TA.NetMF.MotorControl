@@ -6,6 +6,7 @@
 // File: AcceleratingStepperMotor.cs  Created: 2015-01-31@17:10
 // Last modified: 2015-01-31@23:42 by Tim
 
+using System;
 using System.Diagnostics;
 using System.Threading;
 using Microsoft.SPOT;
@@ -22,7 +23,6 @@ namespace TA.NetMF.Motor
 
         Thread computationThread;
         /*volatile*/
-        bool enableAccelerationComputationThread;
         double nextSpeed;
 
         public AcceleratingStepperMotor(int limitOfTravel, IStepSequencer stepper) : base(limitOfTravel, stepper)
@@ -137,27 +137,51 @@ namespace TA.NetMF.Motor
 
         void StartComputationThread()
             {
-            enableAccelerationComputationThread = true;
             if (computationThread == null)
                 {
-                var threadStarter = new ThreadStart(ComputeAccelerationCurveThread);
-                computationThread = new Thread(threadStarter);
-                computationThread.Priority = ThreadPriority.AboveNormal;
-                computationThread.Start();
+                CreateAndStartNewComputationThread();
                 }
             else
-                computationThread.Resume();
+                switch (computationThread.ThreadState)
+                    {
+                    case ThreadState.Running:
+                        break;
+                    case ThreadState.StopRequested:
+                    case ThreadState.Stopped:
+                    case ThreadState.WaitSleepJoin:
+                    case ThreadState.AbortRequested:
+                    case ThreadState.Aborted:
+                        computationThread.Abort();
+                        computationThread.Join(10);
+                        computationThread = null;
+                        CreateAndStartNewComputationThread();
+                        break;
+                    case ThreadState.Unstarted:
+                        computationThread.Start();
+                        break;
+                    default:
+                        computationThread.Resume();
+                        break;
+                    }
+
+            }
+
+        void CreateAndStartNewComputationThread()
+            {
+            var threadStarter = new ThreadStart(ComputeAccelerationCurveThread);
+            computationThread = new Thread(threadStarter);
+            computationThread.Priority = ThreadPriority.Normal;
+            computationThread.Start();
             }
 
         void StopComputationThread()
             {
-            enableAccelerationComputationThread = false;
-            computationThread = null;
+            computationThread.Suspend();
             }
 
         void ComputeAccelerationCurveThread()
             {
-            while (enableAccelerationComputationThread)
+            while (true)
                 {
                 nextSpeed = ComputeAcceleratedVelocity();
                 Thread.Sleep(0); // Yield

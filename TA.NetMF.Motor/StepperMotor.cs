@@ -8,6 +8,8 @@
 
 using System;
 using System.Threading;
+using Microsoft.SPOT;
+using Math = System.Math;
 
 namespace TA.NetMF.Motor
     {
@@ -339,6 +341,7 @@ namespace TA.NetMF.Motor
         protected virtual void SetSpeed(double speed)
             {
             // Should be overridden in derived classes.
+            Debug.Print("Set speed "+speed.ToString("F4"));
             }
         }
     }
