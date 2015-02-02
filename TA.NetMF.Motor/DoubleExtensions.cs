@@ -5,6 +5,9 @@
 // 
 // File: DoubleExtensions.cs  Created: 2014-06-05@12:18
 // Last modified: 2014-11-30@13:57 by Tim
+
+using System;
+
 namespace TA.NetMF.Motor
     {
     public static class DoubleExtensions
@@ -34,6 +37,12 @@ namespace TA.NetMF.Motor
             if (value < min)
                 return min;
             return value;
+            }
+
+        public static Boolean IsWithinAGnatsWhiskerOf(this double lhs, double rhs, double tolerance = 1E-8)
+            {
+            var positiveDifference = Math.Abs(lhs - rhs);
+            return positiveDifference < tolerance;
             }
         }
     }
