@@ -7,10 +7,10 @@
 // Last modified: 2015-01-19@00:25 by Tim
 
 #region Shield selection - uncomment only one of the following shields
-//#define AdafruitV1Shield
+#define AdafruitV1Shield
 //#define AdafruitV2Shield
 //#define SparkfunArduMotoShield
-#define LedSimulatorShield
+//#define LedSimulatorShield
 #endregion
 
 #region Hardware options -- do not edit without good reason
@@ -32,7 +32,7 @@ using TA.NetMF.Motor;
 #if SparkfunArduMotoShield
 using TA.NetMF.SparkfunArdumotoShield;
 #elif AdafruitV1Shield
-using TA.NetMF.AdafruitMotorShieldV1;
+using TA.NetMF.ShieldDriver.AdafruitV1;
 #elif AdafruitV2Shield
 using TA.NetMF.AdafruitMotorShieldV2;
 #elif LedSimulatorShield
@@ -55,29 +55,26 @@ namespace TA.NetMF.MotorControl.Samples
 #if UseOnboardLedForDiagnostics
             Led = new OutputPort(Pins.ONBOARD_LED, false);
 #endif
+            HBridge bridge1;
+            HBridge bridge2;
 #if AdafruitV1Shield
-            var latch = new OutputPort(Pins.GPIO_PIN_D12, false);
-            var enable = new OutputPort(Pins.GPIO_PIN_D7, true);
-            var data = new OutputPort(Pins.GPIO_PIN_D8, false);
-            var clock = new OutputPort(Pins.GPIO_PIN_D4, false);
-            var adafruitMotorShieldV1 = new MotorShield(latch, enable, data, clock);
-            adafruitMotorShieldV1.InitializeShield();
-            StepperM1M2 = adafruitMotorShieldV1.GetFullSteppingStepperMotor(1, 2);
-            StepperM3M4 = adafruitMotorShieldV1.GetMicrosteppingStepperMotor(64, 3, 4);
+            var shield = new AdafruitV1MotorShield();
+            shield.InitializeShield();
+            bridge1 = shield.GetDcMotor(1);
+            bridge2 = shield.GetDcMotor(2);
 #elif AdafruitV2Shield
-            var adafruitMotorShieldV2 = new MotorShield();  // use shield at default I2C address.
-            adafruitMotorShieldV2.InitializeShield();
-            StepperM1M2 = adafruitMotorShieldV2.GetMicrosteppingStepperMotor(MicrostepsPerStep, 1, 2);
-            StepperM3M4 = adafruitMotorShieldV2.GetMicrosteppingStepperMotor(MicrostepsPerStep, 3, 4);
+            var shield = new AdafruitV2MotorShield();
+            shield.InitializeShield();
+            bridge1 = shield.GetDcMotor(1);
+            bridge2 = shield.GetDcMotor(2);
 #elif SparkfunArduMotoShield
             var shield = new ArdumotoShield();
             shield.InitializeShield();
-            var phase1 = shield.GetHBridge(Connector.A, TargetDevice.Netduino);
-            var phase2 = shield.GetHBridge(Connector.B, TargetDevice.Netduino);
-            StepperM1M2 = shield.GetMicrosteppingStepperMotor(MicrostepsPerStep, phase1, phase2);
+            bridge1 = shield.GetHBridge(Connector.A, TargetDevice.Netduino);
+            bridge2 = shield.GetHBridge(Connector.B, TargetDevice.Netduino);
 #elif LedSimulatorShield
-            var bridge1 = LedMotorSimulator.GetDcMotor(Pins.GPIO_PIN_D0, PWMChannels.PWM_ONBOARD_LED);
-            var bridge2 = LedMotorSimulator.GetDcMotor(Pins.GPIO_PIN_D1, PWMChannels.PWM_PIN_D6);
+            bridge1 = LedMotorSimulator.GetDcMotor(Pins.GPIO_PIN_D0, PWMChannels.PWM_ONBOARD_LED);
+            bridge2 = LedMotorSimulator.GetDcMotor(Pins.GPIO_PIN_D1, PWMChannels.PWM_PIN_D6);
 #else
             throw new ApplicationException("Uncomment one of the shield #define statements");
 #endif

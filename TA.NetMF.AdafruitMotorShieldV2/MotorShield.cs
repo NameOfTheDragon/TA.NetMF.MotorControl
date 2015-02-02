@@ -4,21 +4,24 @@
 // This source code is licensed under the MIT License, see http://opensource.org/licenses/MIT
 // 
 // File: MotorShield.cs  Created: 2015-01-13@13:45
-// Last modified: 2015-01-16@17:56 by Tim
+// Last modified: 2015-02-02@18:10 by Tim
 
 using System;
 using TA.NetMF.Motor;
 
-namespace TA.NetMF.AdafruitMotorShieldV2
+namespace TA.NetMF.ShieldDriver.AdafruitV2
     {
     public class MotorShield
         {
         readonly Pca9685PwmController pwmController;
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="MotorShield" /> class at the specified I2C address.
+        ///   Initializes a new instance of the <see cref="MotorShield" /> class at the specified
+        ///   I2C address.
         /// </summary>
-        /// <param name="address">The I2C base address of the shield (optional; defaults to 0x60).</param>
+        /// <param name="address">
+        ///   The I2C base address of the shield (optional; defaults to 0x60).
+        /// </param>
         public MotorShield(ushort address = 0x60)
             {
             pwmController = new Pca9685PwmController(address);
@@ -35,7 +38,10 @@ namespace TA.NetMF.AdafruitMotorShieldV2
         /// <param name="microsteps">The number of microsteps per stepping cycle. </param>
         /// <param name="phase1">The output number (M1, M2, M3 or M4) that the first motor phase is connected to.</param>
         /// <param name="phase2">The output number (M1, M2, M3 or M4) that the  second motor phase is connected to.</param>
-        /// <returns>An implementation of <see cref="IStepSequencer" />  that can control the specified motor windings in microsteps.</returns>
+        /// <returns>
+        ///   An implementation of <see cref="IStepSequencer" />  that can control the specified motor windings in
+        ///   microsteps.
+        /// </returns>
         public IStepSequencer GetMicrosteppingStepperMotor(int microsteps, int phase1, int phase2)
             {
             if (phase1 > 4 || phase1 < 1)
@@ -58,7 +64,10 @@ namespace TA.NetMF.AdafruitMotorShieldV2
         /// </summary>
         /// <param name="phase1">The output number (M1, M2, M3 or M4) that the first motor phase is connected to.</param>
         /// <param name="phase2">The output number (M1, M2, M3 or M4) that the  second motor phase is connected to.</param>
-        /// <returns>An implementation of <see cref="IStepSequencer" /> that can control the specified motor windings in whole steps.</returns>
+        /// <returns>
+        ///   An implementation of <see cref="IStepSequencer" /> that can control the specified motor windings in whole
+        ///   steps.
+        /// </returns>
         public IStepSequencer GetFullSteppingStepperMotor(int phase1, int phase2)
             {
             return GetMicrosteppingStepperMotor(4, phase1, phase2);
@@ -72,7 +81,10 @@ namespace TA.NetMF.AdafruitMotorShieldV2
         /// </summary>
         /// <param name="phase1">The output number (M1, M2, M3 or M4) that the first motor phase is connected to.</param>
         /// <param name="phase2">The output number (M1, M2, M3 or M4) that the  second motor phase is connected to.</param>
-        /// <returns>An implementation of <see cref="IStepSequencer" /> that can control the specified motor windings in half steps.</returns>
+        /// <returns>
+        ///   An implementation of <see cref="IStepSequencer" /> that can control the specified motor windings in half
+        ///   steps.
+        /// </returns>
         public IStepSequencer GetHalfSteppingStepperMotor(int phase1, int phase2)
             {
             return GetMicrosteppingStepperMotor(8, phase1, phase2);
@@ -96,16 +108,32 @@ namespace TA.NetMF.AdafruitMotorShieldV2
             switch (motorNumber)
                 {
                 case 1:
-                    return new MotorPhase(pwmController, 10, 9, 8);
+                    return new PwmControlledHBridge(pwmController, 10, 9, 8);
                 case 2:
-                    return new MotorPhase(pwmController, 11, 12, 13);
+                    return new PwmControlledHBridge(pwmController, 11, 12, 13);
                 case 3:
-                    return new MotorPhase(pwmController, 5, 6, 7);
+                    return new PwmControlledHBridge(pwmController, 5, 6, 7);
                 case 4:
-                    return new MotorPhase(pwmController, 4, 3, 2);
+                    return new PwmControlledHBridge(pwmController, 4, 3, 2);
                 default:
                     throw new ArgumentOutOfRangeException("motorNumber", "Must be 1, 2, 3, or 4");
                 }
+            }
+
+        /// <summary>
+        ///   Gets a DC motor on the specified connector pins.
+        /// </summary>
+        /// <param name="connectorNumber">
+        ///   The connector number, as indicated on the shield's silk
+        ///   screen, where the motor will be connected.
+        /// </param>
+        /// <returns>
+        ///   an <see cref="HBridge" /> instance configured to control the specified motor
+        ///   connector.
+        /// </returns>
+        public HBridge GetDcMotor(int connectorNumber)
+            {
+            return GetHbridge(connectorNumber);
             }
         }
     }

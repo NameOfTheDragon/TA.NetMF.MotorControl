@@ -9,7 +9,7 @@
 using Microsoft.SPOT.Hardware;
 using TA.NetMF.Motor;
 
-namespace TA.NetMF.MotorSimulator
+namespace TA.NetMF.ShieldDriver.Simulator
     {
     /// <summary>
     /// Class LedMotorSimulator. Uses LEDs as simulated motor outputs.

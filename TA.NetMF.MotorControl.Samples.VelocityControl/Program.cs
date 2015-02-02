@@ -29,7 +29,8 @@ using Microsoft.SPOT;
 using Microsoft.SPOT.Hardware;
 using SecretLabs.NETMF.Hardware.Netduino;
 using TA.NetMF.Motor;
-using TA.NetMF.MotorSimulator;
+using TA.NetMF.ShieldDriver.Simulator;
+
 #if SparkfunArduMotoShield
 using TA.NetMF.SparkfunArdumotoShield;
 #elif AdafruitV1Shield

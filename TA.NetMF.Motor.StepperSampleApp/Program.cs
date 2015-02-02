@@ -29,10 +29,11 @@ using Microsoft.SPOT;
 using Microsoft.SPOT.Hardware;
 using SecretLabs.NETMF.Hardware.Netduino;
 using TA.NetMF.Motor;
+using TA.NetMF.ShieldDriver.AdafruitV1;
 #if SparkfunArduMotoShield
 using TA.NetMF.SparkfunArdumotoShield;
 #elif AdafruitV1Shield
-using TA.NetMF.AdafruitMotorShieldV1;
+
 #elif AdafruitV2Shield
 using TA.NetMF.AdafruitMotorShieldV2;
 #elif LedSimulatorShield
@@ -62,12 +63,12 @@ namespace TA.NetMF.MotorControl.Samples
             var enable = new OutputPort(Pins.GPIO_PIN_D7, true);
             var data = new OutputPort(Pins.GPIO_PIN_D8, false);
             var clock = new OutputPort(Pins.GPIO_PIN_D4, false);
-            var adafruitMotorShieldV1 = new MotorShield(latch, enable, data, clock);
+            var adafruitMotorShieldV1 = new AdafruitV1MotorShield(latch, enable, data, clock);
             adafruitMotorShieldV1.InitializeShield();
             StepperM1M2 = adafruitMotorShieldV1.GetFullSteppingStepperMotor(1, 2);
             StepperM3M4 = adafruitMotorShieldV1.GetMicrosteppingStepperMotor(64, 3, 4);
 #elif AdafruitV2Shield
-            var adafruitMotorShieldV2 = new MotorShield();  // use shield at default I2C address.
+            var adafruitMotorShieldV2 = new AdafruitV1MotorShield();  // use shield at default I2C address.
             adafruitMotorShieldV2.InitializeShield();
             StepperM1M2 = adafruitMotorShieldV2.GetMicrosteppingStepperMotor(MicrostepsPerStep, 1, 2);
             StepperM3M4 = adafruitMotorShieldV2.GetMicrosteppingStepperMotor(MicrostepsPerStep, 3, 4);

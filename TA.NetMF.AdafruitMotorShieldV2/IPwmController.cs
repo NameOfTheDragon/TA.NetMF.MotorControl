@@ -5,7 +5,7 @@
 // 
 // File: IPwmController.cs  Created: 2014-06-07@16:50
 // Last modified: 2014-11-30@13:57 by Tim
-namespace TA.NetMF.AdafruitMotorShieldV2
+namespace TA.NetMF.ShieldDriver.AdafruitV2
     {
     internal interface IPwmController
         {

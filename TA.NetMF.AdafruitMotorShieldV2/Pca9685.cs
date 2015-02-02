@@ -5,7 +5,7 @@
 // 
 // File: Pca9685.cs  Created: 2014-06-07@15:01
 // Last modified: 2014-11-30@13:57 by Tim
-namespace TA.NetMF.AdafruitMotorShieldV2
+namespace TA.NetMF.ShieldDriver.AdafruitV2
     {
     /// <summary>
     ///   Pca9685 constants.

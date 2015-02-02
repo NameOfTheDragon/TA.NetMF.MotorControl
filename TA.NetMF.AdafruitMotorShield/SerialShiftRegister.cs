@@ -9,7 +9,7 @@
 using Microsoft.SPOT.Hardware;
 using TA.NetMF.Motor;
 
-namespace TA.NetMF.AdafruitMotorShieldV1
+namespace TA.NetMF.ShieldDriver.AdafruitV1
     {
     /// <summary>
     ///   Class SerialShiftRegister.

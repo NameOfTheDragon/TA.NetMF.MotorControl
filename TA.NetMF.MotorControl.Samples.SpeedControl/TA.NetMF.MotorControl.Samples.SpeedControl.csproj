@@ -46,9 +46,9 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TA.NetMF.AdafruitMotorShield\TA.NetMF.AdafruitMotorShieldV1.csproj">
+    <ProjectReference Include="..\TA.NetMF.AdafruitMotorShield\TA.NetMF.ShieldDriver.AdafruitV1.csproj">
       <Project>{7F574E49-5B84-4D82-89C4-6EF51FB03B24}</Project>
-      <Name>TA.NetMF.AdafruitMotorShieldV1</Name>
+      <Name>TA.NetMF.ShieldDriver.AdafruitV1</Name>
     </ProjectReference>
     <ProjectReference Include="..\TA.NetMF.Motor\TA.NetMF.Motor.csproj">
       <Project>{85B64019-9BE7-4F0F-A328-0050FE5F5F96}</Project>
