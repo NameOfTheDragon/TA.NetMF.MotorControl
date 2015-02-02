@@ -13,47 +13,21 @@ using TA.NetMF.Motor;
 namespace TA.NetMF.AdafruitMotorShieldV1
     {
     /// <summary>
-    ///   Class MultiplexedHBridge. Each instance corresponds to one motor winding.
+    ///   Class MultiplexedHBridge. Each instance corresponds to one motor winding, i.e. a single DC
+    ///   motor or one phase of a stepper motor.
     ///   <para>
     ///     Models Adafruit's peculiar control method on version 1 of their motor control shield.
     ///     The shield has 2 x L293D H-Bridge motor drivers, each controlling 2 motor windings. Each
     ///     winding can drive a single DC motor, or one phase of a stepper motor. The motor coils
     ///     are named M1, M2, M3 and M4 on the PCB silk screen. The L293D chips are controlled by a
-    ///     74HCT595 8-bit data register which is accessed via a serial shift register. Presumably
-    ///     this was done to use as few digital output pins as possible. The 74HC595 requires a
-    ///     total of 4 output pins as follows:
-    ///     <list type="table">
-    ///       <listheader>
-    ///         <term>Name</term>
-    ///         <description>Usage</description>
-    ///       </listheader>
-    ///       <item>
-    ///         <term>Serial clock</term>
-    ///         <description>
-    ///           Clocks the data bit into the shift register on each positive
-    ///           transition.
-    ///         </description>
-    ///       </item>
-    ///       <item>
-    ///         <term>Serial Data</term>
-    ///         <description>The bit being shifted into the shift register input.</description>
-    ///       </item>
-    ///       <item>
-    ///         <term>Latch</term>
-    ///         <description>
-    ///           Transfers the shift register into the parallel output register and latches the
-    ///           data there. This occurs on a positive transition.
-    ///         </description>
-    ///       </item>
-    ///       <item>
-    ///         <term>Output Enable</term>
-    ///         <description>
-    ///           Active low; enables the output drivers of the tri-state parallel output
-    ///           register.
-    ///         </description>
-    ///       </item>
-    ///     </list>
-    ///   </para>
+    ///     74HCT595 8-bit parallel output register which is accessed via a serial shift register.
+    ///     Presumably this was done to use as few digital output pins as possible. The 74HC595
+    ///     requires a total of 4 output pins for Serial Clock, Serial Data, Latch and Output
+    ///     Enable. Data must be manually clocked into the chip using the Serial Data and Serial
+    ///     Clock pins. When enough bits have been shiften into the shift register, they can be
+    ///     transferred to the parallel output register using the Latch pin (transfer occurs on the
+    ///     rising edge). The Output Enable pin enables or disables the output drivers and is active
+    ///     low.
     ///   <para>
     ///     The Output Enable pins of the L293D chips are connected directly to digital outputs that
     ///     correspond to PWM outputs from the host microprocessor. The intention is to use the PWM
@@ -63,6 +37,12 @@ namespace TA.NetMF.AdafruitMotorShieldV1
     ///     variable speed control. The L293D data sheet suggests that 5KHz is an appropriate
     ///     maximum PWM frequency.
     ///   </para>
+    /// <para>
+    /// When controlling individual motor windings, care must be taken not to disturb the settings
+    /// of the othe motors. The necessary behaviours are modelled in the 
+    /// <see cref="SerialShiftRegister"/> and <see cref="ShiftRegisterOperation"/> classes and the 
+    /// <see cref="SerialShiftRegister.WriteTransaction"/> method.
+    /// </para>
     /// </summary>
     internal class MultiplexedHBridge : HBridge
         {
@@ -71,9 +51,10 @@ namespace TA.NetMF.AdafruitMotorShieldV1
         readonly ushort directionB;
         readonly ShiftRegisterOperation[] forwardTransaction;
         readonly SerialShiftRegister outputShiftRegister;
-        readonly ShiftRegisterOperation[] releaseTransaction;
+        readonly ShiftRegisterOperation[] brakeTransaction;
         readonly ShiftRegisterOperation[] reverseTransaction;
         readonly PWM speedControl;
+        ShiftRegisterOperation[] releaseTransaction;
 
         /// <summary>
         ///   Initializes a new instance of the <see cref="MultiplexedHBridge" /> class.
@@ -100,6 +81,11 @@ namespace TA.NetMF.AdafruitMotorShieldV1
             reverseTransaction = new[]
                 {
                 new ShiftRegisterOperation(directionA, false),
+                new ShiftRegisterOperation(directionB, true)
+                };
+            brakeTransaction = new[]
+                {
+                new ShiftRegisterOperation(directionA, true),
                 new ShiftRegisterOperation(directionB, true)
                 };
             releaseTransaction = new[]
@@ -140,10 +126,28 @@ namespace TA.NetMF.AdafruitMotorShieldV1
             speedControl.DutyCycle = magnitude;
             }
 
-        void ReleaseTorque()
+        /// <summary>
+        /// Releases the motor torque such that the motor is no longer driven and can idle freely.
+        /// This is achieved by completely disabling the motor driver circuit.
+        /// </summary>
+        public override void ReleaseTorque()
             {
-            speedControl.DutyCycle = 0.0;
+            base.ReleaseTorque();
             outputShiftRegister.WriteTransaction(releaseTransaction);
+            }
+
+        /// <summary>
+        /// Applies a passive brake to the motor winding. This works by driving both motor outputs
+        /// with the same polarity and enabling the output drivers. This should clamp the voltage
+        /// across the coil to zero. This is the best approach for the L293D driver, but anecdotal
+        /// evidence suggests that it is not very effective. This type of braking is dynamic and
+        /// will not produce any 'holding torque'.
+        /// </summary>
+        public override void ApplyBrake()
+            {
+            base.ApplyBrake();
+            outputShiftRegister.WriteTransaction(brakeTransaction);
+            speedControl.DutyCycle = +1.0;
             }
         }
     }

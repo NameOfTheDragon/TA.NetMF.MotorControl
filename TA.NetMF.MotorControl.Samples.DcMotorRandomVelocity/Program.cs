@@ -77,17 +77,20 @@ namespace TA.NetMF.MotorControl.Samples
             StepperM1M2 = shield.GetMicrosteppingStepperMotor(MicrostepsPerStep, phase1, phase2);
 #elif LedSimulatorShield
             var bridge1 = LedMotorSimulator.GetDcMotor(Pins.GPIO_PIN_D0, PWMChannels.PWM_ONBOARD_LED);
-            //var bridge2 = LedMotorSimulator.GetDcMotor(Pins.GPIO_PIN_D1, PWMChannels.PWM_PIN_D6);
+            var bridge2 = LedMotorSimulator.GetDcMotor(Pins.GPIO_PIN_D1, PWMChannels.PWM_PIN_D6);
 #else
             throw new ApplicationException("Uncomment one of the shield #define statements");
 #endif
 
             // Create the stepper motor axes and link them to the Adafruit driver.
             var motor1 = new DcMotor(bridge1);
+            var motor2 = new DcMotor(bridge2);
             while (true)
                 {
-                var targetSpeed = randomGenerator.NextDouble() * 2.0 -1.0; // range -1.0 to +1.0
-                motor1.AccelerateToVelocity(targetSpeed);
+                var targetSpeed1 = randomGenerator.NextDouble() * 2.0 - 1.0; // range -1.0 to +1.0
+                var targetSpeed2 = randomGenerator.NextDouble() * 2.0 - 1.0; // range -1.0 to +1.0
+                motor1.AccelerateToVelocity(targetSpeed1);
+                motor2.AccelerateToVelocity(targetSpeed2);
                 Thread.Sleep(6000);
                 }
             }
