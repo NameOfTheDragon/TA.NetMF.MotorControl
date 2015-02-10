@@ -65,8 +65,8 @@ namespace TA.NetMF.MotorControl.Samples
             var clock = new OutputPort(Pins.GPIO_PIN_D4, false);
             var adafruitMotorShieldV1 = new AdafruitV1MotorShield(latch, enable, data, clock);
             adafruitMotorShieldV1.InitializeShield();
-            StepperM1M2 = adafruitMotorShieldV1.GetFullSteppingStepperMotor(1, 2);
-            StepperM3M4 = adafruitMotorShieldV1.GetMicrosteppingStepperMotor(64, 3, 4);
+            StepperM1M2 = adafruitMotorShieldV1.GetMicrosteppingStepperMotor(MicrostepsPerStep, 1, 2);
+            //StepperM3M4 = adafruitMotorShieldV1.GetMicrosteppingStepperMotor(MicrostepsPerStep, 3, 4);
 #elif AdafruitV2Shield
             var adafruitMotorShieldV2 = new AdafruitV1MotorShield();  // use shield at default I2C address.
             adafruitMotorShieldV2.InitializeShield();
@@ -165,7 +165,7 @@ namespace TA.NetMF.MotorControl.Samples
         ///   Specify 4 to use whole steps, 8 to use half-steps, or 9+ to use microsteps.
         ///   The higher the value, the smoother the motor motion will be but the slower it will turn.
         /// </summary>
-        const int MicrostepsPerStep = 64;
+        const int MicrostepsPerStep = 256;
 
         /// <summary>
         ///   The ramp time, i.e. the number of seconds taken to reach <see cref="MaxSpeed" />.

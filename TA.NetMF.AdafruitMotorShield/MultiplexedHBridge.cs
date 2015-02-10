@@ -55,6 +55,7 @@ namespace TA.NetMF.ShieldDriver.AdafruitV1
         readonly ShiftRegisterOperation[] reverseTransaction;
         readonly PWM speedControl;
         ShiftRegisterOperation[] releaseTransaction;
+        int pwmFrequency = 1000;
 
         /// <summary>
         ///   Initializes a new instance of the <see cref="MultiplexedHBridge" /> class.
@@ -101,7 +102,7 @@ namespace TA.NetMF.ShieldDriver.AdafruitV1
             {
             // base duty will start at 0.0, i.e. magnitude 0, polarity true (forwards)
             speedControl.DutyCycle = 0.5;
-            speedControl.Frequency = 5000;
+            speedControl.Frequency = pwmFrequency;
             speedControl.DutyCycle = 0.0;
             speedControl.Start();
             outputShiftRegister.WriteTransaction(forwardTransaction);
@@ -120,7 +121,6 @@ namespace TA.NetMF.ShieldDriver.AdafruitV1
             {
             if (polarity != Polarity)
                 {
-                speedControl.DutyCycle = 0.0; // Set output power to nothing before reversing polarity.
                 outputShiftRegister.WriteTransaction(polarity ? forwardTransaction : reverseTransaction);
                 }
             speedControl.DutyCycle = magnitude;

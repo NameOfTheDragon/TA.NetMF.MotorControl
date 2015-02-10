@@ -84,7 +84,7 @@ namespace TA.NetMF.MotorControl.Samples
             var motor2 = new DcMotor(bridge2);
             while (true)
                 {
-                var targetSpeed1 = randomGenerator.NextDouble() * 2.0 - 1.0; // range -1.0 to +1.0
+                var targetSpeed1 = randomGenerator.NextDouble() / 2.0 + 0.5; // range -1.0 to +1.0
                 var targetSpeed2 = randomGenerator.NextDouble() * 2.0 - 1.0; // range -1.0 to +1.0
                 motor1.AccelerateToVelocity(targetSpeed1);
                 motor2.AccelerateToVelocity(targetSpeed2);

@@ -34,6 +34,9 @@ namespace TA.NetMF.ShieldDriver.AdafruitV1
             serialClockPositiveEdge = serialClock;
             this.serialData = serialData;
             latchPositiveEdge = latch;
+            outputEnable.High();
+            latchPositiveEdge.Low();
+            serialClockPositiveEdge.Low();
             }
 
         /// <summary>
@@ -65,6 +68,7 @@ namespace TA.NetMF.ShieldDriver.AdafruitV1
             // SO whatever is shifted in forst ends up on output Q7/QH/Pin 7.
             for (int i = 7; i >= 0; i--)
                 WriteOneBit(data[i]);
+            serialClockPositiveEdge.Low();  // Leave the clock low
             }
 
         /// <summary>
