@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<vcs-root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="8671da9e-5965-4e4d-927e-83a3b21c6dfc" type="jetbrains.git" modification-check-interval="200" xsi:noNamespaceSchemaLocation="http://www.jetbrains.com/teamcity/schemas/9.0/project-config.xsd">
+  <name>https://bitbucket.org/tigranetworks/ta.netmf.motorcontrol.git</name>
+  <param name="agentCleanFilesPolicy" value="ALL_UNTRACKED" />
+  <param name="agentCleanPolicy" value="ON_BRANCH_CHANGE" />
+  <param name="authMethod" value="PASSWORD" />
+  <param name="ignoreKnownHosts" value="true" />
+  <param name="secure:password" value="zxxbd9862929814ed96b45f46eaac1bc2a0" />
+  <param name="serverSideAutoCrlf" value="true" />
+  <param name="submoduleCheckout" value="CHECKOUT" />
+  <param name="teamcity:branchSpec" value="%BranchSpecification%" />
+  <param name="url" value="https://bitbucket.org/tigranetworks/ta.netmf.motorcontrol.git" />
+  <param name="userForTags" value="TeamCity &lt;teamcity@tigranetworks.co.uk&gt;" />
+  <param name="username" value="tigranetworks" />
+  <param name="usernameStyle" value="FULL" />
+</vcs-root>
+

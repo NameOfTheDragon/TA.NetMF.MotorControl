@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<build-type xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="282ec231-e29a-4ed8-b2b4-83d0e11ad396" xsi:noNamespaceSchemaLocation="http://www.jetbrains.com/teamcity/schemas/9.0/project-config.xsd">
+  <name>Beta</name>
+  <description>Beta pre-release and release hardening builds</description>
+  <settings ref="OpenSource_TaNetMFMotorControl_GitFlowWithSemVer">
+    <disabled-settings>
+      <setting-ref ref="RUNNER_113" />
+    </disabled-settings>
+    <parameters>
+      <param name="BranchSpecification" value="+:refs/heads/(release/*)" />
+    </parameters>
+    <build-runners order="RUNNER_1, RUNNER_10, RUNNER_113, RUNNER_112" />
+    <vcs-settings />
+    <requirements />
+    <build-triggers />
+    <cleanup />
+  </settings>
+</build-type>
+

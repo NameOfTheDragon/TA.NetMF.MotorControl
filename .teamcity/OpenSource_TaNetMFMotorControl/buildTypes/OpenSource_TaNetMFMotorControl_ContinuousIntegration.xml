@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<build-type xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="ee851b57-e3be-4356-8934-5dd330e005b9" xsi:noNamespaceSchemaLocation="http://www.jetbrains.com/teamcity/schemas/9.0/project-config.xsd">
+  <name>Integration</name>
+  <description>Continuous Integration Build</description>
+  <settings ref="OpenSource_TaNetMFMotorControl_GitFlowWithSemVer">
+    <disabled-settings>
+      <setting-ref ref="RUNNER_112" />
+      <setting-ref ref="RUNNER_113" />
+    </disabled-settings>
+    <parameters>
+      <param name="BranchSpecification"><![CDATA[+:refs/heads/(develop)
++:refs/heads/feature/(*)
++:refs/heads/develop/(*)]]></param>
+    </parameters>
+    <build-runners order="RUNNER_1, RUNNER_10, RUNNER_113, RUNNER_112" />
+    <vcs-settings />
+    <requirements />
+    <build-triggers />
+    <cleanup />
+  </settings>
+</build-type>
+

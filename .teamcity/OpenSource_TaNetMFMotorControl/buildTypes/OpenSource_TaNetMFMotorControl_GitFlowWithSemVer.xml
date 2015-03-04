@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="0f80e92a-4dc0-4a34-a507-361c1c6b2283" xsi:noNamespaceSchemaLocation="http://www.jetbrains.com/teamcity/schemas/9.0/project-config.xsd">
+  <name>GitFlow with SemVer</name>
+  <settings>
+    <options>
+      <option name="allowExternalStatus" value="true" />
+      <option name="buildNumberPattern" value="%MajorVersion%.%MinorVersion%.%PatchVersion%-%env.TEAMCITY_BUILDCONF_NAME%.%sharedBuildNumber.id14%" />
+    </options>
+    <parameters>
+      <param name="MajorVersion" value="0" />
+      <param name="MinorVersion" value="2" />
+      <param name="PatchVersion" value="0" />
+    </parameters>
+    <build-runners>
+      <runner id="RUNNER_1" name="" type="VS.Solution">
+        <parameters>
+          <param name="build-file-path" value="TA.NetMF.MotorControl.sln" />
+          <param name="msbuild.prop.Configuration" value="Release" />
+          <param name="msbuild_version" value="12.0" />
+          <param name="targets" value="Rebuild" />
+          <param name="teamcity.step.mode" value="default" />
+          <param name="toolsVersion" value="12.0" />
+          <param name="vs.version" value="vs2013" />
+        </parameters>
+      </runner>
+      <runner id="RUNNER_10" name="Create pre-release NuGet package" type="jb.nuget.pack">
+        <parameters>
+          <param name="nuget.pack.as.artifact" value="true" />
+          <param name="nuget.pack.output.clean" value="true" />
+          <param name="nuget.pack.output.directory" value="NuGet-Packages" />
+          <param name="nuget.pack.project.dir" value="as_is" />
+          <param name="nuget.pack.properties" value="Configuration=Release" />
+          <param name="nuget.pack.specFile" value="NuSpec/TA.NetMF.MotorControl.nuspec" />
+          <param name="nuget.pack.version" value="%MajorVersion%.%MinorVersion%.%PatchVersion%-%env.TEAMCITY_BUILDCONF_NAME%%sharedBuildNumber.id14%" />
+          <param name="nuget.path" value="?NuGet.CommandLine.DEFAULT.nupkg" />
+          <param name="nugetCustomPath" value="?NuGet.CommandLine.DEFAULT.nupkg" />
+          <param name="nugetPathSelector" value="?NuGet.CommandLine.DEFAULT.nupkg" />
+          <param name="teamcity.step.mode" value="default" />
+        </parameters>
+      </runner>
+      <runner id="RUNNER_113" name="Create Stable NuGet package" type="jb.nuget.pack">
+        <parameters>
+          <param name="nuget.pack.as.artifact" value="true" />
+          <param name="nuget.pack.output.clean" value="true" />
+          <param name="nuget.pack.output.directory" value="NuGet-Packages" />
+          <param name="nuget.pack.project.dir" value="as_is" />
+          <param name="nuget.pack.properties" value="Configuration=Release" />
+          <param name="nuget.pack.specFile" value="NuSpec/TA.NetMF.MotorControl.nuspec" />
+          <param name="nuget.pack.version" value="%MajorVersion%.%MinorVersion%.%PatchVersion%" />
+          <param name="nuget.path" value="?NuGet.CommandLine.DEFAULT.nupkg" />
+          <param name="nugetCustomPath" value="?NuGet.CommandLine.DEFAULT.nupkg" />
+          <param name="nugetPathSelector" value="?NuGet.CommandLine.DEFAULT.nupkg" />
+          <param name="teamcity.step.mode" value="default" />
+        </parameters>
+      </runner>
+      <runner id="RUNNER_112" name="Publish to NuGet.org" type="jb.nuget.publish">
+        <parameters>
+          <param name="nuget.path" value="?NuGet.CommandLine.DEFAULT.nupkg" />
+          <param name="nuget.publish.files" value="NuGet-Packages\*.nupkg" />
+          <param name="nugetCustomPath" value="?NuGet.CommandLine.DEFAULT.nupkg" />
+          <param name="nugetPathSelector" value="?NuGet.CommandLine.DEFAULT.nupkg" />
+          <param name="secure:nuget.api.key" value="zxx2e51e7edd8bc076c7eebc3430e8393af2c39bcf150748ac1fdd220f3923c0e277d1903ebaf8910f9" />
+          <param name="teamcity.step.mode" value="default" />
+        </parameters>
+      </runner>
+    </build-runners>
+    <vcs-settings>
+      <vcs-entry-ref root-id="OpenSource_TaNetMFMotorControl_HttpsBitbucketOrgTigranetworksTaNetmfMotorcontrol" />
+    </vcs-settings>
+    <requirements>
+      <exists name="env.DotNetMicroFramework43" />
+    </requirements>
+    <build-triggers>
+      <build-trigger id="vcsTrigger" type="vcsTrigger">
+        <parameters>
+          <param name="branchFilter" value="+:*" />
+          <param name="quietPeriodMode" value="DO_NOT_USE" />
+        </parameters>
+      </build-trigger>
+    </build-triggers>
+    <build-extensions>
+      <extension id="JetBrains.AssemblyInfo" type="JetBrains.AssemblyInfo">
+        <parameters>
+          <param name="assembly-format" value="%MajorVersion%.%MinorVersion%.%PatchVersion%.%sharedBuildNumber.id14%" />
+          <param name="file-format" value="%MajorVersion%.%MinorVersion%.%PatchVersion%.%sharedBuildNumber.id14%" />
+          <param name="info-format" value="%system.build.number% built by TeamCity" />
+          <param name="patch-global-assembly-info" value="true" />
+        </parameters>
+      </extension>
+      <extension id="jetbrains.agent.free.space" type="jetbrains.agent.free.space">
+        <parameters>
+          <param name="free-space-work" value="10gb" />
+        </parameters>
+      </extension>
+      <extension id="perfmon" type="perfmon">
+        <parameters />
+      </extension>
+      <extension id="BUILD_EXT_6" type="teamcity.stash.status">
+        <parameters>
+          <param name="secure:stash_username" value="zxxbd9862929814ed96b45f46eaac1bc2a0" />
+          <param name="stash_failCancelledBuilds" value="true" />
+          <param name="stash_host" value="http://127.0.0.1:7990" />
+          <param name="stash_username" value="TeamCity" />
+        </parameters>
+      </extension>
+      <extension id="BUILD_EXT_23" type="VcsLabeling">
+        <parameters>
+          <param name="labelingPattern" value="build-%system.build.number%" />
+          <param name="successfulOnly" value="true" />
+          <param name="vcsRootId" value="OpenSource_TaNetMFMotorControl_HttpsBitbucketOrgTigranetworksTaNetmfMotorcontrol" />
+        </parameters>
+      </extension>
+    </build-extensions>
+    <cleanup />
+  </settings>
+</template>
+
