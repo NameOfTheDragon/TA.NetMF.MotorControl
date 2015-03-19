@@ -50,25 +50,25 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TA.NetMF.AdafruitMotorShieldV2\TA.NetMF.AdafruitMotorShieldV2.csproj">
+    <ProjectReference Include="..\TA.NetMF.AdafruitMotorShieldV2\TA.NetMF.ShieldDriver.AdafruitV2.csproj">
       <Project>{AAE4ED0D-CC09-4307-91E8-48473EE7BB8A}</Project>
-      <Name>TA.NetMF.AdafruitMotorShieldV2</Name>
+      <Name>TA.NetMF.ShieldDriver.AdafruitV2</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TA.NetMF.AdafruitMotorShield\TA.NetMF.AdafruitMotorShieldV1.csproj">
+    <ProjectReference Include="..\TA.NetMF.AdafruitMotorShield\TA.NetMF.ShieldDriver.AdafruitV1.csproj">
       <Project>{7F574E49-5B84-4D82-89C4-6EF51FB03B24}</Project>
-      <Name>TA.NetMF.AdafruitMotorShieldV1</Name>
+      <Name>TA.NetMF.ShieldDriver.AdafruitV1</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TA.NetMF.MotorSimulator\TA.NetMF.MotorSimulator.csproj">
+    <ProjectReference Include="..\TA.NetMF.MotorSimulator\TA.NetMF.ShieldDriver.Simulator.csproj">
       <Project>{FBA7AC49-CC4F-4C72-8632-F628DE16888A}</Project>
-      <Name>TA.NetMF.MotorSimulator</Name>
+      <Name>TA.NetMF.ShieldDriver.Simulator</Name>
     </ProjectReference>
     <ProjectReference Include="..\TA.NetMF.Motor\TA.NetMF.Motor.csproj">
       <Project>{85B64019-9BE7-4F0F-A328-0050FE5F5F96}</Project>
       <Name>TA.NetMF.Motor</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TA.NetMF.SparkfunArdumotoShield\TA.NetMF.SparkfunArdumotoShield.csproj">
+    <ProjectReference Include="..\TA.NetMF.SparkfunArdumotoShield\TA.NetMF.ShieldDriver.SparkfunArdumoto.csproj">
       <Project>{EB54507F-0FB2-4A97-8463-CF42C09F42ED}</Project>
-      <Name>TA.NetMF.SparkfunArdumotoShield</Name>
+      <Name>TA.NetMF.ShieldDriver.SparkfunArdumoto</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>

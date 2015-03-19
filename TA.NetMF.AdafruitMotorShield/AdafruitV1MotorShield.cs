@@ -3,7 +3,7 @@
 // Copyright © 2014-2015 Tigra Astronomy, all rights reserved.
 // This source code is licensed under the MIT License, see http://opensource.org/licenses/MIT
 // 
-// File: MotorShield.cs  Created: 2015-01-16@17:30
+// File: AdafruitV1MotorShield.cs  Created: 2015-01-16@17:30
 // Last modified: 2015-01-16@18:05 by Tim
 
 using System;
@@ -11,14 +11,14 @@ using Microsoft.SPOT.Hardware;
 using SecretLabs.NETMF.Hardware.NetduinoPlus;
 using TA.NetMF.Motor;
 
-namespace TA.NetMF.AdafruitMotorShieldV1
+namespace TA.NetMF.ShieldDriver.AdafruitV1
     {
     /// <summary>
-    /// Class MotorShield. This class cannot be inherited. Provides access to the resources of the
+    /// Class AdafruitV1MotorShield. This class cannot be inherited. Provides access to the resources of the
     /// Adafruit Motor Shield (version 1).
     /// <image url="$(ProjectDir)\Datasheet\mshieldv12schem.png" />
     /// </summary>
-    public sealed class MotorShield
+    public sealed class AdafruitV1MotorShield
         {
         Octet latchState; // The last octet written to the latch.
         readonly OutputPort clock; // clocks the shift register
@@ -28,23 +28,37 @@ namespace TA.NetMF.AdafruitMotorShieldV1
         SerialShiftRegister serialShiftRegister;
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="MotorShield" /> class.
+        ///   Initializes a new instance of the <see cref="AdafruitV1MotorShield" /> class.
         /// </summary>
         /// <param name="latch">The latch store register clock pin (STCP).</param>
         /// <param name="enable">The latch output enable pin (OE).</param>
         /// <param name="data">The latch serial data pin (DS).</param>
         /// <param name="clock">The latch shift register clock pin (SHCP).</param>
-        public MotorShield(OutputPort latch, OutputPort enable, OutputPort data, OutputPort clock)
+        public AdafruitV1MotorShield(OutputPort latch, OutputPort enable, OutputPort data, OutputPort clock)
             {
             this.latch = latch;
             this.enable = enable;
             this.data = data;
             this.clock = clock;
-            this.serialShiftRegister = new SerialShiftRegister(enable, clock, data, latch);
+            serialShiftRegister = new SerialShiftRegister(enable, clock, data, latch);
             }
 
         /// <summary>
-        ///   Resets the latch so that all motors and outputs are disabled.
+        /// Initializes a new instance of the <see cref="AdafruitV1MotorShield"/> class using the default hardware outputs.
+        /// </summary>
+        public AdafruitV1MotorShield()
+            {
+            latch = new OutputPort(Pins.GPIO_PIN_D12, false);
+            enable = new OutputPort(Pins.GPIO_PIN_D7, true);
+            data = new OutputPort(Pins.GPIO_PIN_D8, false);
+            clock = new OutputPort(Pins.GPIO_PIN_D4, false);
+            serialShiftRegister = new SerialShiftRegister(enable, clock, data, latch);
+            }
+
+        /// <summary>
+        ///   Resets the latch so that all motors and outputs are disabled. This method should be called
+        ///   before using any of the shield's resources to ensure that the hardware is in a consistent
+        ///   state.
         /// </summary>
         /// <exception cref="System.NotImplementedException"></exception>
         public void InitializeShield()
@@ -136,6 +150,16 @@ namespace TA.NetMF.AdafruitMotorShieldV1
             {
             var pwm = new PWM(pwmChannel, 64000.0, 0.0, false);
             return pwm;
+            }
+
+        /// <summary>
+        /// Gets a DC motor.
+        /// </summary>
+        /// <param name="motorNumber">The motor number, corresponding to the motor numbers on the shield silk screen (M1, M2, M3, M4).</param>
+        /// <returns>An <see cref="HBridge"/> instance configured to control the specified motor winding.</returns>
+        public HBridge GetDcMotor(int motorNumber)
+            {
+            return GetHbridge(motorNumber);
             }
         }
     }

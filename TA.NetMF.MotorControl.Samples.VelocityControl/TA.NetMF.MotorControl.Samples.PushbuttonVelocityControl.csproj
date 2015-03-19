@@ -1,16 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <AssemblyName>TA.NetMF.SparkfunArdumotoShield</AssemblyName>
-    <OutputType>Library</OutputType>
-    <RootNamespace>TA.NetMF.SparkfunArdumotoShield</RootNamespace>
+    <AssemblyName>TA.NetMF.MotorControl.Samples.PushbuttonVelocityControl</AssemblyName>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>TA.NetMF.MotorControl.Samples.PushbuttonVelocityControl</RootNamespace>
     <ProjectTypeGuids>{b69e3092-b931-443c-abe7-7e7b65f2a37f};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{EB54507F-0FB2-4A97-8463-CF42C09F42ED}</ProjectGuid>
+    <ProjectGuid>{43389AB9-B180-4C16-A012-1F9CA8E2B71A}</ProjectGuid>
     <TargetFrameworkVersion>v4.3</TargetFrameworkVersion>
     <NetMfTargetsBaseDir Condition="'$(NetMfTargetsBaseDir)'==''">$(MSBuildExtensionsPath32)\Microsoft\.NET Micro Framework\</NetMfTargetsBaseDir>
-    <TargetFrameworkProfile />
+    <DeployDevice>Netduino</DeployDevice>
+    <DeployTransport>USB</DeployTransport>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,24 +32,39 @@
   </PropertyGroup>
   <Import Project="$(NetMfTargetsBaseDir)$(TargetFrameworkVersion)\CSharp.Targets" />
   <ItemGroup>
-    <Compile Include="..\GlobalAssemblyInfo.cs">
-      <Link>Properties\GlobalAssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="ArdumotoShield.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SimpleHBridge.cs" />
+    <Compile Include="Program.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.SPOT.Hardware" />
     <Reference Include="Microsoft.SPOT.Hardware.PWM" />
-    <Reference Include="Microsoft.SPOT.Native">
-    </Reference>
-    <Reference Include="SecretLabs.NETMF.Hardware.NetduinoPlus, Version=4.3.1.0, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.SPOT.Hardware.SerialPort" />
+    <Reference Include="Microsoft.SPOT.Native" />
+    <Reference Include="Microsoft.SPOT.Net" />
+    <Reference Include="SecretLabs.NETMF.Hardware" />
+    <Reference Include="SecretLabs.NETMF.Hardware.Netduino" />
+    <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\TA.NetMF.AdafruitMotorShieldV2\TA.NetMF.ShieldDriver.AdafruitV2.csproj">
+      <Project>{AAE4ED0D-CC09-4307-91E8-48473EE7BB8A}</Project>
+      <Name>TA.NetMF.ShieldDriver.AdafruitV2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TA.NetMF.AdafruitMotorShield\TA.NetMF.ShieldDriver.AdafruitV1.csproj">
+      <Project>{7F574E49-5B84-4D82-89C4-6EF51FB03B24}</Project>
+      <Name>TA.NetMF.ShieldDriver.AdafruitV1</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TA.NetMF.MotorSimulator\TA.NetMF.ShieldDriver.Simulator.csproj">
+      <Project>{FBA7AC49-CC4F-4C72-8632-F628DE16888A}</Project>
+      <Name>TA.NetMF.ShieldDriver.Simulator</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TA.NetMF.Motor\TA.NetMF.Motor.csproj">
       <Project>{85B64019-9BE7-4F0F-A328-0050FE5F5F96}</Project>
       <Name>TA.NetMF.Motor</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TA.NetMF.SparkfunArdumotoShield\TA.NetMF.ShieldDriver.SparkfunArdumoto.csproj">
+      <Project>{EB54507F-0FB2-4A97-8463-CF42C09F42ED}</Project>
+      <Name>TA.NetMF.ShieldDriver.SparkfunArdumoto</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>

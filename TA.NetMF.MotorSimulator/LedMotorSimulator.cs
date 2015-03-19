@@ -9,7 +9,7 @@
 using Microsoft.SPOT.Hardware;
 using TA.NetMF.Motor;
 
-namespace TA.NetMF.MotorSimulator
+namespace TA.NetMF.ShieldDriver.Simulator
     {
     /// <summary>
     /// Class LedMotorSimulator. Uses LEDs as simulated motor outputs.
@@ -40,6 +40,19 @@ namespace TA.NetMF.MotorSimulator
             var bridge1 = new HBridgeLedSimulator(direction1Port, power1);
             var bridge2 = new HBridgeLedSimulator(direction2Port, power2);
             return GetMicrosteppingStepperMotor(256, bridge1, bridge2);
+            }
+
+        /// <summary>
+        /// Gets a simulated dc motor.
+        /// </summary>
+        /// <param name="directionIndicator">The direction indicator.</param>
+        /// <param name="powerIndicator">The power indicator.</param>
+        /// <returns>HBridge.</returns>
+        public static HBridge GetDcMotor(Cpu.Pin directionIndicator, Cpu.PWMChannel powerIndicator)
+            {
+            var direction1Port = new OutputPort(directionIndicator, false);
+            var bridge = new HBridgeLedSimulator(direction1Port, powerIndicator);
+            return bridge;
             }
         }
     }

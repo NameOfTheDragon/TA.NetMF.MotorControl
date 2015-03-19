@@ -211,6 +211,8 @@ namespace TA.NetMF.Motor
         /// </summary>
         public event AxisEventHandler MotorStopped;
 
+        public event AxisEventHandler BeforeStep;
+
         /// <summary>
         ///   Raises the <see cref="MotorStopped" /> event.
         /// </summary>
@@ -220,6 +222,14 @@ namespace TA.NetMF.Motor
             var handler = MotorStopped;
             if (handler != null)
                 handler(axis);
+            }
+
+        void RaiseBeforeStep(StepperMotor axis)
+            {
+            var handler = BeforeStep;
+            if (handler != null)
+                handler(axis);
+
             }
 
         /// <summary>
@@ -245,8 +255,8 @@ namespace TA.NetMF.Motor
             var safeDirection = Math.Sign(direction);
             if (safeDirection == 0)
                 return; // Not moving.
+            RaiseBeforeStep(this);
             stepper.PerformStep(safeDirection);
-            performStepCallback(safeDirection); // user code
             currentPosition += safeDirection;
             if (currentPosition > limitOfTravel || currentPosition < 0)
                 WrapPosition();

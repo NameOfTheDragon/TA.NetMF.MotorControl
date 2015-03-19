@@ -5,11 +5,12 @@
 // 
 // File: SimpleHBridge.cs  Created: 2014-06-05@02:27
 // Last modified: 2014-11-30@13:57 by Tim
+
 using System;
 using Microsoft.SPOT.Hardware;
 using TA.NetMF.Motor;
 
-namespace TA.NetMF.SparkfunArdumotoShield
+namespace TA.NetMF.ShieldDriver.SparkfunArdumoto
     {
     /// <summary>
     /// Class SimpleHBridge. Implements a simple H-Bridge that can be used to control

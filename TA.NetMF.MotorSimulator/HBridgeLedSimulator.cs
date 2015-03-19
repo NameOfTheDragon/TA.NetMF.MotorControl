@@ -1,10 +1,8 @@
-using System;
-using Microsoft.SPOT;
 using Microsoft.SPOT.Hardware;
 using TA.NetMF.Motor;
 using Math = System.Math;
 
-namespace TA.NetMF.MotorSimulator
+namespace TA.NetMF.ShieldDriver.Simulator
     {
     public class HBridgeLedSimulator : HBridge
         {

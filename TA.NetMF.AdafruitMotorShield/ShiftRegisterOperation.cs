@@ -1,4 +1,4 @@
-namespace TA.NetMF.AdafruitMotorShieldV1
+namespace TA.NetMF.ShieldDriver.AdafruitV1
     {
     /// <summary>
     ///   Struct ShiftRegisterOperation - represents a single bit operation on the parallel output register.
