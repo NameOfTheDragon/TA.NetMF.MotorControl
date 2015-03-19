@@ -9,7 +9,7 @@
 using System;
 using System.Collections;
 
-namespace TA.NetMF.ShieldDriver.AdafruitV2
+namespace TA.NetMF.ShieldDriver
     {
     /// <summary>
     ///   Class PwmChannel. Represents a single channel of the PCA9685 PWM controller.

@@ -23,16 +23,16 @@
 #endregion
 
 using System;
-using System.Diagnostics;
 using System.Threading;
-using Microsoft.SPOT;
 using Microsoft.SPOT.Hardware;
-using SecretLabs.NETMF.Hardware.Netduino;
+using SecretLabs.NETMF.Hardware.NetduinoPlus;
 using TA.NetMF.Motor;
+using TA.NetMF.ShieldDriver;
+
 #if SparkfunArduMotoShield
 using TA.NetMF.SparkfunArdumotoShield;
 #elif AdafruitV1Shield
-using TA.NetMF.ShieldDriver.AdafruitV1;
+
 #elif AdafruitV2Shield
 using TA.NetMF.AdafruitMotorShieldV2;
 #elif LedSimulatorShield
@@ -68,7 +68,7 @@ namespace TA.NetMF.MotorControl.Samples
             bridge1 = shield.GetDcMotor(1);
             bridge2 = shield.GetDcMotor(2);
 #elif SparkfunArduMotoShield
-            var shield = new ArdumotoShield();
+            var shield = new SparkfunArdumoto();
             shield.InitializeShield();
             bridge1 = shield.GetHBridge(Connector.A, TargetDevice.Netduino);
             bridge2 = shield.GetHBridge(Connector.B, TargetDevice.Netduino);

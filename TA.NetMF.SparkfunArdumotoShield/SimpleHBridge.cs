@@ -10,7 +10,7 @@ using System;
 using Microsoft.SPOT.Hardware;
 using TA.NetMF.Motor;
 
-namespace TA.NetMF.ShieldDriver.SparkfunArdumoto
+namespace TA.NetMF.ShieldDriver
     {
     /// <summary>
     /// Class SimpleHBridge. Implements a simple H-Bridge that can be used to control

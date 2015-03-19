@@ -3,16 +3,16 @@
 // Copyright © 2014-2015 Tigra Astronomy, all rights reserved.
 // This source code is licensed under the MIT License, see http://opensource.org/licenses/MIT
 // 
-// File: ArdumotoShield.cs  Created: 2015-01-13@13:45
+// File: SparkfunArdumoto.cs  Created: 2015-01-13@13:45
 // Last modified: 2015-02-02@18:05 by Tim
 
 using System;
 using SecretLabs.NETMF.Hardware.NetduinoPlus;
 using TA.NetMF.Motor;
 
-namespace TA.NetMF.ShieldDriver.SparkfunArdumoto
+namespace TA.NetMF.ShieldDriver
     {
-    public sealed class ArdumotoShield
+    public sealed class SparkfunArdumoto
         {
         /// <summary>
         ///   Gets an <see cref="HBridge" /> instance configured for the specified platform and

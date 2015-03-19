@@ -1,4 +1,4 @@
-namespace TA.NetMF.ShieldDriver.SparkfunArdumoto
+namespace TA.NetMF.ShieldDriver
     {
     public enum Connector
         {
