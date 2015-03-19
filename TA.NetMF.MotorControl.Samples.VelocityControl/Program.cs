@@ -22,20 +22,19 @@
 #endif
 #endregion
 
-using TA.NetMF.ShieldDriver.AdafruitV2;
 using System;
 using System.Diagnostics;
 using System.Threading;
 using Microsoft.SPOT;
 using Microsoft.SPOT.Hardware;
-using SecretLabs.NETMF.Hardware.Netduino;
+using SecretLabs.NETMF.Hardware.NetduinoPlus;
 using TA.NetMF.Motor;
-using TA.NetMF.ShieldDriver.Simulator;
+using TA.NetMF.ShieldDriver;
 
 #if SparkfunArduMotoShield
 using TA.NetMF.SparkfunArdumotoShield;
 #elif AdafruitV1Shield
-using TA.NetMF.ShieldDriver.AdafruitV1;
+
 #elif AdafruitV2Shield
 using TA.NetMF.AdafruitMotorShieldV2;
 #elif LedSimulatorShield
@@ -69,12 +68,12 @@ namespace TA.NetMF.MotorControl.Samples.PushbuttonVelocityControl
             StepperM1M2 = adafruitMotorShieldV1.GetMicrosteppingStepperMotor(MicrostepsPerStep, 1, 2);
             StepperM3M4 = adafruitMotorShieldV1.GetFullSteppingStepperMotor(3, 4);
 #elif AdafruitV2Shield
-            var adafruitMotorShieldV2 = new MotorShield();  // use shield at default I2C address.
+            var adafruitMotorShieldV2 = new SparkfunArdumoto();  // use shield at default I2C address.
             adafruitMotorShieldV2.InitializeShield();
             StepperM1M2 = adafruitMotorShieldV2.GetMicrosteppingStepperMotor(MicrostepsPerStep, 1, 2);
             StepperM3M4 = adafruitMotorShieldV2.GetMicrosteppingStepperMotor(MicrostepsPerStep, 3, 4);
 #elif SparkfunArduMotoShield
-            var shield = new ArdumotoShield();
+            var shield = new SparkfunArdumoto();
             shield.InitializeShield();
             var phase1 = shield.GetHBridge(Connector.A, TargetDevice.Netduino);
             var phase2 = shield.GetHBridge(Connector.B, TargetDevice.Netduino);

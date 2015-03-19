@@ -9,7 +9,7 @@
 using System;
 using TA.NetMF.Motor;
 
-namespace TA.NetMF.ShieldDriver.AdafruitV2
+namespace TA.NetMF.ShieldDriver
     {
     /// <summary>
     ///   <para>

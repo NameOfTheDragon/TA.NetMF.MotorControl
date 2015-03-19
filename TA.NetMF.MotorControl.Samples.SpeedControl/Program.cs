@@ -26,9 +26,10 @@ using System;
 using System.Diagnostics;
 using System.Threading;
 using Microsoft.SPOT.Hardware;
-using SecretLabs.NETMF.Hardware.Netduino;
+using SecretLabs.NETMF.Hardware.NetduinoPlus;
 using TA.NetMF.Motor;
-using TA.NetMF.ShieldDriver.AdafruitV1;
+using TA.NetMF.ShieldDriver;
+
 #if SparkfunArduMotoShield
 using TA.NetMF.SparkfunArdumotoShield;
 #elif AdafruitV1Shield

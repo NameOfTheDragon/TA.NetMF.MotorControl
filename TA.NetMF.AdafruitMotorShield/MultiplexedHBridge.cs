@@ -10,7 +10,7 @@ using System;
 using Microsoft.SPOT.Hardware;
 using TA.NetMF.Motor;
 
-namespace TA.NetMF.ShieldDriver.AdafruitV1
+namespace TA.NetMF.ShieldDriver
     {
     /// <summary>
     ///   Class MultiplexedHBridge. Each instance corresponds to one motor winding, i.e. a single DC

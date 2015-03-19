@@ -37,6 +37,8 @@
     <Compile Include="AcceleratingStepperMotor.cs" />
     <Compile Include="DcMotor.cs" />
     <Compile Include="InstantaneousStepperMotor.cs" />
+    <Compile Include="IServoControl.cs" />
+    <Compile Include="ServoMotor.cs" />
     <Compile Include="StepperMotor.cs" />
     <Compile Include="DoubleExtensions.cs" />
     <Compile Include="HBridge.cs" />
@@ -56,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Class Diagrams\Stepper Motor Control.cd" />
+    <None Include="Class Diagrams\ServoMotor.cd" />
   </ItemGroup>
   <ItemGroup />
 </Project>

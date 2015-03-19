@@ -12,7 +12,7 @@ using Microsoft.SPOT;
 using Microsoft.SPOT.Hardware;
 using Math = System.Math;
 
-namespace TA.NetMF.ShieldDriver.AdafruitV2
+namespace TA.NetMF.ShieldDriver
     {
     internal class Pca9685PwmController : IPwmController
         {

@@ -11,7 +11,7 @@ using Microsoft.SPOT.Hardware;
 using SecretLabs.NETMF.Hardware.NetduinoPlus;
 using TA.NetMF.Motor;
 
-namespace TA.NetMF.ShieldDriver.AdafruitV1
+namespace TA.NetMF.ShieldDriver
     {
     /// <summary>
     /// Class AdafruitV1MotorShield. This class cannot be inherited. Provides access to the resources of the
@@ -161,5 +161,27 @@ namespace TA.NetMF.ShieldDriver.AdafruitV1
             {
             return GetHbridge(motorNumber);
             }
+
+        /// <summary>
+        ///     Gets a servo motor.
+        /// </summary>
+        /// <param name="servoNumber">The servo number, which must be either 1 or 2 for this shield.</param>
+        /// <returns>IServoControl.</returns>
+        /// <exception cref="System.ArgumentOutOfRangeException">servoNumber;Valid servo numbers for this shield are 1 or 2.</exception>
+        /// <remarks>Servo 1 uses PWM pin D10; Servo 2 uses PWM pin D9.</remarks>
+        public IServoControl GetServoMotor(int servoNumber)
+            {
+            switch (servoNumber)
+                {
+                    case 1:
+                        return new ServoMotor(PWMChannels.PWM_PIN_D10);
+                    case 2:
+                        return new ServoMotor(PWMChannels.PWM_PIN_D9);
+                    default:
+                        throw new ArgumentOutOfRangeException("servoNumber",
+                            "Valid servo numbers for this shield are 1 or 2.");
+                }
+            }
+
         }
     }

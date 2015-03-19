@@ -1,11 +1,10 @@
 ﻿// This file is part of the TA.NetMF.MotorControl project
 // 
-// Copyright © 2014 Tigra Astronomy, all rights reserved.
-// This source code is licensed under Creative Commons Attribution International 4.0 license
-// http://creativecommons.org/licenses/by/4.0/
+// Copyright © 2014-2015 Tigra Astronomy, all rights reserved.
+// This source code is licensed under the MIT License, see http://opensource.org/licenses/MIT
 // 
-// File: AssemblyInfo.cs  Created: 2014-06-05@02:27
-// Last modified: 2014-06-05@12:23 by Tim
+// File: AssemblyInfo.cs  Created: 2015-03-19@02:03
+// Last modified: 2015-03-19@02:57 by Tim
 
 using System.Reflection;
 
@@ -15,4 +14,3 @@ using System.Reflection;
 
 [assembly: AssemblyTitle("TA.NetMF.AdafruitMotorShield")]
 [assembly: AssemblyDescription("Shield driver for Adafruit Motor Shield V1")]
-

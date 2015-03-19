@@ -3,26 +3,27 @@
 // Copyright © 2014-2015 Tigra Astronomy, all rights reserved.
 // This source code is licensed under the MIT License, see http://opensource.org/licenses/MIT
 // 
-// File: MotorShield.cs  Created: 2015-01-13@13:45
+// File: AdafruitV2MotorShield.cs  Created: 2015-01-13@13:45
 // Last modified: 2015-02-02@18:10 by Tim
 
 using System;
+using SecretLabs.NETMF.Hardware.NetduinoPlus;
 using TA.NetMF.Motor;
 
-namespace TA.NetMF.ShieldDriver.AdafruitV2
+namespace TA.NetMF.ShieldDriver
     {
-    public class MotorShield
+    public class AdafruitV2MotorShield
         {
         readonly Pca9685PwmController pwmController;
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="MotorShield" /> class at the specified
+        ///   Initializes a new instance of the <see cref="AdafruitV2MotorShield" /> class at the specified
         ///   I2C address.
         /// </summary>
         /// <param name="address">
         ///   The I2C base address of the shield (optional; defaults to 0x60).
         /// </param>
-        public MotorShield(ushort address = 0x60)
+        public AdafruitV2MotorShield(ushort address = 0x60)
             {
             pwmController = new Pca9685PwmController(address);
             }
@@ -135,5 +136,27 @@ namespace TA.NetMF.ShieldDriver.AdafruitV2
             {
             return GetHbridge(connectorNumber);
             }
+
+        /// <summary>
+        ///     Gets a servo motor.
+        /// </summary>
+        /// <param name="servoNumber">The servo number, which must be either 1 or 2 for this shield.</param>
+        /// <returns>IServoControl.</returns>
+        /// <exception cref="System.ArgumentOutOfRangeException">servoNumber;Valid servo numbers for this shield are 1 or 2.</exception>
+        /// <remarks>Servo 1 uses PWM pin D10; Servo 2 uses PWM pin D9.</remarks>
+        public IServoControl GetServoMotor(int servoNumber)
+            {
+            switch (servoNumber)
+                {
+                case 1:
+                    return new ServoMotor(PWMChannels.PWM_PIN_D10);
+                case 2:
+                    return new ServoMotor(PWMChannels.PWM_PIN_D9);
+                default:
+                    throw new ArgumentOutOfRangeException("servoNumber",
+                        "Valid servo numbers for this shield are 1 or 2.");
+                }
+            }
+
         }
     }

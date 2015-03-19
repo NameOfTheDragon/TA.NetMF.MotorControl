@@ -36,6 +36,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TA.NetMF.MotorControl.Sampl
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shield Drivers", "Shield Drivers", "{015DA468-7B66-4566-947D-F51D38053107}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TA.NetMF.MotorControl.Samples.ServoCycle", "TA.NetMF.MotorControl.Samples.ServoCycle\TA.NetMF.MotorControl.Samples.ServoCycle.csproj", "{AB73B705-5E60-427C-AC5C-60DC57297231}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -92,6 +94,12 @@ Global
 		{EE5F6517-8346-44E2-8CBE-74B8C18F3227}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EE5F6517-8346-44E2-8CBE-74B8C18F3227}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EE5F6517-8346-44E2-8CBE-74B8C18F3227}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{AB73B705-5E60-427C-AC5C-60DC57297231}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB73B705-5E60-427C-AC5C-60DC57297231}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB73B705-5E60-427C-AC5C-60DC57297231}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{AB73B705-5E60-427C-AC5C-60DC57297231}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB73B705-5E60-427C-AC5C-60DC57297231}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB73B705-5E60-427C-AC5C-60DC57297231}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -106,5 +114,6 @@ Global
 		{43389AB9-B180-4C16-A012-1F9CA8E2B71A} = {491E3CF0-36BD-4468-93F6-44BF382B7B92}
 		{5B4D8D48-7745-49EA-BDEE-12F7BBCEED97} = {491E3CF0-36BD-4468-93F6-44BF382B7B92}
 		{EE5F6517-8346-44E2-8CBE-74B8C18F3227} = {491E3CF0-36BD-4468-93F6-44BF382B7B92}
+		{AB73B705-5E60-427C-AC5C-60DC57297231} = {491E3CF0-36BD-4468-93F6-44BF382B7B92}
 	EndGlobalSection
 EndGlobal

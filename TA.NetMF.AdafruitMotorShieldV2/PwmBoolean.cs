@@ -5,7 +5,7 @@
 // 
 // File: PwmBoolean.cs  Created: 2014-09-28@04:12
 // Last modified: 2014-11-30@13:57 by Tim
-namespace TA.NetMF.ShieldDriver.AdafruitV2
+namespace TA.NetMF.ShieldDriver
     {
     /// <summary>
     ///   Class PwmBoolean.
