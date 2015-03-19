@@ -8,7 +8,7 @@
     </options>
     <parameters>
       <param name="MajorVersion" value="0" />
-      <param name="MinorVersion" value="2" />
+      <param name="MinorVersion" value="3" />
       <param name="PatchVersion" value="0" />
     </parameters>
     <build-runners>
