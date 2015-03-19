@@ -137,5 +137,18 @@ namespace TA.NetMF.AdafruitMotorShieldV1
             var pwm = new PWM(pwmChannel, 64000.0, 0.0, false);
             return pwm;
             }
+
+        public IServoControl GetServoMotor(int servoNumber)
+            {
+            switch (servoNumber)
+                {
+                case 1:
+                        return new ServoMotor( PWMChannels.PWM_PIN_D10);
+                case 2:
+                        return new ServoMotor(PWMChannels.PWM_PIN_D9);
+                default:
+                    throw new ArgumentOutOfRangeException("servoNumber", "Valid servo numbers for this shield are 1 or 2.");
+                }
+            }
         }
     }

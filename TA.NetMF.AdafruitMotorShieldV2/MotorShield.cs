@@ -3,10 +3,11 @@
 // Copyright © 2014-2015 Tigra Astronomy, all rights reserved.
 // This source code is licensed under the MIT License, see http://opensource.org/licenses/MIT
 // 
-// File: MotorShield.cs  Created: 2015-01-13@13:45
-// Last modified: 2015-01-16@17:56 by Tim
+// File: MotorShield.cs  Created: 2015-03-18@01:07
+// Last modified: 2015-03-19@01:39 by Tim
 
 using System;
+using SecretLabs.NETMF.Hardware.NetduinoPlus;
 using TA.NetMF.Motor;
 
 namespace TA.NetMF.AdafruitMotorShieldV2
@@ -16,7 +17,7 @@ namespace TA.NetMF.AdafruitMotorShieldV2
         readonly Pca9685PwmController pwmController;
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="MotorShield" /> class at the specified I2C address.
+        ///     Initializes a new instance of the <see cref="MotorShield" /> class at the specified I2C address.
         /// </summary>
         /// <param name="address">The I2C base address of the shield (optional; defaults to 0x60).</param>
         public MotorShield(ushort address = 0x60)
@@ -27,15 +28,18 @@ namespace TA.NetMF.AdafruitMotorShieldV2
         public void InitializeShield() {}
 
         /// <summary>
-        ///   Gets a stepper motor with the specified number of microsteps. The
-        ///   phases specify which of the 4 motor outputs the stepper motor
-        ///   windings are connected to. The outputs M1, M2, M3 and M4 can be
-        ///   read from the silk screen of the shield.
+        ///     Gets a stepper motor with the specified number of microsteps. The
+        ///     phases specify which of the 4 motor outputs the stepper motor
+        ///     windings are connected to. The outputs M1, M2, M3 and M4 can be
+        ///     read from the silk screen of the shield.
         /// </summary>
         /// <param name="microsteps">The number of microsteps per stepping cycle. </param>
         /// <param name="phase1">The output number (M1, M2, M3 or M4) that the first motor phase is connected to.</param>
         /// <param name="phase2">The output number (M1, M2, M3 or M4) that the  second motor phase is connected to.</param>
-        /// <returns>An implementation of <see cref="IStepSequencer" />  that can control the specified motor windings in microsteps.</returns>
+        /// <returns>
+        ///     An implementation of <see cref="IStepSequencer" />  that can control the specified motor windings in
+        ///     microsteps.
+        /// </returns>
         public IStepSequencer GetMicrosteppingStepperMotor(int microsteps, int phase1, int phase2)
             {
             if (phase1 > 4 || phase1 < 1)
@@ -51,43 +55,49 @@ namespace TA.NetMF.AdafruitMotorShieldV2
             }
 
         /// <summary>
-        ///   Gets a stepper motor controller that performs 4 whole steps per stepping cycle.
-        ///   The phases specify which of the 4 motor outputs the stepper motor
-        ///   windings are connected to. The outputs M1, M2, M3 and M4 can be
-        ///   read from the silk screen of the shield.
+        ///     Gets a stepper motor controller that performs 4 whole steps per stepping cycle.
+        ///     The phases specify which of the 4 motor outputs the stepper motor
+        ///     windings are connected to. The outputs M1, M2, M3 and M4 can be
+        ///     read from the silk screen of the shield.
         /// </summary>
         /// <param name="phase1">The output number (M1, M2, M3 or M4) that the first motor phase is connected to.</param>
         /// <param name="phase2">The output number (M1, M2, M3 or M4) that the  second motor phase is connected to.</param>
-        /// <returns>An implementation of <see cref="IStepSequencer" /> that can control the specified motor windings in whole steps.</returns>
+        /// <returns>
+        ///     An implementation of <see cref="IStepSequencer" /> that can control the specified motor windings in whole
+        ///     steps.
+        /// </returns>
         public IStepSequencer GetFullSteppingStepperMotor(int phase1, int phase2)
             {
             return GetMicrosteppingStepperMotor(4, phase1, phase2);
             }
 
         /// <summary>
-        ///   Gets a stepper motor controller that performs 8 half steps per stepping cycle.
-        ///   The phases specify which of the 4 motor outputs the stepper motor
-        ///   windings are connected to. The outputs M1, M2, M3 and M4 can be
-        ///   read from the silk screen of the shield.
+        ///     Gets a stepper motor controller that performs 8 half steps per stepping cycle.
+        ///     The phases specify which of the 4 motor outputs the stepper motor
+        ///     windings are connected to. The outputs M1, M2, M3 and M4 can be
+        ///     read from the silk screen of the shield.
         /// </summary>
         /// <param name="phase1">The output number (M1, M2, M3 or M4) that the first motor phase is connected to.</param>
         /// <param name="phase2">The output number (M1, M2, M3 or M4) that the  second motor phase is connected to.</param>
-        /// <returns>An implementation of <see cref="IStepSequencer" /> that can control the specified motor windings in half steps.</returns>
+        /// <returns>
+        ///     An implementation of <see cref="IStepSequencer" /> that can control the specified motor windings in half
+        ///     steps.
+        /// </returns>
         public IStepSequencer GetHalfSteppingStepperMotor(int phase1, int phase2)
             {
             return GetMicrosteppingStepperMotor(8, phase1, phase2);
             }
 
         /// <summary>
-        ///   Gets an H-Bridge instance for the specified motor output number.
+        ///     Gets an H-Bridge instance for the specified motor output number.
         /// </summary>
         /// <param name="motorNumber">
-        ///   The motor number, as printed on the silk screen of the Adafruit motor shield
-        ///   (M1, M2, M3, M4).
+        ///     The motor number, as printed on the silk screen of the Adafruit motor shield
+        ///     (M1, M2, M3, M4).
         /// </param>
         /// <returns>
-        ///   An H-Bridge configured with all of the correct PWM channels corresponding to the
-        ///   specified motor number.
+        ///     An H-Bridge configured with all of the correct PWM channels corresponding to the
+        ///     specified motor number.
         /// </returns>
         HBridge GetHbridge(int motorNumber)
             {
@@ -95,16 +105,30 @@ namespace TA.NetMF.AdafruitMotorShieldV2
             // The channel numbers below tally with those used in Adafruit's driver.
             switch (motorNumber)
                 {
-                case 1:
-                    return new MotorPhase(pwmController, 10, 9, 8);
-                case 2:
-                    return new MotorPhase(pwmController, 11, 12, 13);
-                case 3:
-                    return new MotorPhase(pwmController, 5, 6, 7);
-                case 4:
-                    return new MotorPhase(pwmController, 4, 3, 2);
-                default:
-                    throw new ArgumentOutOfRangeException("motorNumber", "Must be 1, 2, 3, or 4");
+                    case 1:
+                        return new MotorPhase(pwmController, 10, 9, 8);
+                    case 2:
+                        return new MotorPhase(pwmController, 11, 12, 13);
+                    case 3:
+                        return new MotorPhase(pwmController, 5, 6, 7);
+                    case 4:
+                        return new MotorPhase(pwmController, 4, 3, 2);
+                    default:
+                        throw new ArgumentOutOfRangeException("motorNumber", "Must be 1, 2, 3, or 4");
+                }
+            }
+
+        public IServoControl GetServoMotor(uint servoNumber)
+            {
+            switch (servoNumber)
+                {
+                    case 1:
+                        return new ServoMotor(PWMChannels.PWM_PIN_D10);
+                    case 2:
+                        return new ServoMotor(PWMChannels.PWM_PIN_D9);
+                    default:
+                        throw new ArgumentOutOfRangeException("servoNumber",
+                            "Valid servo numbers for this shield are 1 or 2.");
                 }
             }
         }
