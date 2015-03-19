@@ -1,10 +1,13 @@
 // This file is part of the TA.NetMF.MotorControl project
 // 
-// Copyright © 2014-2014 Tigra Astronomy, all rights reserved.
+// Copyright © 2014-2015 Tigra Astronomy, all rights reserved.
 // This source code is licensed under the MIT License, see http://opensource.org/licenses/MIT
 // 
-// File: Octet.cs  Created: 2014-06-05@02:27
-// Last modified: 2014-11-30@13:57 by Tim
+// File: Octet.cs  Created: 2015-01-13@13:45
+// Last modified: 2015-01-17@22:33 by Tim
+
+using System.Text;
+
 namespace TA.NetMF.Motor
     {
     /// <summary>
@@ -12,8 +15,6 @@ namespace TA.NetMF.Motor
     /// </summary>
     public struct Octet
         {
-        static readonly Octet max = FromInt(0xFF);
-        static readonly Octet zero = FromInt(0);
         readonly bool[] bits;
 
         /// <summary>
@@ -63,5 +64,35 @@ namespace TA.NetMF.Motor
             {
             return FromInt((int)source);
             }
+
+        /// <summary>
+        ///   Returns a new octet with the specified bit number set to the specified value.
+        ///   Other bits are duplicated.
+        /// </summary>
+        /// <param name="bit">The bit number to be modified.</param>
+        /// <param name="value">The value of the specified bit number.</param>
+        /// <returns>A new octet instance with the specified bit number set to the specified value.</returns>
+        public Octet WithBitSetTo(ushort bit, bool value)
+            {
+            var newBits = new bool[8];
+            bits.CopyTo(newBits, 0);
+            newBits[bit] = value;
+            return new Octet(newBits);
+            }
+
+        public override string ToString()
+            {
+            var builder = new StringBuilder();
+            for (int i = 7; i >= 0; i--)
+                {
+                builder.Append(bits[i] ? '1' : '0');
+                builder.Append(' ');
+                }
+            builder.Length -= 1;
+            return builder.ToString();
+            }
+
+        static readonly Octet max = FromInt(0xFF);
+        static readonly Octet zero = FromInt(0);
         }
     }

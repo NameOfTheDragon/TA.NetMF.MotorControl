@@ -15,8 +15,8 @@ namespace TA.NetMF.MotorControl.Samples.AxisSequencer
     /// </summary>
     internal class DualAxisSequencer
         {
-        readonly AcceleratingStepperMotor firstAxis;
-        readonly AcceleratingStepperMotor secondAxis;
+        readonly StepperMotor firstAxis;
+        readonly StepperMotor secondAxis;
         readonly ManualResetEvent sequenceComplete = new ManualResetEvent(true); // start signalled
         int firstTarget;
         int secondTarget;
@@ -26,7 +26,7 @@ namespace TA.NetMF.MotorControl.Samples.AxisSequencer
         /// </summary>
         /// <param name="firstAxis">The first axis.</param>
         /// <param name="secondAxis">The second axis.</param>
-        public DualAxisSequencer(AcceleratingStepperMotor firstAxis, AcceleratingStepperMotor secondAxis)
+        public DualAxisSequencer(StepperMotor firstAxis, StepperMotor secondAxis)
             {
             this.firstAxis = firstAxis;
             this.secondAxis = secondAxis;
@@ -54,7 +54,7 @@ namespace TA.NetMF.MotorControl.Samples.AxisSequencer
         ///   Received the MotorStopped event from the first axis and starts the second axis.
         /// </summary>
         /// <param name="axis">The axis.</param>
-        void FirstAxisMotorStopped(AcceleratingStepperMotor axis)
+        void FirstAxisMotorStopped(StepperMotor axis)
             {
             secondAxis.MoveToTargetPosition(secondTarget);
             }
@@ -63,7 +63,7 @@ namespace TA.NetMF.MotorControl.Samples.AxisSequencer
         ///   Receives the MotorStopped event from the second axis and signals any waiting threads.
         /// </summary>
         /// <param name="axis">The axis.</param>
-        void SecondAxisMotorStopped(AcceleratingStepperMotor axis)
+        void SecondAxisMotorStopped(StepperMotor axis)
             {
             SequenceComplete.Set(); // Unblock waiting threads
             }

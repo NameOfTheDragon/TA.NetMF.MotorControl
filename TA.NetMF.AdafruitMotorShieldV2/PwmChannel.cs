@@ -5,10 +5,11 @@
 // 
 // File: PwmChannel.cs  Created: 2014-06-07@15:58
 // Last modified: 2014-11-30@13:57 by Tim
+
 using System;
 using System.Collections;
 
-namespace TA.NetMF.AdafruitMotorShieldV2
+namespace TA.NetMF.ShieldDriver
     {
     /// <summary>
     ///   Class PwmChannel. Represents a single channel of the PCA9685 PWM controller.

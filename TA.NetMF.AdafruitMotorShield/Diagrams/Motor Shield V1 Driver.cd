@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="TA.NetMF.AdafruitMotorShield.MotorShield">
+    <Position X="0.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAABAAAAAAAFAAIAACAAABAAAAAAgAAAAASEAAAAAA=</HashCode>
+      <FileName>MotorShield.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="serialShiftRegister" />
+      <Field Name="clock" />
+      <Field Name="data" />
+      <Field Name="enable" />
+      <Field Name="latch" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="TA.NetMF.AdafruitMotorShield.MultiplexedHBridge">
+    <Position X="0.5" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACQCAAAABAAAAAAAAAAAAEAABAgAAWAAAAAAA=</HashCode>
+      <FileName>MultiplexedHBridge.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="speedControl" />
+      <Field Name="outputShiftRegister" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="TA.NetMF.AdafruitMotorShield.SerialShiftRegister">
+    <Position X="8.25" Y="3" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAYAAAAICAAAEAAAAAAAABAAUAAAAgAUAAAA=</HashCode>
+      <FileName>SerialShiftRegister.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="latchPositiveEdge" />
+      <Field Name="outputEnableActiveLow" />
+      <Field Name="serialClockPositiveEdge" />
+      <Field Name="serialData" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Microsoft.SPOT.Hardware.PWM" Collapsed="true">
+    <Position X="4.5" Y="0.5" Width="1.5" />
+    <NestedTypes>
+      <Enum Name="Microsoft.SPOT.Hardware.PWM.ScaleFactor" Collapsed="true">
+        <TypeIdentifier />
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Microsoft.SPOT.Hardware.OutputPort">
+    <Position X="3.75" Y="4.5" Width="2" />
+    <TypeIdentifier />
+  </Class>
+  <Struct Name="TA.NetMF.AdafruitMotorShield.ShiftRegisterOperation">
+    <Position X="8.25" Y="0.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>ShiftRegisterOperation.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

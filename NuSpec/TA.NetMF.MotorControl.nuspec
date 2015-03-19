@@ -21,16 +21,24 @@
     </metadata>
     <files>
         <!-- Shield Agnostic Motor Control -->
-        <file src="..\TA.NetMF.SparkfunArdumotoShield\bin\Release\TA.NetMF.Motor.*" target="lib/netmf43/" />
-        <file src="..\TA.NetMF.SparkfunArdumotoShield\bin\Release\le\TA.NetMF.Motor.p*" target="lib/netmf43/le/" />
-        <file src="..\TA.NetMF.SparkfunArdumotoShield\bin\Release\be\TA.NetMF.Motor.p*" target="lib/netmf43/be/" />
+        <file src="..\TA.NetMF.Motor\bin\Release\TA.NetMF.Motor.*" target="lib/netmf43/" />
+        <file src="..\TA.NetMF.Motor\bin\Release\le\TA.NetMF.Motor.p*" target="lib/netmf43/le/" />
+        <file src="..\TA.NetMF.Motor\bin\Release\be\TA.NetMF.Motor.p*" target="lib/netmf43/be/" />
         <!-- Sparkfun motor shield -->
-        <file src="..\TA.NetMF.SparkfunArdumotoShield\bin\Release\TA.NetMF.SparkfunArdumotoShield.*" target="lib/netmf43/" />
-        <file src="..\TA.NetMF.SparkfunArdumotoShield\bin\Release\le\TA.NetMF.SparkfunArdumotoShield.p*" target="lib/netmf43/le/" />
-        <file src="..\TA.NetMF.SparkfunArdumotoShield\bin\Release\be\TA.NetMF.SparkfunArdumotoShield.p*" target="lib/netmf43/be/" />
+        <file src="..\TA.NetMF.SparkfunArdumotoShield\bin\Release\TA.NetMF.ShieldDriver.SparkfunArdumoto.*" target="lib/netmf43/" />
+        <file src="..\TA.NetMF.SparkfunArdumotoShield\bin\Release\le\TA.NetMF.ShieldDriver.SparkfunArdumoto.p*" target="lib/netmf43/le/" />
+        <file src="..\TA.NetMF.SparkfunArdumotoShield\bin\Release\be\TA.NetMF.ShieldDriver.SparkfunArdumoto.p*" target="lib/netmf43/be/" />
         <!-- Adafruit V2 Motor Shield -->
-        <file src="..\TA.NetMF.AdafruitMotorShieldV2\bin\Release\TA.NetMF.AdafruitMotorShieldV2.*" target="lib/netmf43/" />
-        <file src="..\TA.NetMF.AdafruitMotorShieldV2\bin\Release\le\TA.NetMF.AdafruitMotorShieldV2.p*" target="lib/netmf43/le/" />
-        <file src="..\TA.NetMF.AdafruitMotorShieldV2\bin\Release\be\TA.NetMF.AdafruitMotorShieldV2.p*" target="lib/netmf43/be/" />
+        <file src="..\TA.NetMF.AdafruitMotorShieldV2\bin\Release\TA.NetMF.ShieldDriver.AdafruitV2.*" target="lib/netmf43/" />
+        <file src="..\TA.NetMF.AdafruitMotorShieldV2\bin\Release\le\TA.NetMF.ShieldDriver.AdafruitV2.p*" target="lib/netmf43/le/" />
+        <file src="..\TA.NetMF.AdafruitMotorShieldV2\bin\Release\be\TA.NetMF.ShieldDriver.AdafruitV2.p*" target="lib/netmf43/be/" />
+        <!-- Adafruit V1 Motor Shield-->
+        <file src="..\TA.NetMF.AdafruitMotorShield\bin\Release\TA.NetMF.ShieldDriver.AdafruitV1.*" target="lib/netmf43/" />
+        <file src="..\TA.NetMF.AdafruitMotorShield\bin\Release\le\TA.NetMF.ShieldDriver.AdafruitV1.p*" target="lib/netmf43/le/" />
+        <file src="..\TA.NetMF.AdafruitMotorShield\bin\Release\be\TA.NetMF.ShieldDriver.AdafruitV1.p*" target="lib/netmf43/be/" />
+        <!-- LED Simulator Motor Shield -->
+        <file src="..\TA.NetMF.MotorSimulator\bin\Release\TA.NetMF.ShieldDriver.Simulator.*" target="lib/netmf43/" />
+        <file src="..\TA.NetMF.MotorSimulator\bin\Release\le\TA.NetMF.ShieldDriver.Simulator.p*" target="lib/netmf43/le/" />
+        <file src="..\TA.NetMF.MotorSimulator\bin\Release\be\TA.NetMF.ShieldDriver.Simulator.p*" target="lib/netmf43/be/" />
     </files>
 </package>

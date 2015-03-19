@@ -5,13 +5,14 @@
 // 
 // File: Pca9685PwmController.cs  Created: 2014-06-06@18:06
 // Last modified: 2014-11-30@13:57 by Tim
+
 using System;
 using System.Threading;
 using Microsoft.SPOT;
 using Microsoft.SPOT.Hardware;
 using Math = System.Math;
 
-namespace TA.NetMF.AdafruitMotorShieldV2
+namespace TA.NetMF.ShieldDriver
     {
     internal class Pca9685PwmController : IPwmController
         {

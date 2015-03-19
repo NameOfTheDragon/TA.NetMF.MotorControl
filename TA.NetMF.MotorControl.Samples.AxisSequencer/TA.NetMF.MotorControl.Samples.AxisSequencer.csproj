@@ -46,13 +46,17 @@
     <Reference Include="Microsoft.SPOT.Native" />
     <Reference Include="Microsoft.SPOT.Net" />
     <Reference Include="SecretLabs.NETMF.Hardware" />
-    <Reference Include="SecretLabs.NETMF.Hardware.Netduino" />
+    <Reference Include="SecretLabs.NETMF.Hardware.NetduinoPlus, Version=4.3.1.0, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TA.NetMF.AdafruitMotorShieldV2\TA.NetMF.AdafruitMotorShieldV2.csproj">
+    <ProjectReference Include="..\TA.NetMF.AdafruitMotorShieldV2\TA.NetMF.ShieldDriver.AdafruitV2.csproj">
       <Project>{AAE4ED0D-CC09-4307-91E8-48473EE7BB8A}</Project>
-      <Name>TA.NetMF.AdafruitMotorShieldV2</Name>
+      <Name>TA.NetMF.ShieldDriver.AdafruitV2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TA.NetMF.MotorSimulator\TA.NetMF.ShieldDriver.Simulator.csproj">
+      <Project>{FBA7AC49-CC4F-4C72-8632-F628DE16888A}</Project>
+      <Name>TA.NetMF.ShieldDriver.Simulator</Name>
     </ProjectReference>
     <ProjectReference Include="..\TA.NetMF.Motor\TA.NetMF.Motor.csproj">
       <Project>{85B64019-9BE7-4F0F-A328-0050FE5F5F96}</Project>

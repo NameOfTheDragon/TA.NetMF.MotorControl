@@ -1,35 +1,44 @@
 // This file is part of the TA.NetMF.MotorControl project
 // 
-// Copyright © 2014-2014 Tigra Astronomy, all rights reserved.
+// Copyright © 2014-2015 Tigra Astronomy, all rights reserved.
 // This source code is licensed under the MIT License, see http://opensource.org/licenses/MIT
 // 
-// File: MotorPhase.cs  Created: 2014-06-07@15:30
-// Last modified: 2014-11-30@13:57 by Tim
+// File: PwmControlledHBridge.cs  Created: 2015-01-13@13:45
+// Last modified: 2015-02-02@18:17 by Tim
+
 using System;
 using TA.NetMF.Motor;
 
-namespace TA.NetMF.AdafruitMotorShieldV2
+namespace TA.NetMF.ShieldDriver
     {
     /// <summary>
-    ///   Class MotorPhase. Represents one winding (or phase) within a motor.
-    ///   DC motors have a single phase, stepper motors have 2 phases.
-    ///   This type of circuitry is often referred to as an <see cref="HBridge"/>.
+    ///   <para>
+    ///     Class PwmControlledHBridge. Represents one winding (or phase) within a motor. DC motors
+    ///     have a single phase, stepper motors have 2 phases. This type of circuitry is often
+    ///     referred to as an <see cref="HBridge" /> .
+    ///   </para>
+    ///   <para>
+    ///     Adafruit seems to like complicated solutions and they use PWM channels to control some
+    ///     TTL inputs on the H-Bridge chip. Setting the duty cycle to 100% is equivalent to logic
+    ///     '1' and setting it to 0% is equivalent to logic '0'. This behaviour is modelled by the
+    ///     <see cref="PwmBoolean" /> class.
+    ///   </para>
     /// </summary>
-    internal class MotorPhase : HBridge
+    internal class PwmControlledHBridge : HBridge
         {
+        Pca9685PwmController pwmController;
         readonly PwmBoolean in1;
         readonly PwmBoolean in2;
         readonly PwmChannel powerControl;
-        Pca9685PwmController pwmController;
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="MotorPhase" /> class.
+        ///   Initializes a new instance of the <see cref="PwmControlledHBridge" /> class.
         /// </summary>
         /// <param name="pwmController">The 16-channel PWM controller instance that controls this motor phase.</param>
         /// <param name="in1PwmChannelNumber">The PWM channel number that provides the IN1 input for this winding.</param>
         /// <param name="in2PwmChannelNumber">The PWM channel number that provides the IN2 input for this winding.</param>
         /// <param name="pwmPowerControlChannelNumber">The PWM source.</param>
-        public MotorPhase(Pca9685PwmController pwmController,
+        public PwmControlledHBridge(Pca9685PwmController pwmController,
             ushort in1PwmChannelNumber,
             ushort in2PwmChannelNumber,
             ushort pwmPowerControlChannelNumber)
@@ -57,7 +66,7 @@ namespace TA.NetMF.AdafruitMotorShieldV2
         void Forward()
             {
             // Order is important; must avoid setting both outputs to true, which would cause a BRAKE condition.
-            in2.State = false; 
+            in2.State = false;
             in1.State = true;
             }
 
@@ -68,6 +77,12 @@ namespace TA.NetMF.AdafruitMotorShieldV2
         void Reverse()
             {
             in1.State = false;
+            in2.State = true;
+            }
+
+        void ShortBrake()
+            {
+            in1.State = true;
             in2.State = true;
             }
 
@@ -100,6 +115,26 @@ namespace TA.NetMF.AdafruitMotorShieldV2
             else
                 Reverse();
             powerControl.DutyCycle = magnitude;
+            }
+
+        /// <summary>
+        ///   Releases the motor torque such that the motor is no longer driven and can idle freely.
+        ///   This is achieved by completely disabling the motor driver circuit.
+        /// </summary>
+        public override void ReleaseTorque()
+            {
+            base.ReleaseTorque();
+            Release();
+            }
+
+        /// <summary>
+        ///   Applies an induction brake to the motor winding by shorting out the coil. This allows
+        ///   the motor's internally generated magnetic field to act against its own motion.
+        /// </summary>
+        public override void ApplyBrake()
+            {
+            base.ApplyBrake();
+            ShortBrake();
             }
         }
     }
