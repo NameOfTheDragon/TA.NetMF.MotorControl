@@ -8,7 +8,7 @@
     </disabled-settings>
     <parameters>
       <param name="BranchSpecification"><![CDATA[+:refs/heads/(release/*)
-+:/refs/heads/(beta/*)]]></param>
++:refs/heads/(beta/*)]]></param>
     </parameters>
     <build-runners order="RUNNER_1, RUNNER_10, RUNNER_113, RUNNER_112" />
     <vcs-settings />
