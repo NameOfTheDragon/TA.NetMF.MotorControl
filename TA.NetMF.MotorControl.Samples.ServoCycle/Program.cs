@@ -19,7 +19,7 @@ namespace TA.NetMF.MotorControl.Samples.ServoCycle
         static double servo1Position;
         static IServoControl servo1;
         static Timer timer;
-        static double increment = +0.25;
+        static double increment = +4;
 
         public static void Main()
             {
